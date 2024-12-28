@@ -2,6 +2,9 @@ import { motion } from "framer-motion";
 import { Building2, MapPin, Coins } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
+import TokenPurchaseModal from "../components/TokenPurchaseModal";
+import { useAuth } from "../contexts/AuthContext";
 
 const properties = [
   {
@@ -35,8 +38,14 @@ const properties = [
 ];
 
 const Eiendommer = () => {
-  const handlePurchase = (propertyId: number) => {
-    console.log("Forsøker kjøp...", propertyId);
+  const [selectedProperty, setSelectedProperty] = useState<typeof properties[0] | null>(null);
+  const { addPropertyTokens } = useAuth();
+
+  const handlePurchase = (tokenCount: number) => {
+    if (selectedProperty) {
+      console.log(`Kjøp ${tokenCount} tokens i ${selectedProperty.name}`);
+      addPropertyTokens(selectedProperty.id, selectedProperty.name, tokenCount);
+    }
   };
 
   return (
@@ -90,7 +99,7 @@ const Eiendommer = () => {
                 <CardFooter>
                   <Button
                     className="w-full"
-                    onClick={() => handlePurchase(property.id)}
+                    onClick={() => setSelectedProperty(property)}
                   >
                     <Building2 className="mr-2 h-4 w-4" />
                     Kjøp tokens
@@ -101,6 +110,13 @@ const Eiendommer = () => {
           ))}
         </div>
       </main>
+
+      <TokenPurchaseModal
+        isOpen={!!selectedProperty}
+        onClose={() => setSelectedProperty(null)}
+        propertyName={selectedProperty?.name || ""}
+        onPurchase={handlePurchase}
+      />
     </div>
   );
 };
