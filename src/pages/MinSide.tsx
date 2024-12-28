@@ -4,6 +4,14 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { toast } from "sonner";
 
 const MinSide = () => {
@@ -22,6 +30,9 @@ const MinSide = () => {
     toast.success("KYC-verifisering fullført!");
   };
 
+  // Mock token price for value calculation
+  const TOKEN_PRICE = 1000; // NOK
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <main className="container mx-auto px-4 py-16">
@@ -29,7 +40,7 @@ const MinSide = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="max-w-md mx-auto"
+          className="max-w-4xl mx-auto space-y-8"
         >
           {!user ? (
             <Card>
@@ -73,43 +84,85 @@ const MinSide = () => {
               </CardContent>
             </Card>
           ) : (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-2xl font-bold">
-                  Velkommen, {user.email}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <p className="text-gray-700">
-                    KYC Status:{" "}
-                    <span
-                      className={`font-semibold ${
-                        user.isKYC ? "text-green-600" : "text-yellow-600"
-                      }`}
+            <>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-2xl font-bold">
+                    Velkommen, {user.email}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <p className="text-gray-700">
+                      KYC Status:{" "}
+                      <span
+                        className={`font-semibold ${
+                          user.isKYC ? "text-green-600" : "text-yellow-600"
+                        }`}
+                      >
+                        {user.isKYC ? "Verifisert" : "Ikke verifisert"}
+                      </span>
+                    </p>
+                  </div>
+
+                  {!user.isKYC && (
+                    <Button onClick={handleStartKYC} className="w-full">
+                      Start KYC
+                    </Button>
+                  )}
+
+                  {user.isKYC && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="text-center text-green-600 font-semibold"
                     >
-                      {user.isKYC ? "Verifisert" : "Ikke verifisert"}
-                    </span>
-                  </p>
-                </div>
+                      KYC bekreftet!
+                    </motion.div>
+                  )}
+                </CardContent>
+              </Card>
 
-                {!user.isKYC && (
-                  <Button onClick={handleStartKYC} className="w-full">
-                    Start KYC
-                  </Button>
-                )}
-
-                {user.isKYC && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-center text-green-600 font-semibold"
-                  >
-                    KYC bekreftet!
-                  </motion.div>
-                )}
-              </CardContent>
-            </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-2xl font-bold">
+                    Mine eierandeler
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {user.ownedProperties.length > 0 ? (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Eiendom</TableHead>
+                          <TableHead className="text-right">Antall tokens</TableHead>
+                          <TableHead className="text-right">Verdi (NOK)</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {user.ownedProperties.map((property) => (
+                          <TableRow key={property.id}>
+                            <TableCell className="font-medium">
+                              {property.name}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              {property.tokenCount}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              {(property.tokenCount * TOKEN_PRICE).toLocaleString()} NOK
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  ) : (
+                    <p className="text-center text-gray-500 py-8">
+                      Du eier ingen tokens ennå
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            </>
           )}
         </motion.div>
       </main>
