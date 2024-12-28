@@ -10,6 +10,7 @@ interface User {
   email: string;
   isKYC: boolean;
   ownedProperties: Property[];
+  accumulatedRent: number;
 }
 
 interface AuthContextType {
@@ -17,6 +18,7 @@ interface AuthContextType {
   login: (email: string, password: string) => void;
   startKYC: () => void;
   addPropertyTokens: (propertyId: number, propertyName: string, tokenCount: number) => void;
+  addRentIncome: (amount: number) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -25,7 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
   const login = (email: string, password: string) => {
-    setUser({ email, isKYC: false, ownedProperties: [] });
+    setUser({ email, isKYC: false, ownedProperties: [], accumulatedRent: 0 });
   };
 
   const startKYC = () => {
@@ -51,8 +53,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const addRentIncome = (amount: number) => {
+    if (user) {
+      setUser({ ...user, accumulatedRent: (user.accumulatedRent || 0) + amount });
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, startKYC, addPropertyTokens }}>
+    <AuthContext.Provider value={{ user, login, startKYC, addPropertyTokens, addRentIncome }}>
       {children}
     </AuthContext.Provider>
   );

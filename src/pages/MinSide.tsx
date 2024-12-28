@@ -15,7 +15,7 @@ import {
 import { toast } from "sonner";
 
 const MinSide = () => {
-  const { user, login, startKYC } = useAuth();
+  const { user, login, startKYC, addRentIncome } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -28,6 +28,18 @@ const MinSide = () => {
   const handleStartKYC = () => {
     startKYC();
     toast.success("KYC-verifisering fullført!");
+  };
+
+  const handleSimulateRent = () => {
+    if (user) {
+      const totalTokens = user.ownedProperties.reduce(
+        (sum, property) => sum + property.tokenCount,
+        0
+      );
+      const dailyRent = totalTokens * 0.5;
+      addRentIncome(dailyRent);
+      toast.success(`Du mottok ${dailyRent} kr i daglig leie`);
+    }
   };
 
   // Mock token price for value calculation
@@ -103,6 +115,9 @@ const MinSide = () => {
                         {user.isKYC ? "Verifisert" : "Ikke verifisert"}
                       </span>
                     </p>
+                    <p className="text-gray-700 mt-2">
+                      Total opptjent leie: {user.accumulatedRent || 0} kr
+                    </p>
                   </div>
 
                   {!user.isKYC && (
@@ -131,30 +146,37 @@ const MinSide = () => {
                 </CardHeader>
                 <CardContent>
                   {user.ownedProperties.length > 0 ? (
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Eiendom</TableHead>
-                          <TableHead className="text-right">Antall tokens</TableHead>
-                          <TableHead className="text-right">Verdi (NOK)</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {user.ownedProperties.map((property) => (
-                          <TableRow key={property.id}>
-                            <TableCell className="font-medium">
-                              {property.name}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              {property.tokenCount}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              {(property.tokenCount * TOKEN_PRICE).toLocaleString()} NOK
-                            </TableCell>
+                    <div className="space-y-4">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Eiendom</TableHead>
+                            <TableHead className="text-right">Antall tokens</TableHead>
+                            <TableHead className="text-right">Verdi (NOK)</TableHead>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                        </TableHeader>
+                        <TableBody>
+                          {user.ownedProperties.map((property) => (
+                            <TableRow key={property.id}>
+                              <TableCell className="font-medium">
+                                {property.name}
+                              </TableCell>
+                              <TableCell className="text-right">
+                                {property.tokenCount}
+                              </TableCell>
+                              <TableCell className="text-right">
+                                {(property.tokenCount * TOKEN_PRICE).toLocaleString()} NOK
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                      <div className="flex justify-end mt-4">
+                        <Button onClick={handleSimulateRent} variant="outline">
+                          Simuler daglig leieinntekt
+                        </Button>
+                      </div>
+                    </div>
                   ) : (
                     <p className="text-center text-gray-500 py-8">
                       Du eier ingen tokens ennå
