@@ -42,10 +42,10 @@ const Index = () => {
             Nå i Beta
           </Badge>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary mb-6">
-            Velkommen til Kvanta.ai
+            Investér i eiendom, enkelt og trygt
           </h1>
           <p className="text-xl sm:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Eiendomsinvestering for alle i Norden. Start din investeringsreise med så lite som 1000 kr.
+            Kvanta.ai gjør det mulig å kjøpe brøkdeler av eiendom i Norden. Start din investeringsreise med så lite som 1000 kr.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Button size="lg">
