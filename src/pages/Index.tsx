@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Building2, Coins, LineChart, Shield } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   const features = [
@@ -47,12 +48,16 @@ const Index = () => {
             Kvanta.ai gjør det mulig å kjøpe brøkdeler av eiendom i Norden. Start din investeringsreise med så lite som 1000 kr.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Button size="lg">
-              Kom i gang
-            </Button>
-            <Button variant="outline" size="lg">
-              Se eiendommer
-            </Button>
+            <Link to="/eiendommer">
+              <Button size="lg">
+                Kom i gang
+              </Button>
+            </Link>
+            <Link to="/eiendommer">
+              <Button variant="outline" size="lg">
+                Se eiendommer
+              </Button>
+            </Link>
           </div>
         </motion.div>
 
@@ -81,6 +86,37 @@ const Index = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.8 }}
+          className="mt-20 bg-nordic-softblue rounded-xl p-8 shadow-lg"
+        >
+          <h2 className="text-2xl sm:text-3xl font-semibold mb-6 text-center text-primary">
+            Om Kvanta.ai
+          </h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center p-4">
+              <h3 className="font-semibold mb-2 text-lg">Nordisk Fokus</h3>
+              <p className="text-gray-600">
+                Spesialisert på eiendomsmarkedet i Norge, Sverige, Danmark og Finland
+              </p>
+            </div>
+            <div className="text-center p-4">
+              <h3 className="font-semibold mb-2 text-lg">Demokratisering</h3>
+              <p className="text-gray-600">
+                Gjør eiendomsinvestering tilgjengelig for alle i Norden
+              </p>
+            </div>
+            <div className="text-center p-4">
+              <h3 className="font-semibold mb-2 text-lg">Transparent</h3>
+              <p className="text-gray-600">
+                Full åpenhet om kostnader, inntekter og verdiutvikling
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8, duration: 0.8 }}
           className="mt-20 text-center"
         >
           <h2 className="text-2xl sm:text-3xl font-semibold mb-4">
