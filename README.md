@@ -47,6 +47,22 @@ const PURCHASE_TOKENS = gql`
 `;
 ```
 
+## Supabase Konfigurasjon
+
+For å koble til Supabase, legg til følgende miljøvariabler i prosjektet:
+
+- `VITE_SUPABASE_URL`: Din Supabase prosjekt URL
+- `VITE_SUPABASE_ANON_KEY`: Din Supabase anonyme nøkkel
+
+### Hvordan legge til miljøvariabler
+
+1. I Lovable: Bruk Supabase-integrasjonen i topp høyre hjørne
+2. Lokalt: Opprett en `.env`-fil i prosjektets rot med:
+   ```
+   VITE_SUPABASE_URL=your_supabase_project_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+
 ## Kjøre prosjektet lokalt
 
 For å kjøre prosjektet lokalt, følg disse stegene:
