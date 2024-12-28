@@ -13,11 +13,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const MinSide = () => {
-  const { user, login, startKYC, addRentIncome } = useAuth();
+  const { user, login, startKYC, addRentIncome, logout } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,6 +42,12 @@ const MinSide = () => {
       addRentIncome(dailyRent);
       toast.success(`Du mottok ${dailyRent} kr i daglig leie`);
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    toast.success("Du er nå logget ut");
+    navigate("/");
   };
 
   // Mock token price for value calculation
@@ -98,10 +106,13 @@ const MinSide = () => {
           ) : (
             <>
               <Card>
-                <CardHeader>
+                <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle className="text-2xl font-bold">
                     Velkommen, {user.email}
                   </CardTitle>
+                  <Button onClick={handleLogout} variant="outline">
+                    Logg ut
+                  </Button>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="p-4 bg-gray-50 rounded-lg">

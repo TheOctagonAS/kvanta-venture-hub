@@ -16,6 +16,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => void;
+  logout: () => void;
   startKYC: () => void;
   addPropertyTokens: (propertyId: number, propertyName: string, tokenCount: number) => void;
   addRentIncome: (amount: number) => void;
@@ -28,6 +29,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = (email: string, password: string) => {
     setUser({ email, isKYC: false, ownedProperties: [], accumulatedRent: 0 });
+  };
+
+  const logout = () => {
+    setUser(null);
   };
 
   const startKYC = () => {
@@ -60,7 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, startKYC, addPropertyTokens, addRentIncome }}>
+    <AuthContext.Provider value={{ user, login, logout, startKYC, addPropertyTokens, addRentIncome }}>
       {children}
     </AuthContext.Provider>
   );
