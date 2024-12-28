@@ -26,7 +26,7 @@ const TokenPurchaseModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] w-[95%] mx-auto">
         <DialogHeader>
           <DialogTitle>Kjøp tokens i {propertyName}</DialogTitle>
         </DialogHeader>

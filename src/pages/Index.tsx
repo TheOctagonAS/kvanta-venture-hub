@@ -31,7 +31,6 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <main className="container mx-auto px-4 py-16">
-        {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -57,7 +56,6 @@ const Index = () => {
           </div>
         </motion.div>
 
-        {/* Features Section */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -79,7 +77,6 @@ const Index = () => {
           ))}
         </motion.div>
 
-        {/* Trust Section */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

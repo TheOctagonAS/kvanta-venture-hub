@@ -32,11 +32,21 @@ export default {
           DEFAULT: "#F3F4F6",
           foreground: "#1E3A8A",
         },
+        nordic: {
+          blue: "#33C3F0",
+          charcoal: "#403E43",
+          gray: "#8A898C",
+          lightgray: "#F6F6F7",
+          softblue: "#D3E4FD",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      fontFamily: {
+        sans: ["Inter", "system-ui", "sans-serif"],
       },
     },
   },
