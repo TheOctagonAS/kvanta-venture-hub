@@ -6,15 +6,30 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
+const RATE_LIMIT_SECONDS = 15;
+
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [lastAttemptTime, setLastAttemptTime] = useState(0);
   const navigate = useNavigate();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Check rate limit
+    const now = Date.now();
+    const timeSinceLastAttempt = (now - lastAttemptTime) / 1000;
+    
+    if (timeSinceLastAttempt < RATE_LIMIT_SECONDS) {
+      const remainingSeconds = Math.ceil(RATE_LIMIT_SECONDS - timeSinceLastAttempt);
+      toast.error(`Vennligst vent ${remainingSeconds} sekunder før du prøver igjen.`);
+      return;
+    }
+
     setIsLoading(true);
+    setLastAttemptTime(now);
 
     try {
       // Step 1: Sign up the user
@@ -50,6 +65,8 @@ const Register = () => {
       console.error("Registration error:", error);
       if (error.message.includes("already registered")) {
         toast.error("E-postadressen er allerede registrert");
+      } else if (error.message.includes("rate_limit")) {
+        toast.error("Vennligst vent litt før du prøver igjen.");
       } else {
         toast.error("Det oppstod en feil under registrering. Vennligst prøv igjen.");
       }
