@@ -65,6 +65,18 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
                   Går live om: {countdown}
                 </span>
               </div>
+              <motion.p 
+                className="text-sm text-nordic-charcoal text-center max-w-[80%] mt-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ 
+                  duration: 1.5,
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }}
+              >
+                Forhåndsinfo: Eiendommen blir tilgjengelig om 35 dager. Følg med for å sikre deg tokens tidlig!
+              </motion.p>
             </div>
           </>
         )}
