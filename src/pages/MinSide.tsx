@@ -16,14 +16,32 @@ const MinSide = () => {
     queryKey: ['profile', user?.id],
     queryFn: async () => {
       if (!user) return null;
-      const { data, error } = await supabase
+      
+      // First get the profile data
+      const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .single();
       
-      if (error) throw error;
-      return data;
+      if (profileError) throw profileError;
+      
+      // Then get the KYC data
+      const { data: kycData, error: kycError } = await supabase
+        .from('kyc_data')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+      
+      if (kycError && kycError.code !== 'PGRST116') { // Ignore "no rows returned" error
+        throw kycError;
+      }
+
+      return {
+        ...profileData,
+        is_kyc: profileData.is_kyc || false,
+        kyc_data: kycData
+      };
     },
     enabled: !!user,
   });
@@ -32,12 +50,12 @@ const MinSide = () => {
     if (!user) return;
 
     try {
-      const { error } = await supabase
+      const { error: profileError } = await supabase
         .from('profiles')
         .update({ is_kyc: true })
         .eq('id', user.id);
 
-      if (error) throw error;
+      if (profileError) throw profileError;
 
       await refetchProfile();
       toast.success("KYC-verifisering fullført!");
