@@ -1,4 +1,7 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Session, User } from "@supabase/supabase-js";
+import { toast } from "sonner";
 
 interface Property {
   id: number;
@@ -6,8 +9,8 @@ interface Property {
   tokenCount: number;
 }
 
-interface User {
-  id: string;  // Added this line
+interface AuthUser {
+  id: string;
   email: string;
   isKYC: boolean;
   ownedProperties: Property[];
@@ -15,9 +18,9 @@ interface User {
 }
 
 interface AuthContextType {
-  user: User | null;
-  login: (email: string, password: string) => void;
-  logout: () => void;
+  user: AuthUser | null;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
   startKYC: () => void;
   addPropertyTokens: (propertyId: number, propertyName: string, tokenCount: number) => void;
   addRentIncome: (amount: number) => void;
@@ -26,16 +29,69 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
 
-  const login = (email: string, password: string) => {
-    // Generate a random ID for demo purposes
-    const id = Math.random().toString(36).substr(2, 9);
-    setUser({ id, email, isKYC: false, ownedProperties: [], accumulatedRent: 0 });
+  useEffect(() => {
+    // Set up initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        handleSession(session);
+      }
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        handleSession(session);
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSession = async (session: Session) => {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', session.user.id)
+      .single();
+
+    setUser({
+      id: session.user.id,
+      email: session.user.email || '',
+      isKYC: profile?.is_kyc || false,
+      ownedProperties: [],
+      accumulatedRent: 0
+    });
   };
 
-  const logout = () => {
-    setUser(null);
+  const login = async (email: string, password: string) => {
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+    } catch (error: any) {
+      toast.error(error.message);
+      throw error;
+    }
+  };
+
+  const logout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      setUser(null);
+    } catch (error: any) {
+      toast.error(error.message);
+      throw error;
+    }
   };
 
   const startKYC = () => {
