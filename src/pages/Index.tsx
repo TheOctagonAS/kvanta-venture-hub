@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Clock, Banknote, ArrowUpRight, Wallet } from "lucide-react";
+import { Clock, Banknote, ArrowUpRight, Wallet, Home, TrendingUp, Shield, PiggyBank } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import YieldCalculator from "@/components/YieldCalculator";
@@ -28,6 +28,29 @@ const Index = () => {
       icon: <Wallet className="w-10 h-10 text-primary" />,
       title: "Enkel Likviditet",
       description: "Selg tokens når du vil, ingen bindingstid eller låste perioder"
+    }
+  ];
+
+  const investmentBenefits = [
+    {
+      icon: <Home className="w-12 h-12 text-primary mb-4" />,
+      title: "Stabilitet og Forutsigbarhet",
+      description: "Eiendom har historisk sett vært en av de mest stabile investeringsformene, med jevn verdistigning over tid."
+    },
+    {
+      icon: <TrendingUp className="w-12 h-12 text-primary mb-4" />,
+      title: "To Inntektsstrømmer",
+      description: "Få både løpende leieinntekter og langsiktig verdistigning på din investering."
+    },
+    {
+      icon: <Shield className="w-12 h-12 text-primary mb-4" />,
+      title: "Inflasjonsbeskyttelse",
+      description: "Eiendomsverdier og leiepriser følger ofte inflasjonen, noe som beskytter verdien av investeringen din."
+    },
+    {
+      icon: <PiggyBank className="w-12 h-12 text-primary mb-4" />,
+      title: "Passiv Inntekt",
+      description: "La investeringen jobbe for deg med minimalt av egen innsats, takket være vår automatiserte plattform."
     }
   ];
 
@@ -101,6 +124,36 @@ const Index = () => {
                   Se alle transaksjoner og eiendomsdetaljer i sanntid på plattformen
                 </p>
               </div>
+            </div>
+          </motion.div>
+
+          {/* New Investment Benefits Section */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
+            className="bg-white rounded-xl p-8 shadow-lg mb-24"
+          >
+            <h2 className="text-2xl sm:text-3xl font-semibold mb-8 text-center text-nordic-charcoal">
+              Hvorfor investere i eiendom?
+            </h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {investmentBenefits.map((benefit, index) => (
+                <div 
+                  key={index} 
+                  className="text-center p-6 rounded-lg border border-nordic-softblue hover:shadow-md transition-shadow"
+                >
+                  <div className="flex justify-center">
+                    {benefit.icon}
+                  </div>
+                  <h3 className="font-semibold mb-3 text-lg text-nordic-charcoal">
+                    {benefit.title}
+                  </h3>
+                  <p className="text-nordic-charcoal/80">
+                    {benefit.description}
+                  </p>
+                </div>
+              ))}
             </div>
           </motion.div>
 
