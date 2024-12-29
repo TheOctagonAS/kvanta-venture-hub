@@ -2,6 +2,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
+import { ChartBar } from "lucide-react";
 
 type Property = {
   price_per_token: number;
@@ -32,7 +33,10 @@ const Statistics = () => {
         .eq('user_id', user.id);
       
       if (error) throw error;
-      return (data || []) as HoldingWithProperty[];
+      return (data || []).map(holding => ({
+        token_count: holding.token_count,
+        property: holding.property[0]
+      })) as HoldingWithProperty[];
     },
     enabled: !!user,
   });
@@ -49,11 +53,14 @@ const Statistics = () => {
   const dailyPayout = calculateDailyPayout();
 
   return (
-    <Card>
+    <Card className="bg-white shadow-lg">
       <CardHeader>
-        <CardTitle>
-          Statistikk & Prognoser
-        </CardTitle>
+        <div className="flex items-center gap-2">
+          <ChartBar className="h-6 w-6 text-blue-600" />
+          <CardTitle>
+            Statistikk & Prognoser
+          </CardTitle>
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="text-center">

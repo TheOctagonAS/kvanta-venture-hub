@@ -1,11 +1,10 @@
-import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabaseClient";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabaseClient";
 import { toast } from "sonner";
-import { Coins } from "lucide-react";
+import { differenceInDays } from "date-fns";
 
 type Property = {
   price_per_token: number;
@@ -13,98 +12,83 @@ type Property = {
 };
 
 type HoldingWithProperty = {
-  id: string;
   token_count: number;
   property: Property;
+  last_claim_at: string | null;
 };
 
 const RentClaim = () => {
   const { user } = useAuth();
-  const queryClient = useQueryClient();
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleClaim = async () => {
-    if (!user) return;
-    setIsLoading(true);
-
-    try {
-      const { data: holdings, error: holdingsError } = await supabase
+  const { data: holding } = useQuery<HoldingWithProperty | null>({
+    queryKey: ['holdings-for-claim', user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+      const { data, error } = await supabase
         .from('user_holdings')
         .select(`
-          id,
           token_count,
-          property:properties (
+          last_claim_at,
+          property:properties(
             price_per_token,
             yield
           )
         `)
         .eq('user_id', user.id)
         .maybeSingle();
+      
+      if (error) throw error;
+      if (!data) return null;
+      
+      return {
+        token_count: data.token_count,
+        last_claim_at: data.last_claim_at,
+        property: data.property[0]
+      } as HoldingWithProperty;
+    },
+    enabled: !!user,
+  });
 
-      if (holdingsError) throw holdingsError;
+  const handleClaim = async () => {
+    if (!user || !holding) return;
 
-      let totalRent = 0;
+    try {
+      const { error } = await supabase
+        .from('user_holdings')
+        .update({ last_claim_at: new Date().toISOString() })
+        .eq('user_id', user.id);
 
-      if (holdings) {
-        const dailyRent = (
-          holdings.token_count *
-          holdings.property.yield /
-          365 /
-          100 *
-          holdings.property.price_per_token
-        );
-
-        totalRent += dailyRent;
-
-        const { error: updateError } = await supabase
-          .from('user_holdings')
-          .update({
-            accumulated_rent: dailyRent,
-            last_claim_at: new Date().toISOString()
-          })
-          .eq('id', holdings.id);
-
-        if (updateError) throw updateError;
-      }
-
-      toast.success(
-        `Du har claimet ${totalRent.toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        })} kr i daglig yield!`
-      );
-
-      queryClient.invalidateQueries({ queryKey: ['holdings'] });
+      if (error) throw error;
+      toast.success("Utbetaling er krevd!");
     } catch (error) {
       console.error('Error claiming rent:', error);
-      toast.error('Kunne ikke hente yield-utbetaling. Prøv igjen senere.');
-    } finally {
-      setIsLoading(false);
+      toast.error("Kunne ikke kreve utbetaling");
     }
   };
 
+  const canClaim = () => {
+    if (!holding?.last_claim_at) return true;
+    const daysSinceLastClaim = differenceInDays(
+      new Date(),
+      new Date(holding.last_claim_at)
+    );
+    return daysSinceLastClaim >= 1;
+  };
+
+  if (!user || !holding) return null;
+
   return (
-    <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 border-2 border-purple-200">
+    <Card className="bg-white shadow-lg">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-purple-900">
-          <Coins className="h-5 w-5" />
-          DeFi Eiendom
-        </CardTitle>
+        <CardTitle>Claim Utbetaling</CardTitle>
       </CardHeader>
       <CardContent>
         <Button
           onClick={handleClaim}
-          disabled={isLoading}
-          className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
+          disabled={!canClaim()}
+          className="w-full"
         >
-          {isLoading ? (
-            "Prosesserer claim..."
-          ) : (
-            <>
-              <Coins className="mr-2 h-4 w-4" />
-              Claim dagens yield
-            </>
-          )}
+          {canClaim() ? "Claim daglig utbetaling" : "Allerede claimet i dag"}
         </Button>
       </CardContent>
     </Card>

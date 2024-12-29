@@ -12,6 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import RentClaim from "./RentClaim";
+import { Wallet } from "lucide-react";
 
 type Property = {
   id: string;
@@ -48,7 +49,11 @@ const UserHoldings = () => {
         .eq('user_id', user.id);
       
       if (error) throw error;
-      return (data || []) as HoldingWithProperty[];
+      return (data || []).map(holding => ({
+        id: holding.id,
+        token_count: holding.token_count,
+        property: holding.property[0]
+      })) as HoldingWithProperty[];
     },
     enabled: !!user,
   });
@@ -77,11 +82,14 @@ const UserHoldings = () => {
     <div className="space-y-6">
       <RentClaim />
       
-      <Card>
+      <Card className="bg-white shadow-lg">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">
-            Din DeFi Portefølje
-          </CardTitle>
+          <div className="flex items-center gap-2">
+            <Wallet className="h-6 w-6 text-blue-600" />
+            <CardTitle className="text-2xl font-bold">
+              Din DeFi Portefølje
+            </CardTitle>
+          </div>
         </CardHeader>
         <CardContent>
           {holdings && holdings.length > 0 ? (
@@ -118,7 +126,7 @@ const UserHoldings = () => {
       </Card>
 
       {holdings && holdings.length > 0 && (
-        <Card>
+        <Card className="bg-white shadow-lg">
           <CardHeader>
             <CardTitle>Porteføljefordeling</CardTitle>
           </CardHeader>

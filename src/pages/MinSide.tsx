@@ -75,7 +75,7 @@ const MinSide = () => {
               <UserProfile isKyc={profile?.is_kyc || false} onStartKYC={handleStartKYC} />
               
               {!profile?.is_kyc && (
-                <Alert className="mb-6 border-yellow-500 bg-yellow-50 text-yellow-800">
+                <Alert className="mb-6 bg-amber-50 border-amber-200 text-amber-800">
                   <AlertDescription>
                     KYC-verifisering kreves for å kjøpe tokens
                   </AlertDescription>

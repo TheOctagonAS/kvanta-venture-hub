@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, XCircle } from "lucide-react";
 
 const UserProfile = ({ isKyc, onStartKYC }: { isKyc: boolean; onStartKYC: () => void }) => {
   const { user, logout } = useAuth();
@@ -18,7 +18,7 @@ const UserProfile = ({ isKyc, onStartKYC }: { isKyc: boolean; onStartKYC: () => 
   if (!user) return null;
 
   return (
-    <Card>
+    <Card className="bg-white shadow-lg">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-2xl font-bold">
           Velkommen, {user.email}
@@ -28,7 +28,7 @@ const UserProfile = ({ isKyc, onStartKYC }: { isKyc: boolean; onStartKYC: () => 
         </Button>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="p-4 bg-gray-50 rounded-lg">
+        <div className="p-4 rounded-lg bg-gray-50">
           <div className="flex items-center gap-2">
             <span className="text-gray-700">KYC-status: </span>
             {isKyc ? (
@@ -37,7 +37,8 @@ const UserProfile = ({ isKyc, onStartKYC }: { isKyc: boolean; onStartKYC: () => 
                 Verifisert
               </span>
             ) : (
-              <span className="text-yellow-600 font-semibold">
+              <span className="flex items-center gap-1 text-amber-600 font-semibold">
+                <XCircle className="h-4 w-4" />
                 Ikke verifisert
               </span>
             )}
