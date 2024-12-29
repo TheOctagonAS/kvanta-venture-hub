@@ -1,14 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Building2, MapPin, Coins, TrendingUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
 import TokenPurchaseModal from "../components/TokenPurchaseModal";
 import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { PropertyCard } from "@/components/PropertyCard";
 
 type Property = {
   id: string;
@@ -55,7 +53,6 @@ const Eiendommer = () => {
     }
 
     try {
-      // Check if user already has holdings for this property
       const { data: existingHoldings } = await supabase
         .from('user_holdings')
         .select('*')
@@ -64,7 +61,6 @@ const Eiendommer = () => {
         .single();
 
       if (existingHoldings) {
-        // Update existing holdings
         const { error: updateError } = await supabase
           .from('user_holdings')
           .update({ 
@@ -74,7 +70,6 @@ const Eiendommer = () => {
 
         if (updateError) throw updateError;
       } else {
-        // Insert new holdings
         const { error: insertError } = await supabase
           .from('user_holdings')
           .insert({
@@ -87,7 +82,7 @@ const Eiendommer = () => {
       }
 
       toast.success("Kjøp fullført!");
-      setSelectedProperty(null); // Close modal
+      setSelectedProperty(null);
     } catch (error) {
       console.error('Error purchasing tokens:', error);
       toast.error("Kunne ikke fullføre kjøpet");
@@ -129,68 +124,11 @@ const Eiendommer = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {properties?.map((property) => (
-            <motion.div
+            <PropertyCard
               key={property.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Card className="h-full flex flex-col hover:shadow-lg transition-shadow duration-300">
-                <div className="relative h-48 overflow-hidden rounded-t-lg">
-                  <img
-                    src={property.image_url || '/placeholder.svg'}
-                    alt={property.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <CardHeader>
-                  <CardTitle className="text-xl font-bold">{property.name}</CardTitle>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-gray-600">
-                      <MapPin className="h-4 w-4" />
-                      <span className="font-semibold text-lg">{property.location}</span>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <Coins className="h-4 w-4" />
-                        <span className="font-semibold text-lg text-primary">
-                          {property.price_per_token} kr per token
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-500 text-sm">
-                        <TrendingUp className="h-3 w-3" />
-                        <span>APY: {property.yield}%</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter className="flex flex-col gap-2">
-                  <Button
-                    className="w-full"
-                    onClick={() => {
-                      if (!user) {
-                        navigate("/login");
-                        return;
-                      }
-                      if (!user.isKYC) {
-                        toast.error("Du må fullføre KYC før du kan kjøpe tokens");
-                        navigate("/minside");
-                        return;
-                      }
-                      setSelectedProperty(property);
-                    }}
-                  >
-                    <Building2 className="mr-2 h-4 w-4" />
-                    Kjøp tokens
-                  </Button>
-                  <p className="text-xs text-gray-500 italic text-center">
-                    *APY er estimert årlig avkastning, ikke garantert.
-                  </p>
-                </CardFooter>
-              </Card>
-            </motion.div>
+              property={property}
+              onSelectProperty={setSelectedProperty}
+            />
           ))}
         </div>
       </main>
