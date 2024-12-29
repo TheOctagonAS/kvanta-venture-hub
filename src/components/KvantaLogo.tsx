@@ -8,7 +8,6 @@ export const KvantaLogo = () => {
       viewBox="0 0 400 100"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      style={{ overflow: 'visible' }}
       className="w-auto h-12 transform transition-transform duration-300 group-hover:scale-[1.02]"
     >
       <defs>
@@ -31,7 +30,6 @@ export const KvantaLogo = () => {
         fontSize="48"
         fontWeight="700"
         fill="url(#kvantaGradient)"
-        className="transition-transform duration-300"
       >
         <tspan x="80" y="55">Kvanta</tspan>
       </text>
@@ -42,7 +40,6 @@ export const KvantaLogo = () => {
         fontSize="36"
         fontWeight="600"
         fill="#345FF6"
-        className="transition-transform duration-300"
       >
         <tspan x="240" y="55">.ai</tspan>
       </text>
