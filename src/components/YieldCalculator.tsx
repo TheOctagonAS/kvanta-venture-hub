@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Calculator, TrendingUp, Calendar, Clock } from "lucide-react";
+import { Calculator } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
-import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import YieldCards from "./calculator/YieldCards";
+import GrowthChart from "./calculator/GrowthChart";
+import CalculatorCTA from "./calculator/CalculatorCTA";
 
 const YieldCalculator = () => {
   const [amount, setAmount] = useState<string>("100000");
@@ -40,7 +42,6 @@ const YieldCalculator = () => {
       compoundedYearly: compoundedYearlyYield,
     });
 
-    // Calculate growth data for the chart
     const data = [];
     for (let day = 0; day <= 30; day++) {
       const standardGrowth = investment + (dailyYield * day);
@@ -113,123 +114,9 @@ const YieldCalculator = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-nordic-softblue p-6 rounded-lg flex flex-col justify-between h-full border border-blue-100">
-              <div className="flex items-center gap-2 mb-2">
-                <Clock className="w-5 h-5 text-nordic-blue" />
-                <p className="text-sm text-gray-600">Daglig avkastning</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-nordic-blue">
-                  {yields.daily.toLocaleString('nb-NO', { 
-                    style: 'currency', 
-                    currency: 'NOK',
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2 
-                  })}
-                </p>
-              </div>
-            </div>
-            <div className="bg-nordic-softblue p-6 rounded-lg flex flex-col justify-between h-full border border-blue-100">
-              <div className="flex items-center gap-2 mb-2">
-                <Calendar className="w-5 h-5 text-nordic-blue" />
-                <p className="text-sm text-gray-600">Månedlig avkastning</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-nordic-blue">
-                  {yields.monthly.toLocaleString('nb-NO', { 
-                    style: 'currency', 
-                    currency: 'NOK',
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2 
-                  })}
-                </p>
-              </div>
-            </div>
-            <div className="bg-nordic-softblue p-6 rounded-lg flex flex-col justify-between h-full border border-blue-100">
-              <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className="w-5 h-5 text-nordic-blue" />
-                <p className="text-sm text-gray-600">Årlig avkastning</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-nordic-blue">
-                  {yields.yearly.toLocaleString('nb-NO', { 
-                    style: 'currency', 
-                    currency: 'NOK',
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2 
-                  })}
-                </p>
-                <p className="text-xs text-gray-600 mt-2">Uten reinvestering</p>
-              </div>
-            </div>
-            <div className="bg-nordic-softblue p-6 rounded-lg flex flex-col justify-between h-full border border-blue-100">
-              <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className="w-5 h-5 text-nordic-blue" />
-                <p className="text-sm text-gray-600">Årlig avkastning med reinvestering</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-nordic-blue">
-                  {yields.compoundedYearly.toLocaleString('nb-NO', { 
-                    style: 'currency', 
-                    currency: 'NOK',
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2 
-                  })}
-                </p>
-                <p className="text-xs text-gray-600 mt-2">Med daglig reinvestering</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Growth Simulation Chart */}
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <h3 className="text-lg font-semibold mb-4">Simulert vekst over tid</h3>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={growthData}>
-                  <XAxis 
-                    dataKey="day" 
-                    label={{ value: 'Dager', position: 'bottom' }}
-                  />
-                  <YAxis 
-                    tickFormatter={(value) => 
-                      new Intl.NumberFormat('nb-NO', {
-                        style: 'currency',
-                        currency: 'NOK',
-                        notation: 'compact',
-                        maximumFractionDigits: 1
-                      }).format(value)
-                    }
-                  />
-                  <Tooltip 
-                    formatter={(value: number) => 
-                      new Intl.NumberFormat('nb-NO', {
-                        style: 'currency',
-                        currency: 'NOK',
-                        maximumFractionDigits: 0
-                      }).format(value)
-                    }
-                  />
-                  <Legend />
-                  <Line 
-                    type="monotone" 
-                    dataKey="standard" 
-                    stroke="#345FF6" 
-                    name="Uten reinvestering"
-                    strokeWidth={2}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="compound" 
-                    stroke="#47C757" 
-                    name="Med reinvestering"
-                    strokeWidth={2}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
+          <YieldCards yields={yields} />
+          <GrowthChart data={growthData} />
+          <CalculatorCTA />
         </CardContent>
       </Card>
     </div>
