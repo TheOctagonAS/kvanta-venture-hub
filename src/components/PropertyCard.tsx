@@ -1,4 +1,4 @@
-import { Building2, MapPin, Coins, TrendingUp } from "lucide-react";
+import { Building2, MapPin, Coins, TrendingUp, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +17,7 @@ type PropertyCardProps = {
     yield: number;
     max_tokens: number;
     tokens_sold: number;
+    is_live?: boolean; // New optional property to determine if the property is live
   };
   onSelectProperty: (property: PropertyCardProps['property']) => void;
 };
@@ -27,6 +28,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
 
   const availableTokens = property.max_tokens - property.tokens_sold;
   const ratio = property.tokens_sold / property.max_tokens;
+  const isLive = property.is_live !== false; // If is_live is undefined or true, treat as live
 
   return (
     <motion.div
@@ -34,7 +36,14 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="h-full flex flex-col bg-white hover:shadow-lg transition-all duration-300 hover:scale-105 relative overflow-hidden border border-gray-100">
+      <Card className="h-full flex flex-col bg-white hover:shadow-lg transition-all duration-300 hover:scale-105 relative overflow-hidden">
+        {!isLive && (
+          <div className="absolute inset-0 z-20 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center">
+            <Lock className="h-12 w-12 text-nordic-blue mb-2" />
+            <span className="text-nordic-blue font-medium">Kommer snart!</span>
+          </div>
+        )}
+        
         <Badge 
           variant="secondary" 
           className="absolute top-4 right-4 z-10 bg-nordic-softblue text-nordic-blue border border-nordic-blue font-medium text-sm"
@@ -84,8 +93,9 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
         
         <CardFooter className="flex flex-col gap-2 pt-4">
           <Button
-            className="w-full bg-nordic-blue hover:bg-nordic-blue/90 text-white"
+            className={`w-full bg-nordic-blue hover:bg-nordic-blue/90 text-white ${!isLive ? 'opacity-50 pointer-events-none' : ''}`}
             onClick={() => {
+              if (!isLive) return;
               if (!user) {
                 navigate("/login");
                 return;
