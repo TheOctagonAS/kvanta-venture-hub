@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { Wallet, Coins, ArrowDownToLine, Clock, Calculator } from "lucide-react";
-import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
+import { Wallet, Coins, ArrowDownToLine, Clock } from "lucide-react";
+import { Boxes } from "@/components/ui/background-boxes";
 
 const Lommebok = () => {
   const features = [
@@ -28,97 +28,74 @@ const Lommebok = () => {
   ];
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      <BackgroundBeamsWithCollision className="absolute inset-0">
-        <div className="relative z-20 container mx-auto px-4 py-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="max-w-4xl mx-auto text-center mb-12"
-          >
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <Calculator className="w-8 h-8 text-primary animate-pulse" />
-              <h2 className="text-sm font-medium text-primary">Regner inntekter...</h2>
-            </div>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-500 to-blue-600">
-              Din Digitale Lommebok – Oversikt og Kontroll
-            </h1>
-            <div className="relative">
-              <motion.div
-                initial={{ width: "0%" }}
-                animate={{ width: "100%" }}
-                transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
-                className="absolute h-1 bg-gradient-to-r from-transparent via-primary to-transparent bottom-0 left-0"
-              />
-              <p className="text-lg mb-8 text-nordic-charcoal/80">
-                Få full innsikt i dine eiendomstokens, daglige leieinntekter og fremtidig avkastning.
-              </p>
-            </div>
-          </motion.div>
+    <div className="relative min-h-screen overflow-hidden bg-slate-900">
+      <div className="absolute inset-0 w-full h-full bg-slate-900 z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <Boxes />
+      
+      <div className="relative z-10 container mx-auto px-4 py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-4xl mx-auto text-center mb-12"
+        >
+          <h1 className="text-4xl font-bold text-white mb-6">
+            Din Digitale Lommebok
+          </h1>
+          <p className="text-lg text-neutral-300 mb-8">
+            Lommeboken er ditt personlige finansielle kontrollsenter i Kvanta.ai. Her kan du enkelt holde oversikt over dine investeringer, leieinntekter og verdistigning i sanntid.
+          </p>
+        </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-6 mb-12">
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <Card className="h-full backdrop-blur-sm border-neutral-800/10 hover:shadow-lg transition-shadow relative overflow-hidden group">
-                  <CardContent className="p-6">
-                    <motion.div
-                      initial={{ opacity: 0.5 }}
-                      animate={{ opacity: [0.5, 1, 0.5] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
-                    />
-                    <div className="flex items-start gap-4 relative z-10">
-                      <div className="p-2 rounded-lg">
-                        {feature.icon}
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-semibold mb-2 text-nordic-charcoal">
-                          {feature.title}
-                        </h3>
-                        <p className="text-nordic-charcoal/80">
-                          {feature.description}
-                        </p>
-                      </div>
+        <div className="grid md:grid-cols-2 gap-6 mb-12">
+          {features.map((feature, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <Card className="h-full bg-white/10 backdrop-blur-sm border-neutral-800 hover:shadow-lg transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="p-2 bg-white/5 rounded-lg">
+                      {feature.icon}
                     </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="max-w-2xl mx-auto text-center"
-          >
-            <Card className="backdrop-blur-sm border-neutral-800/10 relative overflow-hidden group">
-              <CardContent className="p-6">
-                <motion.div
-                  initial={{ opacity: 0.5 }}
-                  animate={{ opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
-                />
-                <h3 className="text-xl font-semibold mb-4 text-nordic-charcoal">
-                  Sikkerhet i Fokus
-                </h3>
-                <p className="text-nordic-charcoal/80">
-                  Din lommebok er beskyttet med samme teknologi som brukes av ledende finansinstitusjoner. 
-                  Alle transaksjoner er kryptert og verifisert gjennom vår blockchain-teknologi, 
-                  noe som sikrer at dine investeringer og inntekter er trygge og sporbare.
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-white mb-2">
+                        {feature.title}
+                      </h3>
+                      <p className="text-neutral-300">
+                        {feature.description}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
         </div>
-      </BackgroundBeamsWithCollision>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="max-w-2xl mx-auto text-center"
+        >
+          <Card className="bg-white/10 backdrop-blur-sm border-neutral-800">
+            <CardContent className="p-6">
+              <h3 className="text-xl font-semibold text-white mb-4">
+                Sikkerhet i Fokus
+              </h3>
+              <p className="text-neutral-300">
+                Din lommebok er beskyttet med samme teknologi som brukes av ledende finansinstitusjoner. 
+                Alle transaksjoner er kryptert og verifisert gjennom vår blockchain-teknologi, 
+                noe som sikrer at dine investeringer og inntekter er trygge og sporbare.
+              </p>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
     </div>
   );
 };
