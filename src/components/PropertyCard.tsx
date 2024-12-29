@@ -76,7 +76,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
                 />
               </div>
               <p className="text-sm text-gray-600 mt-1">
-                {availableTokens} tokens igjen
+                {availableTokens} andeler igjen
               </p>
             </div>
           </div>
@@ -91,7 +91,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
                 return;
               }
               if (!user.isKYC) {
-                toast.error("Du må fullføre KYC før du kan kjøpe tokens");
+                toast.error("Du må fullføre KYC før du kan kjøpe andeler");
                 navigate("/minside");
                 return;
               }
@@ -99,7 +99,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
             }}
           >
             <Building2 className="mr-2 h-4 w-4" />
-            Kjøp tokens
+            Kjøp andeler
           </Button>
           <p className="text-xs text-gray-500 italic text-center">
             *APY er estimert årlig avkastning, ikke garantert.

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import TokenPurchaseModal from "../components/TokenPurchaseModal";
+import SharePurchaseModal from "../components/SharePurchaseModal";
 import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -151,7 +151,7 @@ const Eiendommer = () => {
         </div>
       </main>
 
-      <TokenPurchaseModal
+      <SharePurchaseModal
         isOpen={!!selectedProperty}
         onClose={() => setSelectedProperty(null)}
         propertyName={selectedProperty?.name || ""}
