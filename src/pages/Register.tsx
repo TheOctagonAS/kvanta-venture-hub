@@ -41,6 +41,13 @@ const Register = () => {
       if (signUpError) throw signUpError;
 
       if (authData.user) {
+        // Wait for session to be established
+        const { data: sessionData } = await supabase.auth.getSession();
+        
+        if (!sessionData.session) {
+          throw new Error("No session established after signup");
+        }
+
         // Step 2: Create the user profile
         const { error: profileError } = await supabase
           .from('profiles')
