@@ -7,6 +7,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import Navbar from "./components/Navbar";
 import Index from "./pages/Index";
 import Register from "./pages/Register";
+import Login from "./pages/Login";
 import Eiendommer from "./pages/Eiendommer";
 import MinSide from "./pages/MinSide";
 
@@ -24,6 +25,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
               <Route path="/eiendommer" element={<Eiendommer />} />
               <Route path="/minside" element={<MinSide />} />
             </Routes>
