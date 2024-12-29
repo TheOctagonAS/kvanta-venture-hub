@@ -9,7 +9,7 @@ export const KvantaLogo = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       style={{ overflow: 'visible' }}
-      className="w-auto h-10 transform transition-transform duration-300 group-hover:scale-[1.02]"
+      className="w-auto h-12 transform transition-transform duration-300 group-hover:scale-[1.02]"
     >
       <defs>
         <linearGradient id="kvantaGradient" x1="0" y1="0" x2="1" y2="0">
@@ -28,7 +28,7 @@ export const KvantaLogo = () => {
       {/* "Kvanta" text - now all on the same baseline */}
       <text
         fontFamily="Nunito, sans-serif"
-        fontSize="42"
+        fontSize="48"
         fontWeight="700"
         fill="url(#kvantaGradient)"
         className="transition-transform duration-300"
@@ -39,12 +39,12 @@ export const KvantaLogo = () => {
       {/* ".ai" integrated with main text */}
       <text
         fontFamily="Nunito, sans-serif"
-        fontSize="32"
+        fontSize="36"
         fontWeight="600"
         fill="#345FF6"
         className="transition-transform duration-300"
       >
-        <tspan x="230" y="55">.ai</tspan>
+        <tspan x="240" y="55">.ai</tspan>
       </text>
     </svg>
   );

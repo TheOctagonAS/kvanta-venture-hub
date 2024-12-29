@@ -39,7 +39,7 @@ const Navbar = () => {
               <KvantaLogo />
               <Badge 
                 variant="secondary" 
-                className="ml-2 text-xs bg-gradient-to-r from-amber-50 to-amber-100/80 text-amber-800 font-medium shadow-sm"
+                className="ml-2 text-xs bg-gradient-to-r from-rose-500 to-rose-600 text-white font-medium shadow-sm"
               >
                 Beta
               </Badge>
