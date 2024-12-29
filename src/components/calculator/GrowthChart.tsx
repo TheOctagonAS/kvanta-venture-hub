@@ -12,9 +12,9 @@ const GrowthChart = ({ data }: GrowthChartProps) => {
   const filteredData = data.filter(item => item.day % 5 === 0);
 
   return (
-    <div className="bg-white p-3 rounded-lg shadow-sm">
+    <div className="bg-white p-2 rounded-lg shadow-sm">
       <h3 className="text-sm font-medium mb-2">Simulert vekst over tid</h3>
-      <div className="h-[180px] w-[300px] mx-auto">
+      <div className="h-[160px] w-full mx-auto">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={filteredData} margin={{ top: 5, right: 5, bottom: 15, left: 5 }}>
             <XAxis 

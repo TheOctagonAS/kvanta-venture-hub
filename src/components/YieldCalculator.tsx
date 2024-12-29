@@ -66,9 +66,9 @@ const YieldCalculator = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-[#f8fbff] p-2 rounded-lg">
+    <div className="w-full max-w-lg mx-auto bg-[#f8fbff] p-2 rounded-lg">
       <Card className="bg-white shadow-sm">
-        <CardHeader className="space-y-1 border-b border-gray-100 py-2">
+        <CardHeader className="space-y-1 border-b border-gray-100 p-3">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <CardTitle className="text-base font-bold flex items-center gap-2">
               <Calculator className="w-4 h-4 text-nordic-blue" />
@@ -92,10 +92,10 @@ const YieldCalculator = () => {
             </TooltipProvider>
           </div>
         </CardHeader>
-        <CardContent className="grid gap-2 pt-2">
+        <CardContent className="grid gap-2 p-3">
           <div className="grid gap-2">
-            <div className="bg-white rounded-lg shadow-sm">
-              <div className="flex flex-col gap-2 p-2">
+            <div className="bg-white rounded-lg">
+              <div className="flex flex-col gap-2">
                 <div className="flex-1">
                   <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-1 block">
                     Investeringsbeløp (NOK)
