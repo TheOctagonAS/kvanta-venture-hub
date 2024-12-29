@@ -1,13 +1,11 @@
-import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
-import { toast } from "sonner";
-import { supabase } from "@/lib/supabaseClient";
-import LoginForm from "@/components/LoginForm";
+import { supabase } from "@/integrations/supabase/client";
 import UserProfile from "@/components/UserProfile";
 import UserHoldings from "@/components/UserHoldings";
 import Statistics from "@/components/Statistics";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 
 const MinSide = () => {
   const { user } = useAuth();
@@ -17,53 +15,36 @@ const MinSide = () => {
     queryFn: async () => {
       if (!user) return null;
       
-      // First get the profile data
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single();
-      
-      if (profileError) throw profileError;
-      
-      // Then get the KYC data
-      const { data: kycData, error: kycError } = await supabase
-        .from('kyc_data')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-      
-      if (kycError && kycError.code !== 'PGRST116') { // Ignore "no rows returned" error
-        throw kycError;
+      // Get both profile and KYC data
+      const [profileResponse, kycResponse] = await Promise.all([
+        supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single(),
+        supabase
+          .from('kyc_data')
+          .select('*')
+          .eq('user_id', user.id)
+          .single()
+      ]);
+
+      if (profileResponse.error && profileResponse.error.code !== 'PGRST116') {
+        throw profileResponse.error;
+      }
+
+      // Don't throw error if KYC data doesn't exist
+      if (kycResponse.error && kycResponse.error.code !== 'PGRST116') {
+        throw kycResponse.error;
       }
 
       return {
-        ...profileData,
-        is_kyc: profileData.is_kyc || false,
-        kyc_data: kycData
+        ...profileResponse.data,
+        kyc_data: kycResponse.data
       };
     },
     enabled: !!user,
   });
-
-  const handleStartKYC = async () => {
-    if (!user) return;
-
-    try {
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({ is_kyc: true })
-        .eq('id', user.id);
-
-      if (profileError) throw profileError;
-
-      await refetchProfile();
-      toast.success("KYC-verifisering fullført!");
-    } catch (error) {
-      console.error('Error updating KYC status:', error);
-      toast.error("Kunne ikke fullføre KYC-verifisering");
-    }
-  };
 
   if (isLoading) {
     return (
@@ -87,11 +68,14 @@ const MinSide = () => {
           className="max-w-7xl mx-auto space-y-8"
         >
           {!user ? (
-            <LoginForm />
+            <div>Please log in</div>
           ) : (
             <>
               <div className="bg-white rounded-lg shadow-lg p-6">
-                <UserProfile isKyc={profile?.is_kyc || false} onStartKYC={handleStartKYC} />
+                <UserProfile 
+                  isKyc={profile?.is_kyc || false} 
+                  onStartKYC={refetchProfile} 
+                />
               </div>
               
               {!profile?.is_kyc && (

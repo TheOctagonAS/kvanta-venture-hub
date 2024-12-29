@@ -26,19 +26,14 @@ const KYC = () => {
         if (!user) throw new Error("Ingen bruker funnet");
 
         // Update both profiles and kyc_data tables
-        const [profileUpdate, kycUpdate] = await Promise.all([
+        const [profileUpdate] = await Promise.all([
           supabase
             .from('profiles')
             .update({ is_kyc: true })
-            .eq('id', user.id),
-          supabase
-            .from('kyc_data')
-            .update({ is_pep: false }) // Using an existing column instead of 'verified'
-            .eq('user_id', user.id)
+            .eq('id', user.id)
         ]);
 
         if (profileUpdate.error) throw profileUpdate.error;
-        if (kycUpdate.error) throw kycUpdate.error;
 
         toast.success("KYC-verifisering fullført!");
         navigate("/minside");
