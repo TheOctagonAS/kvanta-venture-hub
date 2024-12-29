@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
-import { BoxesBackground } from "@/components/BoxesBackground";
 import { Card, CardContent } from "@/components/ui/card";
 import { Wallet, Coins, ArrowDownToLine, Clock } from "lucide-react";
+import { Boxes } from "@/components/ui/background-boxes";
 
 const Lommebok = () => {
   const features = [
@@ -28,8 +28,9 @@ const Lommebok = () => {
   ];
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-background">
-      <BoxesBackground />
+    <div className="relative min-h-screen overflow-hidden bg-slate-900">
+      <div className="absolute inset-0 w-full h-full bg-slate-900 z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <Boxes />
       
       <div className="relative z-10 container mx-auto px-4 py-16">
         <motion.div
@@ -38,10 +39,10 @@ const Lommebok = () => {
           transition={{ duration: 0.5 }}
           className="max-w-4xl mx-auto text-center mb-12"
         >
-          <h1 className="text-4xl font-bold text-nordic-charcoal mb-6">
+          <h1 className="text-4xl font-bold text-white mb-6">
             Din Digitale Lommebok
           </h1>
-          <p className="text-lg text-nordic-charcoal/80 mb-8">
+          <p className="text-lg text-neutral-300 mb-8">
             Lommeboken er ditt personlige finansielle kontrollsenter i Kvanta.ai. Her kan du enkelt holde oversikt over dine investeringer, leieinntekter og verdistigning i sanntid.
           </p>
         </motion.div>
@@ -54,17 +55,17 @@ const Lommebok = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="h-full bg-white/80 backdrop-blur-sm border-nordic-softblue hover:shadow-lg transition-shadow">
+              <Card className="h-full bg-white/10 backdrop-blur-sm border-neutral-800 hover:shadow-lg transition-shadow">
                 <CardContent className="p-6">
                   <div className="flex items-start gap-4">
-                    <div className="p-2 bg-nordic-softblue/20 rounded-lg">
+                    <div className="p-2 bg-white/5 rounded-lg">
                       {feature.icon}
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-nordic-charcoal mb-2">
+                      <h3 className="text-xl font-semibold text-white mb-2">
                         {feature.title}
                       </h3>
-                      <p className="text-nordic-charcoal/80">
+                      <p className="text-neutral-300">
                         {feature.description}
                       </p>
                     </div>
@@ -81,12 +82,12 @@ const Lommebok = () => {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="max-w-2xl mx-auto text-center"
         >
-          <Card className="bg-white/80 backdrop-blur-sm border-nordic-softblue">
+          <Card className="bg-white/10 backdrop-blur-sm border-neutral-800">
             <CardContent className="p-6">
-              <h3 className="text-xl font-semibold text-nordic-charcoal mb-4">
+              <h3 className="text-xl font-semibold text-white mb-4">
                 Sikkerhet i Fokus
               </h3>
-              <p className="text-nordic-charcoal/80">
+              <p className="text-neutral-300">
                 Din lommebok er beskyttet med samme teknologi som brukes av ledende finansinstitusjoner. 
                 Alle transaksjoner er kryptert og verifisert gjennom vår blockchain-teknologi, 
                 noe som sikrer at dine investeringer og inntekter er trygge og sporbare.
