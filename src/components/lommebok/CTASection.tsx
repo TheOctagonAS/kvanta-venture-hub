@@ -11,10 +11,10 @@ const CTASection = () => {
       className="mt-16 bg-blue-600 text-white rounded-xl p-8 max-w-2xl mx-auto text-center"
     >
       <h2 className="text-2xl font-bold mb-4">
-        Klar til å begynne?
+        Klar for å prøve din digitale lommebok?
       </h2>
       <p className="text-lg mb-8">
-        Opprett din digitale lommebok nå og start eiendomsreisen med bare noen få klikk.
+        Opprett bruker i dag, og ta del i morgendagens eiendomsinvestering.
       </p>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Button
