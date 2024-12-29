@@ -12,7 +12,6 @@ import Login from "./pages/Login";
 import Eiendommer from "./pages/Eiendommer";
 import MinSide from "./pages/MinSide";
 import LesMer from "./pages/LesMer";
-import Lommebok from "./pages/Lommebok";
 
 const queryClient = new QueryClient();
 
@@ -33,7 +32,6 @@ const App = () => (
                 <Route path="/eiendommer" element={<Eiendommer />} />
                 <Route path="/minside" element={<MinSide />} />
                 <Route path="/les-mer" element={<LesMer />} />
-                <Route path="/lommebok" element={<Lommebok />} />
               </Routes>
             </div>
             <Footer />
