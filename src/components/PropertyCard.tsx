@@ -37,7 +37,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
       <Card className="h-full flex flex-col hover:shadow-lg transition-all duration-300 hover:scale-105 relative overflow-hidden">
         <Badge 
           variant="secondary" 
-          className="absolute top-4 right-4 z-10 bg-nordic-softblue text-nordic-blue border border-nordic-blue font-semibold"
+          className="absolute top-4 right-4 z-10 bg-nordic-softblue text-nordic-blue border border-nordic-blue font-medium text-sm"
         >
           <TrendingUp className="h-3 w-3 mr-1" />
           APY: {property.yield}%
@@ -53,17 +53,6 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
         
         <CardHeader>
           <CardTitle className="text-xl font-bold">{property.name}</CardTitle>
-          <div className="mt-2">
-            <div className="h-2 bg-gray-200 rounded overflow-hidden">
-              <div 
-                className="bg-blue-500 h-full transition-all duration-300"
-                style={{ width: `${ratio * 100}%` }}
-              />
-            </div>
-            <p className="text-sm text-gray-600 mt-1">
-              {availableTokens} tokens igjen
-            </p>
-          </div>
         </CardHeader>
         
         <CardContent className="flex-grow">
@@ -78,8 +67,17 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
                 {property.price_per_token} kr per token
               </span>
             </div>
-            <div className="text-sm text-gray-600">
-              Tilgjengelige tokens: {availableTokens} / {property.max_tokens}
+            
+            <div className="mt-2 mb-2">
+              <div className="h-2 bg-gray-200 rounded overflow-hidden">
+                <div 
+                  className="bg-blue-500 h-full transition-all duration-300"
+                  style={{ width: `${ratio * 100}%` }}
+                />
+              </div>
+              <p className="text-sm text-gray-600 mt-1">
+                {availableTokens} tokens igjen
+              </p>
             </div>
           </div>
         </CardContent>
