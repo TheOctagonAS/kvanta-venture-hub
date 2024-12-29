@@ -35,12 +35,7 @@ const Register = () => {
       // Step 1: Sign up the user
       const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email,
-        password,
-        options: {
-          data: {
-            is_kyc: false // Set initial KYC status
-          }
-        }
+        password
       });
 
       if (signUpError) throw signUpError;
@@ -56,7 +51,10 @@ const Register = () => {
             }
           ]);
 
-        if (profileError) throw profileError;
+        if (profileError) {
+          console.error("Profile creation error:", profileError);
+          throw new Error("Could not create user profile");
+        }
 
         toast.success("Registrering vellykket! Du kan nå logge inn.");
         navigate("/");
