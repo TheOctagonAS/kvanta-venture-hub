@@ -21,15 +21,15 @@ const MinSide = () => {
           .from('profiles')
           .select('*')
           .eq('id', user.id)
-          .single(),
+          .maybeSingle(),
         supabase
           .from('kyc_data')
           .select('*')
           .eq('user_id', user.id)
-          .single()
+          .maybeSingle()
       ]);
 
-      if (profileResponse.error && profileResponse.error.code !== 'PGRST116') {
+      if (profileResponse.error) {
         throw profileResponse.error;
       }
 
@@ -45,6 +45,10 @@ const MinSide = () => {
     },
     enabled: !!user,
   });
+
+  const handleStartKYC = async () => {
+    await refetchProfile();
+  };
 
   if (isLoading) {
     return (
@@ -74,7 +78,7 @@ const MinSide = () => {
               <div className="bg-white rounded-lg shadow-lg p-6">
                 <UserProfile 
                   isKyc={profile?.is_kyc || false} 
-                  onStartKYC={refetchProfile} 
+                  onStartKYC={handleStartKYC} 
                 />
               </div>
               
