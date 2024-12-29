@@ -65,15 +65,25 @@ const YieldCalculator = () => {
               Estimert APY
             </label>
             <Select value={apy} onValueChange={setApy}>
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-full bg-white border border-gray-200 hover:border-nordic-blue transition-colors">
                 <SelectValue placeholder="Velg APY" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="5">5%</SelectItem>
-                <SelectItem value="8">8%</SelectItem>
-                <SelectItem value="10">10%</SelectItem>
-                <SelectItem value="12">12%</SelectItem>
-                <SelectItem value="15">15%</SelectItem>
+              <SelectContent className="bg-white">
+                <SelectItem value="5" className="hover:bg-nordic-softblue cursor-pointer py-3 px-4">
+                  5%
+                </SelectItem>
+                <SelectItem value="8" className="hover:bg-nordic-softblue cursor-pointer py-3 px-4">
+                  8%
+                </SelectItem>
+                <SelectItem value="10" className="hover:bg-nordic-softblue cursor-pointer py-3 px-4">
+                  10%
+                </SelectItem>
+                <SelectItem value="12" className="hover:bg-nordic-softblue cursor-pointer py-3 px-4">
+                  12%
+                </SelectItem>
+                <SelectItem value="15" className="hover:bg-nordic-softblue cursor-pointer py-3 px-4">
+                  15%
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
