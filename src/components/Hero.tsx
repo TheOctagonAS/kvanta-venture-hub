@@ -26,8 +26,8 @@ function Hero() {
 
   return (
     <div className="w-full">
-      <div className="container mx-auto">
-        <div className="flex gap-8 py-20 lg:py-32 items-center justify-center flex-col">
+      <div className="container mx-auto px-4">
+        <div className="flex gap-6 py-12 lg:py-20 items-center justify-center flex-col">
           <div>
             <Link to="/les-mer">
               <Button 
@@ -40,7 +40,7 @@ function Hero() {
             </Link>
           </div>
           <div className="flex gap-4 flex-col">
-            <h1 className="text-5xl md:text-7xl max-w-2xl tracking-tighter text-center font-regular text-nordic-charcoal">
+            <h1 className="text-4xl md:text-6xl max-w-2xl tracking-tighter text-center font-regular text-nordic-charcoal px-2">
               <span>Eiendomsinvestering gjort</span>
               <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-4 md:pt-1">
                 &nbsp;
@@ -68,7 +68,7 @@ function Hero() {
               </span>
             </h1>
 
-            <p className="text-lg md:text-xl leading-relaxed tracking-tight text-nordic-charcoal/80 max-w-2xl text-center">
+            <p className="text-base md:text-lg leading-relaxed tracking-tight text-nordic-charcoal/80 max-w-xl text-center px-4">
               Start eiendomsreisen med bare 1000 kr. Opprett bruker og få <span className="font-bold">daglige</span> leieinntekter og verdistigning rett i din lommebok gjennom vår sikre, tokenbaserte plattform.
             </p>
           </div>
