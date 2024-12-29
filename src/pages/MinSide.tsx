@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import LoginForm from "@/components/LoginForm";
 import UserProfile from "@/components/UserProfile";
@@ -11,9 +10,8 @@ import { useQuery } from "@tanstack/react-query";
 
 const MinSide = () => {
   const { user } = useAuth();
-  const [isLoading, setIsLoading] = useState(true);
 
-  const { data: profile, refetch: refetchProfile } = useQuery({
+  const { data: profile, refetch: refetchProfile, isLoading } = useQuery({
     queryKey: ['profile', user?.id],
     queryFn: async () => {
       if (!user) return null;
