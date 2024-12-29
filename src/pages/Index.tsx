@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Coins, LineChart, Shield, Clock, Banknote, ArrowUpRight, Wallet } from "lucide-react";
+import { Clock, Banknote, ArrowUpRight, Wallet } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import YieldCalculator from "@/components/YieldCalculator";
@@ -34,12 +34,13 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      <main className="container mx-auto px-4 py-16">
+      <main className="container mx-auto px-4">
+        {/* Clean header section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center py-32"
         >
           <Badge variant="secondary" className="mb-4">
             Nå i Beta
@@ -75,20 +76,12 @@ const Index = () => {
           </div>
         </motion.div>
 
+        {/* Features section */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.8 }}
-          className="max-w-4xl mx-auto mb-16"
-        >
-          <YieldCalculator />
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-16"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-24"
         >
           {features.map((feature, index) => (
             <Card key={index} className="border-none shadow-lg hover:shadow-xl transition-shadow">
@@ -105,11 +98,22 @@ const Index = () => {
           ))}
         </motion.div>
 
+        {/* Calculator section moved down */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.8 }}
+          className="max-w-4xl mx-auto mb-24"
+        >
+          <YieldCalculator />
+        </motion.div>
+
+        {/* Why choose section */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.8 }}
-          className="mt-20 bg-nordic-softblue rounded-xl p-8 shadow-lg"
+          className="bg-nordic-softblue rounded-xl p-8 shadow-lg mb-24"
         >
           <h2 className="text-2xl sm:text-3xl font-semibold mb-6 text-center text-primary">
             Hvorfor velge Kvanta.ai?
@@ -140,7 +144,7 @@ const Index = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.8 }}
-          className="mt-20 text-center"
+          className="text-center mb-24"
         >
           <h2 className="text-2xl sm:text-3xl font-semibold mb-4">
             Støttet av ledende aktører i Norden
