@@ -27,6 +27,8 @@ const LoginForm = () => {
       if (error) {
         if (error.message.includes("Invalid login credentials")) {
           toast.error("Feil e-post eller passord.");
+        } else if (error.message.includes("supabaseUrl is required")) {
+          toast.error("Vennligst koble til Supabase via integrasjonsmenyen øverst til høyre.");
         } else {
           toast.error("En feil oppstod under innlogging. Prøv igjen senere.");
         }
@@ -38,8 +40,12 @@ const LoginForm = () => {
         toast.success("Innlogging vellykket!");
         navigate("/minside");
       }
-    } catch (error) {
-      toast.error("En feil oppstod under innlogging. Prøv igjen senere.");
+    } catch (error: any) {
+      if (error.message?.includes("supabaseUrl is required")) {
+        toast.error("Vennligst koble til Supabase via integrasjonsmenyen øverst til høyre.");
+      } else {
+        toast.error("En feil oppstod under innlogging. Prøv igjen senere.");
+      }
     } finally {
       setIsLoading(false);
     }
