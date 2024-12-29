@@ -1,13 +1,31 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
   const isActive = (path: string) => {
     return location.pathname === path ? "text-primary font-semibold" : "text-gray-600 hover:text-primary";
+  };
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      logout();
+      toast.success("Du er nå logget ut");
+      navigate("/");
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("Kunne ikke logge ut");
+    }
   };
 
   return (
@@ -18,7 +36,7 @@ const Navbar = () => {
             Kvanta.ai
           </Link>
           
-          <div className="hidden sm:flex space-x-8">
+          <div className="hidden sm:flex items-center space-x-8">
             <Link to="/" className={`${isActive("/")} transition-colors duration-200`}>
               Forside
             </Link>
@@ -28,6 +46,15 @@ const Navbar = () => {
             <Link to="/minside" className={`${isActive("/minside")} transition-colors duration-200`}>
               Min side
             </Link>
+            {user && (
+              <Button
+                variant="outline"
+                onClick={handleLogout}
+                className="ml-4"
+              >
+                Logg ut
+              </Button>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -67,6 +94,15 @@ const Navbar = () => {
             >
               Min side
             </Link>
+            {user && (
+              <Button
+                variant="outline"
+                onClick={handleLogout}
+                className="w-full mt-2"
+              >
+                Logg ut
+              </Button>
+            )}
           </div>
         </div>
       )}
