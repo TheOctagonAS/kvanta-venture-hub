@@ -29,7 +29,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="h-full flex flex-col hover:shadow-lg transition-shadow duration-300 relative overflow-hidden">
+      <Card className="h-full flex flex-col hover:shadow-lg transition-all duration-300 hover:scale-105 relative overflow-hidden">
         <Badge 
           variant="secondary" 
           className="absolute top-4 right-4 z-10 bg-nordic-softblue text-nordic-blue border border-nordic-blue font-semibold"
