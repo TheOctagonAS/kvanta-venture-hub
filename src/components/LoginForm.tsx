@@ -2,15 +2,9 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient";
-
-const TEST_USER = {
-  email: "julian@example.com",
-  password: "password123"
-};
+import { supabase } from "@/integrations/supabase/client";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -24,39 +18,33 @@ const LoginForm = () => {
     setIsLoading(true);
 
     try {
-      if (email === TEST_USER.email && password === TEST_USER.password) {
-        login(email, password);
-        toast.success("Innlogging vellykket!");
-        navigate("/minside");
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        if (error.message.includes("Invalid login credentials")) {
+          toast.error("Feil e-post eller passord.");
+        } else if (error.message.includes("Email not confirmed")) {
+          toast.error("E-posten din er ikke bekreftet ennå. Sjekk innboksen din.");
+        } else if (error.message.includes("rate_limit")) {
+          toast.error("For mange forsøk. Vennligst vent litt før du prøver igjen.");
+        } else {
+          console.error("Login error:", error);
+          toast.error("En feil oppstod under innlogging. Prøv igjen senere.");
+        }
+        setIsLoading(false);
         return;
       }
 
-      if (isSupabaseConfigured() && supabase) {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-
-        if (error) {
-          if (error.message.includes("Invalid login credentials")) {
-            toast.error("Feil e-post eller passord.");
-          } else if (error.message.includes("rate_limit")) {
-            toast.error("For mange forsøk. Vennligst vent litt før du prøver igjen.");
-          } else {
-            toast.error("En feil oppstod under innlogging. Prøv igjen senere.");
-          }
-          return;
-        }
-
-        if (data.user) {
-          login(data.user.email || "", password);
-          toast.success("Innlogging vellykket!");
-          navigate("/minside");
-        }
-      } else {
-        toast.error("Feil e-post eller passord.");
+      if (data.user) {
+        login(data.user.email || "", password);
+        toast.success("Innlogging vellykket!");
+        navigate("/minside");
       }
     } catch (error) {
+      console.error("Login error:", error);
       toast.error("En feil oppstod under innlogging. Prøv igjen senere.");
     } finally {
       setIsLoading(false);
