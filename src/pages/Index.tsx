@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Building2, Coins, LineChart, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import YieldCalculator from "@/components/YieldCalculator";
 
 const Index = () => {
   const { user } = useAuth();
@@ -72,6 +73,15 @@ const Index = () => {
               </Link>
             )}
           </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.8 }}
+          className="max-w-4xl mx-auto mb-16"
+        >
+          <YieldCalculator />
         </motion.div>
 
         <motion.div
