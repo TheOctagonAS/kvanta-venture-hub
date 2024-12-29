@@ -78,26 +78,32 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
       <Card className="h-full flex flex-col bg-white hover:shadow-lg transition-all duration-300 hover:scale-105 relative overflow-hidden">
         {!isLive && (
           <>
-            <div className="absolute inset-0 z-20 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center">
-              <Lock className="h-12 w-12 text-nordic-blue mb-2" />
-              <span className="text-nordic-blue font-medium">Kommer snart!</span>
-              <div className="mt-2 bg-white rounded-lg px-3 py-1 shadow-sm">
-                <span className="text-sm text-nordic-blue">
-                  Går live om: {countdown}
-                </span>
+            <div className="absolute inset-0 z-20 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center px-4">
+              <div className="w-[80%] md:w-full flex flex-col items-center">
+                <Lock className="h-8 w-8 md:h-12 md:w-12 text-nordic-blue mb-2" />
+                <div className="text-center">
+                  <span className="text-sm md:text-base text-nordic-blue font-medium block">
+                    Kommer snart!
+                  </span>
+                  <div className="mt-2 bg-white rounded-lg px-3 py-1 shadow-sm">
+                    <span className="text-xs md:text-sm text-nordic-blue">
+                      Går live om: {countdown}
+                    </span>
+                  </div>
+                </div>
+                <motion.p 
+                  className="text-xs md:text-sm text-nordic-charcoal text-center max-w-[80%] mt-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ 
+                    duration: 1.5,
+                    repeat: Infinity,
+                    repeatType: "reverse"
+                  }}
+                >
+                  Forhåndsinfo: Eiendommen blir tilgjengelig om 35 dager. Følg med for å sikre deg tokens tidlig!
+                </motion.p>
               </div>
-              <motion.p 
-                className="text-sm text-nordic-charcoal text-center max-w-[80%] mt-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ 
-                  duration: 1.5,
-                  repeat: Infinity,
-                  repeatType: "reverse"
-                }}
-              >
-                Forhåndsinfo: Eiendommen blir tilgjengelig om 35 dager. Følg med for å sikre deg tokens tidlig!
-              </motion.p>
             </div>
           </>
         )}
