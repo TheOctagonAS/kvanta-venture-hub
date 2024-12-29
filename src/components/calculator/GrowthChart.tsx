@@ -9,15 +9,14 @@ interface GrowthChartProps {
 }
 
 const GrowthChart = ({ data }: GrowthChartProps) => {
-  // Filter data to show fewer points
   const filteredData = data.filter(item => item.day % 5 === 0);
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm">
+    <div className="bg-white p-3 rounded-lg shadow-sm">
       <h3 className="text-sm font-medium mb-2">Simulert vekst over tid</h3>
       <div className="h-[180px] w-[300px] mx-auto">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={filteredData} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
+          <LineChart data={filteredData} margin={{ top: 5, right: 5, bottom: 15, left: 5 }}>
             <XAxis 
               dataKey="day" 
               tick={{ fontSize: 10 }}
@@ -48,7 +47,7 @@ const GrowthChart = ({ data }: GrowthChartProps) => {
               align="right"
               verticalAlign="bottom"
               iconSize={8}
-              wrapperStyle={{ fontSize: '10px' }}
+              wrapperStyle={{ fontSize: '10px', marginTop: '10px' }}
             />
             <Line 
               type="monotone" 

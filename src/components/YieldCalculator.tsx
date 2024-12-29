@@ -69,23 +69,23 @@ const YieldCalculator = () => {
     <div className="max-w-md mx-auto bg-[#f8fbff] p-3 rounded-lg">
       <Card className="bg-white shadow-sm">
         <CardHeader className="space-y-1 border-b border-gray-100 py-3">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-2">
             <CardTitle className="text-lg font-bold flex items-center gap-2">
               <Calculator className="w-5 h-5 text-nordic-blue" />
-              Kalkulator: Hva kan du tjene?
+              Kalkulator
             </CardTitle>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
                   <div className="flex items-center gap-1">
-                    <span className="text-sm font-medium text-nordic-charcoal">Estimert årlig avkastning:</span>
+                    <span className="text-sm font-medium text-nordic-charcoal">Årlig avkastning:</span>
                     <span className="text-lg font-bold text-nordic-blue">{APY}%</span>
                     <Info className="w-4 h-4 text-gray-400 hover:text-gray-600" />
                   </div>
                 </TooltipTrigger>
-                <TooltipContent className="max-w-xs">
-                  <p className="text-sm">
-                    Beregnet av gj.snitt leie + antatt verdiøkning. (Historisk data, ingen garanti)
+                <TooltipContent className="max-w-[200px]">
+                  <p className="text-xs">
+                    Beregnet av gj.snitt leie + antatt verdiøkning
                   </p>
                 </TooltipContent>
               </Tooltip>

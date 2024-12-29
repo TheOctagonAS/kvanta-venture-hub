@@ -11,7 +11,7 @@ interface YieldCardsProps {
 
 const YieldCards = ({ yields }: YieldCardsProps) => {
   return (
-    <div className="flex overflow-x-auto gap-4 pb-2 -mx-2 px-2">
+    <div className="flex overflow-x-auto gap-3 pb-2 -mx-2 px-2">
       <div className="min-w-[150px] max-w-[150px] bg-nordic-softblue p-3 rounded-lg flex flex-col items-center justify-between border border-blue-100 shadow-sm">
         <div className="flex items-center gap-1 mb-1">
           <Clock className="w-4 h-4 text-nordic-blue" />
