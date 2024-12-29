@@ -1,13 +1,15 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle2, XCircle } from "lucide-react";
+import KYCModal from "./KYCModal";
 
 const UserProfile = ({ isKyc, onStartKYC }: { isKyc: boolean; onStartKYC: () => void }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [isKYCModalOpen, setIsKYCModalOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -41,7 +43,10 @@ const UserProfile = ({ isKyc, onStartKYC }: { isKyc: boolean; onStartKYC: () => 
 
       <div className="flex gap-4">
         {!isKyc && (
-          <Button onClick={onStartKYC} variant="default">
+          <Button 
+            onClick={() => setIsKYCModalOpen(true)} 
+            variant="default"
+          >
             Fullfør KYC
           </Button>
         )}
@@ -49,6 +54,12 @@ const UserProfile = ({ isKyc, onStartKYC }: { isKyc: boolean; onStartKYC: () => 
           Logg ut
         </Button>
       </div>
+
+      <KYCModal
+        isOpen={isKYCModalOpen}
+        onClose={() => setIsKYCModalOpen(false)}
+        onComplete={onStartKYC}
+      />
     </div>
   );
 };
