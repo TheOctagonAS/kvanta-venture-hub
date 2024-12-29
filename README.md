@@ -51,6 +51,8 @@ CREATE TABLE public.properties (
     location TEXT NOT NULL,
     price_per_token INTEGER NOT NULL,
     image_url TEXT,
+    max_tokens BIGINT NOT NULL DEFAULT 1000,
+    tokens_sold BIGINT NOT NULL DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, NOW())
 );
 ```

@@ -33,8 +33,10 @@ export type Database = {
           id: string
           image_url: string | null
           location: string
+          max_tokens: number
           name: string
           price_per_token: number
+          tokens_sold: number
           yield: number
         }
         Insert: {
@@ -42,8 +44,10 @@ export type Database = {
           id?: string
           image_url?: string | null
           location: string
+          max_tokens?: number
           name: string
           price_per_token: number
+          tokens_sold?: number
           yield?: number
         }
         Update: {
@@ -51,8 +55,10 @@ export type Database = {
           id?: string
           image_url?: string | null
           location?: string
+          max_tokens?: number
           name?: string
           price_per_token?: number
+          tokens_sold?: number
           yield?: number
         }
         Relationships: []
