@@ -40,16 +40,17 @@ const Navbar = () => {
                   <Home className="w-4 h-4 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                 </div>
               </div>
-              <div className="flex items-baseline">
-                <span className="text-[28px] font-medium text-[#345FF6] tracking-tight font-sans">
-                  Kvanta
-                </span>
-                <span className="text-sm font-medium text-[#345FF6] ml-0.5 -mb-0.5">
-                  .ai
-                </span>
-                <Badge variant="secondary" className="ml-2 text-xs bg-yellow-100/80 text-yellow-800 font-medium">
-                  Beta
-                </Badge>
+              <div className="flex flex-col items-start relative">
+                <div className="relative">
+                  <span className="text-[28px] font-medium tracking-tight font-sans bg-gradient-to-r from-[#345FF6] to-[#5a7dfc] bg-clip-text text-transparent relative">
+                    Kvanta
+                    <span className="text-sm font-medium absolute -right-4 top-0 text-[#345FF6]">.ai</span>
+                  </span>
+                  <Badge variant="secondary" className="ml-6 text-xs bg-yellow-100/80 text-yellow-800 font-medium">
+                    Beta
+                  </Badge>
+                </div>
+                <div className="h-[2px] w-full bg-gradient-to-r from-[#345FF6] to-[#5a7dfc] rounded-full mt-0.5 opacity-80" />
               </div>
             </Link>
           </div>
