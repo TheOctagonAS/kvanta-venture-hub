@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Building2, Coins } from "lucide-react";
+import { Menu, X, Home } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -35,10 +35,9 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center gap-2 py-2 px-4 group">
-              <div className="relative w-10 h-10 transition-transform duration-300 group-hover:scale-110">
+              <div className="relative w-8 h-8 transition-transform duration-300 group-hover:scale-110">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#345FF6] to-[#5a7dfc] rounded-full overflow-hidden shadow-lg">
-                  <Building2 className="w-5 h-5 text-white absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-                  <Coins className="w-4 h-4 text-white absolute bottom-1/3 left-1/2 transform -translate-x-1/2 translate-y-1/2 opacity-90" />
+                  <Home className="w-5 h-5 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                 </div>
                 <div className="absolute inset-0 bg-white/10 rounded-full transform group-hover:scale-110 transition-transform duration-300"></div>
               </div>
