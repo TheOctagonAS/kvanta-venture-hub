@@ -69,7 +69,7 @@ function Hero() {
             </h1>
 
             <p className="text-lg md:text-xl leading-relaxed tracking-tight text-nordic-charcoal/80 max-w-2xl text-center">
-              Start eiendomsreisen med bare 1000 kr. Opprett bruker og få daglige leieinntekter gjennom vår sikre, tokenbaserte plattform.
+              Start eiendomsreisen med bare 1000 kr. Opprett bruker og få <span className="font-bold">daglige</span> leieinntekter og verdistigning rett i din lommebok gjennom vår sikre, tokenbaserte plattform.
             </p>
           </div>
           <div className="flex flex-row gap-3">
