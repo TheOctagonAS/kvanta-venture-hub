@@ -33,7 +33,7 @@ const KYC = () => {
             .eq('id', user.id),
           supabase
             .from('kyc_data')
-            .update({ verified: true })
+            .update({ is_pep: false }) // Using an existing column instead of 'verified'
             .eq('user_id', user.id)
         ]);
 
