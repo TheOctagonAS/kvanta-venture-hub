@@ -29,7 +29,7 @@ const UserProfile = ({ isKyc, onStartKYC }: { isKyc: boolean; onStartKYC: () => 
       <CardContent className="space-y-4">
         <div className="p-4 bg-gray-50 rounded-lg">
           <p className="text-gray-700">
-            KYC Status:{" "}
+            KYC-status:{" "}
             <span
               className={`font-semibold ${
                 isKyc ? "text-green-600" : "text-yellow-600"

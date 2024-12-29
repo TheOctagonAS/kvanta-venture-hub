@@ -24,7 +24,6 @@ const LoginForm = () => {
     setIsLoading(true);
 
     try {
-      // Check if credentials match test user
       if (email === TEST_USER.email && password === TEST_USER.password) {
         login(email, password);
         toast.success("Innlogging vellykket!");
@@ -32,7 +31,6 @@ const LoginForm = () => {
         return;
       }
 
-      // If not test user and Supabase is configured, try Supabase auth
       if (isSupabaseConfigured() && supabase) {
         const { data, error } = await supabase.auth.signInWithPassword({
           email,

@@ -2,15 +2,21 @@
 
 Velkommen til Kvanta.ai – Eiendomsinvestering for alle i Norden.
 
-Dette er en konseptuell frontend-demo som viser hvordan tokenisert eiendomsinvestering kan fungere i praksis. Prosjektet er bygget som en prototype for å visualisere brukeropplevelsen og funksjonaliteten i en slik tjeneste.
+Dette er en frontend-applikasjon som demonstrerer tokenisert eiendomsinvestering i praksis. Prosjektet er integrert med Supabase for autentisering, datalagring og sanntidsoppdateringer.
 
-## Test User Credentials
+## Test-bruker
 
-For testing purposes, you can use these credentials:
-- Email: julian@example.com
-- Password: password123
+For testing kan du bruke følgende påloggingsinformasjon:
+- E-post: julian@example.com
+- Passord: password123
 
-## Supabase Setup
+## Supabase-oppsett
+
+Prosjektet bruker Supabase for:
+- Brukerautentisering
+- Datalagring av eiendommer og tokens
+- Håndtering av leieinntekter
+- KYC-verifisering
 
 For å sette opp databasen i Supabase, kjør følgende SQL-kommandoer:
 
@@ -25,6 +31,16 @@ CREATE TABLE public.properties (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
+-- Opprett user_holdings-tabellen
+CREATE TABLE public.user_holdings (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id),
+    property_id UUID REFERENCES properties(id),
+    token_count INTEGER DEFAULT 0,
+    accumulated_rent NUMERIC DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
 -- Legg til eksempeldata
 INSERT INTO public.properties (name, location, price_per_token, image_url) VALUES
 ('Sentrumsleilighet i Oslo', 'Grünerløkka, Oslo', 1000, 'https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&q=80&w=2940&ixlib=rb-4.0.3'),
@@ -34,53 +50,31 @@ INSERT INTO public.properties (name, location, price_per_token, image_url) VALUE
 
 -- Aktiver Row Level Security
 ALTER TABLE public.properties ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_holdings ENABLE ROW LEVEL SECURITY;
 
 -- Tillat lesing for alle
 CREATE POLICY "Allow public read access" ON public.properties
     FOR SELECT TO public USING (true);
+
+-- Tillat brukere å administrere egne holdings
+CREATE POLICY "Users can manage own holdings" ON public.user_holdings
+    FOR ALL TO public
+    USING (auth.uid() = user_id)
+    WITH CHECK (auth.uid() = user_id);
 ```
 
-## Om Mock-funksjonalitet
-
-Dette er en ren frontend-implementasjon hvor noe funksjonalitet fortsatt er simulert:
-- Innlogging bruker lokal state management (ingen faktisk autentisering)
-- "Kjøp tokens"-knapper er ikke koblet til noe betalings-API
-- KYC-verifisering er simulert
-- Token-beholdning lagres kun i minnet
-
-## Supabase Konfigurasjon
+## Miljøvariabler
 
 For å koble til Supabase, legg til følgende miljøvariabler i prosjektet:
 
-- `VITE_SUPABASE_URL`: Din Supabase prosjekt URL
-- `VITE_SUPABASE_ANON_KEY`: Din Supabase anonyme nøkkel
-
-### Hvordan legge til miljøvariabler
-
-1. I Lovable: Bruk Supabase-integrasjonen i topp høyre hjørne
-2. Lokalt: Opprett en `.env`-fil i prosjektets rot med:
-   ```
-   VITE_SUPABASE_URL=your_supabase_project_url
-   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-   ```
+```
+VITE_SUPABASE_URL=din_supabase_prosjekt_url
+VITE_SUPABASE_ANON_KEY=din_supabase_anon_nøkkel
+```
 
 ## Kjøre prosjektet lokalt
 
-For å kjøre prosjektet lokalt, følg disse stegene:
-
-1. Åpne prosjektet i [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID)
-2. Klikk på "Code" knappen øverst til høyre
-3. Følg instruksjonene for å klone og kjøre prosjektet lokalt
-
-### Alternativt kan du:
-
 ```bash
-# Klone prosjektet
-git clone <prosjekt-url>
-
-# Naviger til prosjektmappen
-cd kvanta-ai
-
 # Installer avhengigheter
 npm install
 
@@ -88,11 +82,20 @@ npm install
 npm run dev
 ```
 
+## Funksjonalitet
+
+- Brukerautentisering via Supabase
+- Visning av tilgjengelige eiendommer
+- Kjøp av eiendomstokens
+- Administrasjon av tokenportefølje
+- Automatisk beregning og utbetaling av leieinntekter
+- KYC-verifisering av brukere
+
 ## Teknologier
 
-Dette prosjektet er bygget med:
-- React
+- React med TypeScript
 - Vite
 - Tailwind CSS
-- TypeScript
-- Supabase
+- Supabase for backend
+- React Query for datauthenting
+- Framer Motion for animasjoner
