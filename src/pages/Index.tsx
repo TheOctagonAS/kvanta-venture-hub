@@ -54,9 +54,9 @@ const Index = () => {
             {!user && (
               <>
                 <Link to="/register">
-                  <button className="btn-primary">
+                  <Button size="lg" variant="default">
                     Opprett bruker
-                  </button>
+                  </Button>
                 </Link>
                 <Link to="/login">
                   <Button variant="outline" size="lg">
@@ -75,6 +75,7 @@ const Index = () => {
           </div>
         </motion.div>
 
+        {/* Features section */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -96,6 +97,7 @@ const Index = () => {
           ))}
         </motion.div>
 
+        {/* Calculator section */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -105,6 +107,7 @@ const Index = () => {
           <YieldCalculator />
         </motion.div>
 
+        {/* Les mer button */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -118,6 +121,7 @@ const Index = () => {
           </Link>
         </motion.div>
 
+        {/* Why choose section */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -149,6 +153,7 @@ const Index = () => {
           </div>
         </motion.div>
 
+        {/* Partners section */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

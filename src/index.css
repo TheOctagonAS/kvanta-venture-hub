@@ -35,13 +35,6 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
-
-    --color-1: 0 85% 70%;
-    --color-2: 120 85% 70%;
-    --color-3: 240 85% 70%;
-    --color-4: 60 85% 70%;
-    --color-5: 300 85% 70%;
-    --speed: 2s;
   }
 
   .dark {
@@ -87,18 +80,7 @@
 
 @layer components {
   .btn-primary {
-    @apply relative text-white font-semibold px-6 py-2 rounded-lg;
-    background: linear-gradient(
-      90deg,
-      hsl(var(--color-1)),
-      hsl(var(--color-2)),
-      hsl(var(--color-3)),
-      hsl(var(--color-4)),
-      hsl(var(--color-5)),
-      hsl(var(--color-1))
-    );
-    background-size: 200% 100%;
-    @apply animate-rainbow hover:shadow-lg transition-shadow;
+    @apply bg-blue-600 hover:bg-blue-700 text-white;
   }
 
   .card {
