@@ -7,6 +7,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Coins } from "lucide-react";
 
+type HoldingWithProperty = {
+  id: string;
+  token_count: number;
+  property: {
+    price_per_token: number;
+    yield: number;
+  };
+};
+
 const RentClaim = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -17,7 +26,6 @@ const RentClaim = () => {
     setIsLoading(true);
 
     try {
-      // Get all user holdings with property details
       const { data: holdings, error: holdingsError } = await supabase
         .from('user_holdings')
         .select(`
@@ -34,14 +42,13 @@ const RentClaim = () => {
 
       let totalRent = 0;
 
-      // Update each holding with new accumulated rent
       for (const holding of holdings || []) {
         const dailyRent = (
           holding.token_count *
-          holding.property.yield /
+          (holding.property as HoldingWithProperty['property']).yield /
           365 /
           100 *
-          holding.property.price_per_token
+          (holding.property as HoldingWithProperty['property']).price_per_token
         );
 
         totalRent += dailyRent;
@@ -57,7 +64,6 @@ const RentClaim = () => {
         if (updateError) throw updateError;
       }
 
-      // Show success message with formatted amount
       toast.success(
         `Du mottok ${totalRent.toLocaleString(undefined, {
           minimumFractionDigits: 2,
@@ -65,7 +71,6 @@ const RentClaim = () => {
         })} kr i daglig leie!`
       );
 
-      // Refresh holdings data
       queryClient.invalidateQueries({ queryKey: ['holdings'] });
     } catch (error) {
       console.error('Error claiming rent:', error);

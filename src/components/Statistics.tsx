@@ -30,7 +30,7 @@ const Statistics = () => {
         .eq('user_id', user.id);
       
       if (error) throw error;
-      return data || [];
+      return (data || []) as HoldingWithProperty[];
     },
     enabled: !!user,
   });
