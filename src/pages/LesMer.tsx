@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { Check, ArrowRight, Shield } from "lucide-react";
 
 const LesMer = () => {
   return (
@@ -18,18 +19,34 @@ const LesMer = () => {
         </p>
         
         <div className="space-y-6 max-w-3xl mx-auto">
-          <p className="text-gray-700 text-center">
+          <p className="text-gray-700 text-center mb-4">
             Med Kvanta.ai kan du enkelt kjøpe og selge brøkdeler av attraktive eiendommer med bare noen få klikk. 
             Du bestemmer selv hvor mye du vil investere, og kan starte med et lite beløp.
           </p>
 
-          <div className="bg-nordic-softblue rounded-lg p-4 text-center">
+          {/* Benefits section with icons */}
+          <div className="grid grid-cols-3 gap-6 mb-8">
+            <div className="flex flex-col items-center text-center">
+              <Check className="w-8 h-8 text-primary mb-2" />
+              <span className="font-semibold">Enkelt</span>
+            </div>
+            <div className="flex flex-col items-center text-center">
+              <Shield className="w-8 h-8 text-primary mb-2" />
+              <span className="font-semibold">Trygt</span>
+            </div>
+            <div className="flex flex-col items-center text-center">
+              <ArrowRight className="w-8 h-8 text-primary mb-2" />
+              <span className="font-semibold">Lønnsomt</span>
+            </div>
+          </div>
+
+          <div className="bg-nordic-softblue rounded-lg p-4 text-center mb-4">
             <p className="text-gray-700">
               All data lagres sikkert i Supabase, og KYC sikrer at alle investorer er verifiserte.
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8 mb-8">
             <div className="bg-white p-4 rounded-lg shadow-sm text-center">
               <div className="font-semibold mb-2 text-primary">1. Opprett bruker</div>
               <p className="text-sm text-gray-600">Registrer deg enkelt med e-post</p>
@@ -51,8 +68,8 @@ const LesMer = () => {
             </div>
           </div>
 
-          {/* New section about token trading */}
-          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+          {/* Token trading section */}
+          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100 mb-8">
             <h3 className="text-xl font-semibold mb-4 text-primary text-center">
               Kjøp og salg av tokens – like enkelt som netthandel!
             </h3>
@@ -71,7 +88,7 @@ const LesMer = () => {
             </div>
           </div>
 
-          {/* New CTA section */}
+          {/* CTA section */}
           <div className="text-center mt-12 space-y-4">
             <Link 
               to="/register" 
