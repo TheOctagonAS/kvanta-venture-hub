@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
-import { MovingBorderButton } from "@/components/ui/moving-border-button";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Banknote, ArrowUpRight, Wallet } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import YieldCalculator from "@/components/YieldCalculator";
-import { AuroraBackground } from "@/components/AuroraBackground";
+import AuroraBackground from "@/components/AuroraBackground";
 
 const Index = () => {
   const { user } = useAuth();
@@ -55,24 +55,22 @@ const Index = () => {
             {!user && (
               <>
                 <Link to="/register">
-                  <MovingBorderButton>
+                  <Button size="lg" variant="default">
                     Opprett bruker
-                  </MovingBorderButton>
+                  </Button>
                 </Link>
                 <Link to="/login">
-                  <MovingBorderButton
-                    className="bg-transparent backdrop-blur-none border-slate-800"
-                  >
+                  <Button variant="outline" size="lg">
                     Logg inn
-                  </MovingBorderButton>
+                  </Button>
                 </Link>
               </>
             )}
             {user && (
               <Link to="/eiendommer">
-                <MovingBorderButton>
+                <Button size="lg">
                   Se eiendommer
-                </MovingBorderButton>
+                </Button>
               </Link>
             )}
           </div>
@@ -118,11 +116,9 @@ const Index = () => {
           className="text-center mb-24"
         >
           <Link to="/les-mer">
-            <MovingBorderButton
-              className="bg-transparent backdrop-blur-none border-slate-800"
-            >
+            <Button size="lg" variant="outline" className="mx-auto">
               Les mer om Kvanta.ai
-            </MovingBorderButton>
+            </Button>
           </Link>
         </motion.div>
 
