@@ -35,6 +35,7 @@ export type Database = {
           location: string
           name: string
           price_per_token: number
+          yield: number
         }
         Insert: {
           created_at?: string
@@ -43,6 +44,7 @@ export type Database = {
           location: string
           name: string
           price_per_token: number
+          yield?: number
         }
         Update: {
           created_at?: string
@@ -51,6 +53,7 @@ export type Database = {
           location?: string
           name?: string
           price_per_token?: number
+          yield?: number
         }
         Relationships: []
       }
