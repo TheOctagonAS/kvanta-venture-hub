@@ -32,7 +32,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
       <Card className="h-full flex flex-col hover:shadow-lg transition-shadow duration-300 relative overflow-hidden">
         <Badge 
           variant="secondary" 
-          className="absolute top-4 right-4 bg-blue-50 text-blue-700 border border-blue-200 font-semibold"
+          className="absolute top-4 right-4 z-10 bg-nordic-softblue text-nordic-blue border border-nordic-blue font-semibold"
         >
           <TrendingUp className="h-3 w-3 mr-1" />
           APY: {property.yield}%
