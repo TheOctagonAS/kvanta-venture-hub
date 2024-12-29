@@ -26,6 +26,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
   const navigate = useNavigate();
 
   const availableTokens = property.max_tokens - property.tokens_sold;
+  const ratio = property.tokens_sold / property.max_tokens;
 
   return (
     <motion.div
@@ -52,6 +53,17 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
         
         <CardHeader>
           <CardTitle className="text-xl font-bold">{property.name}</CardTitle>
+          <div className="mt-2">
+            <div className="h-2 bg-gray-200 rounded overflow-hidden">
+              <div 
+                className="bg-blue-500 h-full transition-all duration-300"
+                style={{ width: `${ratio * 100}%` }}
+              />
+            </div>
+            <p className="text-sm text-gray-600 mt-1">
+              {availableTokens} tokens igjen
+            </p>
+          </div>
         </CardHeader>
         
         <CardContent className="flex-grow">
