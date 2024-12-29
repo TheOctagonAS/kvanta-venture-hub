@@ -3,10 +3,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
 
+type HoldingWithProperty = {
+  token_count: number;
+  property: {
+    price_per_token: number;
+    yield: number;
+  };
+};
+
 const Statistics = () => {
   const { user } = useAuth();
 
-  const { data: holdings } = useQuery({
+  const { data: holdings } = useQuery<HoldingWithProperty[]>({
     queryKey: ['holdings-with-yield', user?.id],
     queryFn: async () => {
       if (!user) return [];
@@ -22,7 +30,7 @@ const Statistics = () => {
         .eq('user_id', user.id);
       
       if (error) throw error;
-      return data;
+      return data || [];
     },
     enabled: !!user,
   });
@@ -41,7 +49,7 @@ const Statistics = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">
+        <CardTitle>
           Statistikk & Prognoser
         </CardTitle>
       </CardHeader>

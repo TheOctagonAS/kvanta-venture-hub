@@ -6,18 +6,34 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { useState } from "react";
 import TokenPurchaseModal from "../components/TokenPurchaseModal";
 import { useAuth } from "../contexts/AuthContext";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+type Property = {
+  id: string;
+  name: string;
+  location: string;
+  price_per_token: number;
+  image_url: string | null;
+  yield: number;
+};
+
 const fetchProperties = async () => {
-  const { data, error } = await supabase.from('properties').select('*');
-  if (error) throw error;
-  return data;
+  const { data, error } = await supabase
+    .from('properties')
+    .select('*');
+  
+  if (error) {
+    console.error('Error fetching properties:', error);
+    throw error;
+  }
+  
+  return data as Property[];
 };
 
 const Eiendommer = () => {
-  const [selectedProperty, setSelectedProperty] = useState<any | null>(null);
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const { user } = useAuth();
   const navigate = useNavigate();
   
@@ -44,7 +60,7 @@ const Eiendommer = () => {
         .from('user_holdings')
         .select('*')
         .eq('user_id', user.id)
-        .eq('property_id', selectedProperty.id)
+        .eq('property_id', selectedProperty?.id)
         .single();
 
       if (existingHoldings) {
@@ -63,7 +79,7 @@ const Eiendommer = () => {
           .from('user_holdings')
           .insert({
             user_id: user.id,
-            property_id: selectedProperty.id,
+            property_id: selectedProperty?.id,
             token_count: tokenCount
           });
 
@@ -122,7 +138,7 @@ const Eiendommer = () => {
               <Card className="h-full flex flex-col hover:shadow-lg transition-shadow duration-300">
                 <div className="relative h-48 overflow-hidden rounded-t-lg">
                   <img
-                    src={property.image_url}
+                    src={property.image_url || '/placeholder.svg'}
                     alt={property.name}
                     className="w-full h-full object-cover"
                   />
