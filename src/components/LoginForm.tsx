@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -18,8 +18,14 @@ const LoginForm = () => {
     e.preventDefault();
     setIsLoading(true);
 
+    if (!isSupabaseConfigured()) {
+      toast.error("Vennligst koble til Supabase via integrasjonsmenyen øverst til høyre.");
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase!.auth.signInWithPassword({
         email,
         password,
       });
@@ -27,8 +33,6 @@ const LoginForm = () => {
       if (error) {
         if (error.message.includes("Invalid login credentials")) {
           toast.error("Feil e-post eller passord.");
-        } else if (error.message.includes("supabaseUrl is required")) {
-          toast.error("Vennligst koble til Supabase via integrasjonsmenyen øverst til høyre.");
         } else {
           toast.error("En feil oppstod under innlogging. Prøv igjen senere.");
         }
@@ -40,12 +44,8 @@ const LoginForm = () => {
         toast.success("Innlogging vellykket!");
         navigate("/minside");
       }
-    } catch (error: any) {
-      if (error.message?.includes("supabaseUrl is required")) {
-        toast.error("Vennligst koble til Supabase via integrasjonsmenyen øverst til høyre.");
-      } else {
-        toast.error("En feil oppstod under innlogging. Prøv igjen senere.");
-      }
+    } catch (error) {
+      toast.error("En feil oppstod under innlogging. Prøv igjen senere.");
     } finally {
       setIsLoading(false);
     }
