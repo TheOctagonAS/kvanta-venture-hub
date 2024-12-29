@@ -13,12 +13,10 @@ import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
 
-const TOKEN_PRICE = 1000; // NOK
-
 const UserHoldings = () => {
   const { user } = useAuth();
 
-  const { data: holdings, refetch } = useQuery({
+  const { data: holdings } = useQuery({
     queryKey: ['holdings', user?.id],
     queryFn: async () => {
       if (!user) return [];
@@ -43,7 +41,6 @@ const UserHoldings = () => {
         0
       );
       const dailyRent = totalTokens * 0.5;
-      // addRentIncome(dailyRent);
       toast.success(`Du mottok ${dailyRent} kr i daglig leie`);
     }
   };
@@ -78,7 +75,7 @@ const UserHoldings = () => {
                       {holding.token_count}
                     </TableCell>
                     <TableCell className="text-right">
-                      {(holding.token_count * TOKEN_PRICE).toLocaleString()} NOK
+                      {(holding.token_count * holding.property.price_per_token).toLocaleString()} NOK
                     </TableCell>
                   </TableRow>
                 ))}
