@@ -11,6 +11,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import RentClaim from "./RentClaim";
 
 type HoldingWithProperty = {
   id: string;
@@ -72,6 +73,8 @@ const UserHoldings = () => {
 
   return (
     <div className="space-y-6">
+      <RentClaim />
+      
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl font-bold">

@@ -62,6 +62,7 @@ export type Database = {
           accumulated_rent: number
           created_at: string
           id: string
+          last_claim_at: string | null
           property_id: string
           token_count: number
           user_id: string
@@ -70,6 +71,7 @@ export type Database = {
           accumulated_rent?: number
           created_at?: string
           id?: string
+          last_claim_at?: string | null
           property_id: string
           token_count?: number
           user_id: string
@@ -78,6 +80,7 @@ export type Database = {
           accumulated_rent?: number
           created_at?: string
           id?: string
+          last_claim_at?: string | null
           property_id?: string
           token_count?: number
           user_id?: string
