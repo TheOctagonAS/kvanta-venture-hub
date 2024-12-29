@@ -13,14 +13,72 @@ import {
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import LoginForm from "@/components/LoginForm";
+import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient";
+import { useEffect, useState } from "react";
 
 const MinSide = () => {
   const { user, startKYC, addRentIncome, logout } = useAuth();
   const navigate = useNavigate();
+  const [isKyc, setIsKyc] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleStartKYC = () => {
-    startKYC();
-    toast.success("KYC-verifisering fullført!");
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!user || !isSupabaseConfigured()) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        if (!profile) {
+          // Create new profile if it doesn't exist
+          const { error: createError } = await supabase
+            .from('profiles')
+            .insert([{ id: user.id, is_kyc: false }]);
+
+          if (createError) throw createError;
+          setIsKyc(false);
+        } else {
+          setIsKyc(profile.is_kyc);
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+        toast.error('Kunne ikke hente profil');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [user]);
+
+  const handleStartKYC = async () => {
+    if (!user || !isSupabaseConfigured()) {
+      toast.error('Kunne ikke starte KYC-prosessen');
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ is_kyc: true })
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      setIsKyc(true);
+      startKYC();
+      toast.success("KYC-verifisering fullført!");
+    } catch (error) {
+      console.error('Error updating KYC status:', error);
+      toast.error('Kunne ikke oppdatere KYC-status');
+    }
   };
 
   const handleSimulateRent = () => {
@@ -43,6 +101,14 @@ const MinSide = () => {
 
   // Mock token price for value calculation
   const TOKEN_PRICE = 1000; // NOK
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center">
+        <div className="text-gray-600">Laster...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
@@ -72,10 +138,10 @@ const MinSide = () => {
                       KYC Status:{" "}
                       <span
                         className={`font-semibold ${
-                          user.isKYC ? "text-green-600" : "text-yellow-600"
+                          isKyc ? "text-green-600" : "text-yellow-600"
                         }`}
                       >
-                        {user.isKYC ? "Verifisert" : "Ikke verifisert"}
+                        {isKyc ? "Verifisert" : "Ikke verifisert"}
                       </span>
                     </p>
                     <p className="text-gray-700 mt-2">
@@ -83,13 +149,13 @@ const MinSide = () => {
                     </p>
                   </div>
 
-                  {!user.isKYC && (
+                  {!isKyc && (
                     <Button onClick={handleStartKYC} className="w-full">
-                      Start KYC
+                      Fullfør KYC
                     </Button>
                   )}
 
-                  {user.isKYC && (
+                  {isKyc && (
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
