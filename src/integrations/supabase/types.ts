@@ -9,6 +9,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      kyc_data: {
+        Row: {
+          address: string
+          created_at: string | null
+          full_name: string
+          id: string
+          is_pep: boolean | null
+          personal_number: string
+          user_id: string | null
+        }
+        Insert: {
+          address: string
+          created_at?: string | null
+          full_name: string
+          id?: string
+          is_pep?: boolean | null
+          personal_number: string
+          user_id?: string | null
+        }
+        Update: {
+          address?: string
+          created_at?: string | null
+          full_name?: string
+          id?: string
+          is_pep?: boolean | null
+          personal_number?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string

@@ -33,7 +33,31 @@ const KYC = () => {
       return;
     }
 
-    setShowBankID(true);
+    setIsSubmitting(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Ingen bruker funnet");
+
+      // Insert KYC data
+      const { error: kycError } = await supabase
+        .from('kyc_data')
+        .insert({
+          user_id: user.id,
+          full_name: formData.fullName,
+          address: formData.address,
+          personal_number: formData.personalNumber,
+          is_pep: isPep
+        });
+
+      if (kycError) throw kycError;
+      
+      setShowBankID(true);
+    } catch (error) {
+      console.error("KYC submission failed:", error);
+      toast.error("Kunne ikke lagre KYC-data");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleBankIDClick = async () => {
