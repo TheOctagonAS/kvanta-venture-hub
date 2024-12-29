@@ -29,10 +29,10 @@ const Lommebok = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-900">
-      <div className="absolute inset-0 w-full h-full bg-slate-900 z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+      <div className="absolute inset-0 w-full h-full bg-slate-900 z-10 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
       <BoxesBackground />
       
-      <div className="relative z-10 container mx-auto px-4 py-16">
+      <div className="relative z-20 container mx-auto px-4 py-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
