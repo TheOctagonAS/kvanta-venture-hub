@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useState, useEffect } from "react";
 
 type PropertyCardProps = {
   property: {
@@ -17,7 +18,7 @@ type PropertyCardProps = {
     yield: number;
     max_tokens: number;
     tokens_sold: number;
-    is_live?: boolean; // New optional property to determine if the property is live
+    is_live?: boolean;
   };
   onSelectProperty: (property: PropertyCardProps['property']) => void;
 };
@@ -25,10 +26,27 @@ type PropertyCardProps = {
 export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [countdown, setCountdown] = useState("35 dager");
 
   const availableTokens = property.max_tokens - property.tokens_sold;
   const ratio = property.tokens_sold / property.max_tokens;
-  const isLive = property.is_live !== false; // If is_live is undefined or true, treat as live
+  const isLive = property.is_live !== false;
+
+  // Simple countdown effect (temporary solution)
+  useEffect(() => {
+    if (!isLive) {
+      const days = 35;
+      const hours = 0;
+      const minutes = 0;
+      
+      // Update countdown every minute
+      const timer = setInterval(() => {
+        setCountdown(`${days} dager, ${hours} timer, ${minutes} minutter`);
+      }, 60000);
+
+      return () => clearInterval(timer);
+    }
+  }, [isLive]);
 
   return (
     <motion.div
@@ -38,10 +56,17 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
     >
       <Card className="h-full flex flex-col bg-white hover:shadow-lg transition-all duration-300 hover:scale-105 relative overflow-hidden">
         {!isLive && (
-          <div className="absolute inset-0 z-20 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center">
-            <Lock className="h-12 w-12 text-nordic-blue mb-2" />
-            <span className="text-nordic-blue font-medium">Kommer snart!</span>
-          </div>
+          <>
+            <div className="absolute inset-0 z-20 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center">
+              <Lock className="h-12 w-12 text-nordic-blue mb-2" />
+              <span className="text-nordic-blue font-medium">Kommer snart!</span>
+              <div className="mt-2 bg-white rounded-lg px-3 py-1 shadow-sm">
+                <span className="text-sm text-nordic-blue">
+                  Går live om: {countdown}
+                </span>
+              </div>
+            </div>
+          </>
         )}
         
         <Badge 
