@@ -5,21 +5,18 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient";
+import { supabase } from "@/lib/supabaseClient";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!isSupabaseConfigured()) {
-      toast.error("Vennligst koble til Supabase via integrasjonsmenyen øverst til høyre.");
-      return;
-    }
+    setIsLoading(true);
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -28,7 +25,11 @@ const LoginForm = () => {
       });
 
       if (error) {
-        toast.error("Feil e-post eller passord.");
+        if (error.message.includes("Invalid login credentials")) {
+          toast.error("Feil e-post eller passord.");
+        } else {
+          toast.error("En feil oppstod under innlogging. Prøv igjen senere.");
+        }
         return;
       }
 
@@ -39,6 +40,8 @@ const LoginForm = () => {
       }
     } catch (error) {
       toast.error("En feil oppstod under innlogging. Prøv igjen senere.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -62,6 +65,7 @@ const LoginForm = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="din@epost.no"
+              disabled={isLoading}
             />
           </div>
           <div className="space-y-2">
@@ -75,10 +79,11 @@ const LoginForm = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="••••••••"
+              disabled={isLoading}
             />
           </div>
-          <Button type="submit" className="w-full">
-            Logg inn
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? "Logger inn..." : "Logg inn"}
           </Button>
         </form>
       </CardContent>

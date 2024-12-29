@@ -4,12 +4,12 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('⚠️ Supabase konfigurasjon mangler. Noen funksjoner vil være begrenset.');
+  console.warn('⚠️ Supabase konfigurasjon mangler.');
 }
 
 export const supabase = createClient(
-  supabaseUrl || 'https://placeholder-url.supabase.co',
-  supabaseAnonKey || 'placeholder-key'
+  supabaseUrl || '',
+  supabaseAnonKey || ''
 );
 
 export const isSupabaseConfigured = () => {
