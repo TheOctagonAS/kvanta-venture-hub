@@ -14,6 +14,12 @@ const Register = () => {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (isLoading) {
+      toast.error("En registrering er allerede i gang. Vennligst vent.");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -22,19 +28,23 @@ const Register = () => {
         password,
       });
 
-      if (signUpError) throw signUpError;
+      if (signUpError) {
+        if (signUpError.message.includes('rate_limit')) {
+          toast.error("Vennligst vent litt før du prøver igjen (ca. 1 minutt)");
+          return;
+        }
+        throw signUpError;
+      }
 
       if (!authData.user) {
         throw new Error("No user data returned after signup");
       }
 
-      // Get the session to ensure we have the user's ID
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       
       if (sessionError) throw sessionError;
       if (!session) throw new Error("No session after signup");
 
-      // Create the user profile
       const { error: profileError } = await supabase
         .from('profiles')
         .insert([
@@ -52,6 +62,8 @@ const Register = () => {
       console.error("Registration error:", error);
       if (error.message.includes("already registered")) {
         toast.error("E-postadressen er allerede registrert");
+      } else if (error.message.includes("rate_limit")) {
+        toast.error("Vennligst vent litt før du prøver igjen (ca. 1 minutt)");
       } else {
         toast.error("Det oppstod en feil under registrering. Vennligst prøv igjen.");
       }
