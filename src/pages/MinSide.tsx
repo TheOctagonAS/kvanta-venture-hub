@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabaseClient";
 import LoginForm from "@/components/LoginForm";
 import UserProfile from "@/components/UserProfile";
 import UserHoldings from "@/components/UserHoldings";
+import Statistics from "@/components/Statistics";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useQuery } from "@tanstack/react-query";
 
@@ -56,7 +57,11 @@ const MinSide = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      <main className="container mx-auto px-4 py-16">
+      <main className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">
+          Min side - Din krypto-vennlige eiendomsportefølje
+        </h1>
+        
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -68,6 +73,7 @@ const MinSide = () => {
           ) : (
             <>
               <UserProfile isKyc={profile?.is_kyc || false} onStartKYC={handleStartKYC} />
+              
               {!profile?.is_kyc && (
                 <Alert className="mb-6 border-yellow-500 bg-yellow-50 text-yellow-800">
                   <AlertDescription>
@@ -75,7 +81,9 @@ const MinSide = () => {
                   </AlertDescription>
                 </Alert>
               )}
+              
               <UserHoldings />
+              <Statistics />
             </>
           )}
         </motion.div>
