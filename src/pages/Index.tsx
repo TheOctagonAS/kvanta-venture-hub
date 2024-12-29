@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { MovingBorderButton } from "@/components/ui/moving-border-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Banknote, ArrowUpRight, Wallet } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import YieldCalculator from "@/components/YieldCalculator";
-import AuroraBackground from "@/components/AuroraBackground";
+import { AuroraBackground } from "@/components/AuroraBackground";
 
 const Index = () => {
   const { user } = useAuth();
@@ -55,22 +55,24 @@ const Index = () => {
             {!user && (
               <>
                 <Link to="/register">
-                  <Button size="lg" variant="default">
+                  <MovingBorderButton>
                     Opprett bruker
-                  </Button>
+                  </MovingBorderButton>
                 </Link>
                 <Link to="/login">
-                  <Button variant="outline" size="lg">
+                  <MovingBorderButton
+                    className="bg-transparent backdrop-blur-none border-slate-800"
+                  >
                     Logg inn
-                  </Button>
+                  </MovingBorderButton>
                 </Link>
               </>
             )}
             {user && (
               <Link to="/eiendommer">
-                <Button size="lg">
+                <MovingBorderButton>
                   Se eiendommer
-                </Button>
+                </MovingBorderButton>
               </Link>
             )}
           </div>
@@ -116,9 +118,11 @@ const Index = () => {
           className="text-center mb-24"
         >
           <Link to="/les-mer">
-            <Button size="lg" variant="outline" className="mx-auto">
+            <MovingBorderButton
+              className="bg-transparent backdrop-blur-none border-slate-800"
+            >
               Les mer om Kvanta.ai
-            </Button>
+            </MovingBorderButton>
           </Link>
         </motion.div>
 
