@@ -59,7 +59,7 @@ const MinSide = () => {
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <main className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">
-          Min side - Din krypto-vennlige eiendomsportefølje
+          DeFi Eiendom - Din Tokeniserte Portefølje
         </h1>
         
         <motion.div
@@ -77,7 +77,7 @@ const MinSide = () => {
               {!profile?.is_kyc && (
                 <Alert className="mb-6 border-yellow-500 bg-yellow-50 text-yellow-800">
                   <AlertDescription>
-                    Du må være KYC-verifisert for å kjøpe tokens
+                    KYC-verifisering kreves for å kjøpe tokens
                   </AlertDescription>
                 </Alert>
               )}

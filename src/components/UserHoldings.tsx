@@ -43,10 +43,11 @@ const UserHoldings = () => {
             price_per_token
           )
         `)
-        .eq('user_id', user.id);
+        .eq('user_id', user.id)
+        .single();
       
       if (error) throw error;
-      return (data || []) as HoldingWithProperty[];
+      return [data] as HoldingWithProperty[];
     },
     enabled: !!user,
   });
@@ -78,7 +79,7 @@ const UserHoldings = () => {
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl font-bold">
-            Mine eierandeler
+            Din DeFi Portefølje
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -88,7 +89,7 @@ const UserHoldings = () => {
                 <TableRow>
                   <TableHead>Eiendom</TableHead>
                   <TableHead className="text-right">Antall tokens</TableHead>
-                  <TableHead className="text-right">Estimert verdi (NOK)</TableHead>
+                  <TableHead className="text-right">Verdi (NOK)</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -109,7 +110,7 @@ const UserHoldings = () => {
             </Table>
           ) : (
             <p className="text-center text-gray-500 py-8">
-              Du eier ingen tokens ennå
+              Du har ingen tokens i porteføljen ennå
             </p>
           )}
         </CardContent>
@@ -118,7 +119,7 @@ const UserHoldings = () => {
       {holdings && holdings.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Portefølje-fordeling</CardTitle>
+            <CardTitle>Porteføljefordeling</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-[300px] w-full">

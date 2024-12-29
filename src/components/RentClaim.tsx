@@ -36,19 +36,21 @@ const RentClaim = () => {
             yield
           )
         `)
-        .eq('user_id', user.id);
+        .eq('user_id', user.id)
+        .single();
 
       if (holdingsError) throw holdingsError;
 
       let totalRent = 0;
 
-      for (const holding of holdings || []) {
+      const holding = holdings;
+      if (holding) {
         const dailyRent = (
           holding.token_count *
-          (holding.property as HoldingWithProperty['property']).yield /
+          holding.property.yield /
           365 /
           100 *
-          (holding.property as HoldingWithProperty['property']).price_per_token
+          holding.property.price_per_token
         );
 
         totalRent += dailyRent;
@@ -65,16 +67,16 @@ const RentClaim = () => {
       }
 
       toast.success(
-        `Du mottok ${totalRent.toLocaleString(undefined, {
+        `Du har claimet ${totalRent.toLocaleString(undefined, {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2
-        })} kr i daglig leie!`
+        })} kr i daglig yield!`
       );
 
       queryClient.invalidateQueries({ queryKey: ['holdings'] });
     } catch (error) {
       console.error('Error claiming rent:', error);
-      toast.error('Kunne ikke hente leieinntekter. Prøv igjen senere.');
+      toast.error('Kunne ikke hente yield-utbetaling. Prøv igjen senere.');
     } finally {
       setIsLoading(false);
     }
@@ -85,7 +87,7 @@ const RentClaim = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-purple-900">
           <Coins className="h-5 w-5" />
-          Krypto-leie
+          DeFi Eiendom
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -95,11 +97,11 @@ const RentClaim = () => {
           className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
         >
           {isLoading ? (
-            "Henter utbetaling..."
+            "Prosesserer claim..."
           ) : (
             <>
               <Coins className="mr-2 h-4 w-4" />
-              Motta dagens utbetaling
+              Claim dagens yield
             </>
           )}
         </Button>
