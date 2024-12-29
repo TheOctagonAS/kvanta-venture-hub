@@ -22,26 +22,47 @@ export default {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "#f8f9fa",
-        foreground: "#333333",
+        background: {
+          DEFAULT: "#f8f9fa",
+          dark: "#1a1a1a",
+        },
+        foreground: {
+          DEFAULT: "#333333",
+          dark: "#ffffff",
+        },
         primary: {
-          DEFAULT: "#345FF6", // Kvantum blue - for buttons and headings
+          DEFAULT: "#345FF6",
           foreground: "#FFFFFF",
+          dark: "#4B6EF6",
         },
         secondary: {
-          DEFAULT: "#E9F2FF", // Light blue - for cards and highlights
+          DEFAULT: "#E9F2FF",
           foreground: "#333333",
+          dark: "#2A2A2A",
         },
         accent: {
-          DEFAULT: "#47C757", // Success green - for yields and success states
+          DEFAULT: "#47C757",
           foreground: "#FFFFFF",
+          dark: "#3DB54C",
         },
         nordic: {
           blue: "#345FF6",
-          charcoal: "#333333",
-          gray: "#555555",
-          lightgray: "#f8f9fa",
-          softblue: "#E9F2FF",
+          charcoal: {
+            DEFAULT: "#333333",
+            dark: "#ffffff",
+          },
+          gray: {
+            DEFAULT: "#555555",
+            dark: "#A0A0A0",
+          },
+          lightgray: {
+            DEFAULT: "#f8f9fa",
+            dark: "#1a1a1a",
+          },
+          softblue: {
+            DEFAULT: "#E9F2FF",
+            dark: "#2A2A2A",
+          },
         },
       },
       borderRadius: {
