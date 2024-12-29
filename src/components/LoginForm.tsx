@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -40,6 +40,8 @@ const LoginForm = () => {
         if (error) {
           if (error.message.includes("Invalid login credentials")) {
             toast.error("Feil e-post eller passord.");
+          } else if (error.message.includes("rate_limit")) {
+            toast.error("For mange forsøk. Vennligst vent litt før du prøver igjen.");
           } else {
             toast.error("En feil oppstod under innlogging. Prøv igjen senere.");
           }
@@ -105,6 +107,11 @@ const LoginForm = () => {
           >
             {isLoading ? "Logger inn..." : "Logg inn"}
           </Button>
+          <div className="text-center mt-4">
+            <Link to="/register" className="text-sm text-blue-600 hover:text-blue-800">
+              Har du ikke konto? Opprett en her
+            </Link>
+          </div>
         </form>
       </CardContent>
     </Card>
