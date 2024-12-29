@@ -7,6 +7,7 @@ interface Property {
 }
 
 interface User {
+  id: string;  // Added this line
   email: string;
   isKYC: boolean;
   ownedProperties: Property[];
@@ -28,7 +29,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
   const login = (email: string, password: string) => {
-    setUser({ email, isKYC: false, ownedProperties: [], accumulatedRent: 0 });
+    // Generate a random ID for demo purposes
+    const id = Math.random().toString(36).substr(2, 9);
+    setUser({ id, email, isKYC: false, ownedProperties: [], accumulatedRent: 0 });
   };
 
   const logout = () => {
