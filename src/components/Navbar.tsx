@@ -47,6 +47,9 @@ const Navbar = () => {
                 <span className="text-sm font-medium text-[#345FF6] ml-0.5 -mb-0.5">
                   .ai
                 </span>
+                <Badge variant="secondary" className="ml-2 text-xs bg-yellow-100/80 text-yellow-800 font-medium">
+                  Beta
+                </Badge>
               </div>
             </Link>
           </div>
