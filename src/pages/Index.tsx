@@ -35,7 +35,6 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <main className="container mx-auto px-4">
-        {/* Clean header section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -46,10 +45,10 @@ const Index = () => {
             Nå i Beta
           </Badge>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary mb-6">
-            Få daglige leieinntekter fra næringseiendom
+            Kjøp eiendom like enkelt som å handle på nett
           </h1>
           <p className="text-xl sm:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Kvanta.ai gjør det mulig å investere i tokenisert næringseiendom med daglige utbetalinger. Start med så lite som 1000 kr.
+            Invester i førsteklasses eiendommer og motta daglig leieinntekt
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             {!user && (
@@ -98,7 +97,7 @@ const Index = () => {
           ))}
         </motion.div>
 
-        {/* Calculator section moved down */}
+        {/* Calculator section */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -140,6 +139,7 @@ const Index = () => {
           </div>
         </motion.div>
 
+        {/* Partners section */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
