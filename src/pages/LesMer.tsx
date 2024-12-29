@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Rocket, Shield, Coins, UserPlus, ShieldCheck, Cash } from "lucide-react";
+import { Rocket, Shield, Coins, UserPlus, ShieldCheck, Banknote } from "lucide-react";
 
 const LesMer = () => {
   return (
@@ -92,7 +92,7 @@ const LesMer = () => {
               
               <div className="bg-white p-4 rounded-lg shadow-sm text-center">
                 <div className="flex flex-col items-center">
-                  <Cash className="w-8 h-8 text-primary mb-2" />
+                  <Banknote className="w-8 h-8 text-primary mb-2" />
                   <div className="font-semibold mb-1">4. Motta inntekter</div>
                   <p className="text-sm text-gray-600">Daglige leieutbetalinger</p>
                 </div>
