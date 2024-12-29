@@ -19,7 +19,7 @@ type PropertyCardProps = {
     yield: number;
     max_tokens: number;
     tokens_sold: number;
-    is_live?: boolean;
+    launch_date: string | null;
   };
   onSelectProperty: (property: PropertyCardProps['property']) => void;
 };
@@ -27,28 +27,44 @@ type PropertyCardProps = {
 export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [countdown, setCountdown] = useState("35 dager");
+  const [countdown, setCountdown] = useState<string>("");
   const [isNotifying, setIsNotifying] = useState(false);
 
   const availableTokens = property.max_tokens - property.tokens_sold;
   const ratio = property.tokens_sold / property.max_tokens;
-  const isLive = property.is_live !== false;
+  
+  const calculateIsLive = (launchDate: string | null): boolean => {
+    if (!launchDate) return true;
+    return new Date(launchDate) <= new Date();
+  };
 
-  // Simple countdown effect (temporary solution)
+  const isLive = calculateIsLive(property.launch_date);
+
+  const calculateCountdown = (launchDate: string | null) => {
+    if (!launchDate) return "";
+    
+    const now = new Date();
+    const launch = new Date(launchDate);
+    const diffTime = launch.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffHours = Math.ceil((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    
+    if (diffDays <= 0) return "";
+    return `${diffDays} dager`;
+  };
+
   useEffect(() => {
-    if (!isLive) {
-      const days = 35;
-      const hours = 0;
-      const minutes = 0;
+    if (!isLive && property.launch_date) {
+      const updateCountdown = () => {
+        setCountdown(calculateCountdown(property.launch_date));
+      };
       
-      // Update countdown every minute
-      const timer = setInterval(() => {
-        setCountdown(`${days} dager, ${hours} timer, ${minutes} minutter`);
-      }, 60000);
+      updateCountdown();
+      const timer = setInterval(updateCountdown, 60000); // Update every minute
 
       return () => clearInterval(timer);
     }
-  }, [isLive]);
+  }, [isLive, property.launch_date]);
 
   const handleNotifyMe = async () => {
     if (!user) {
@@ -59,7 +75,6 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
     setIsNotifying(true);
     try {
       // Here we could implement the notification signup logic
-      // For now, we'll just show a success message
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
       toast.success("Du vil bli varslet når eiendommen blir tilgjengelig!");
     } catch (error) {
@@ -101,7 +116,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
                     repeatType: "reverse"
                   }}
                 >
-                  Forhåndsinfo: Eiendommen blir tilgjengelig om 35 dager. Følg med for å sikre deg tokens tidlig!
+                  Forhåndsinfo: Eiendommen blir tilgjengelig {countdown}. Følg med for å sikre deg tokens tidlig!
                 </motion.p>
               </div>
             </div>
