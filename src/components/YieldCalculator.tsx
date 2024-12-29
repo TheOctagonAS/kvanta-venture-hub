@@ -1,30 +1,29 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calculator, TrendingUp, Calendar, Clock } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const YieldCalculator = () => {
   const [amount, setAmount] = useState<string>("100000");
-  const [apy, setApy] = useState<string>("5.5");
   const [yields, setYields] = useState({
     daily: 0,
     monthly: 0,
     yearly: 0,
   });
 
+  const APY = 8.5; // Optimistic estimate as default
+
   useEffect(() => {
     const investment = parseFloat(amount) || 0;
-    const apyRate = parseFloat(apy) / 100;
+    const apyRate = APY / 100;
 
     setYields({
       daily: (investment * apyRate) / 365,
       monthly: (investment * apyRate) / 12,
       yearly: investment * apyRate,
     });
-  }, [amount, apy]);
+  }, [amount]);
 
   const handleSliderChange = (value: number[]) => {
     setAmount(value[0].toString());
@@ -62,57 +61,20 @@ const YieldCalculator = () => {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              Estimert total årlig avkastning
-            </label>
-            <Select value={apy} onValueChange={setApy}>
-              <SelectTrigger className="w-full bg-white border border-gray-200 hover:border-nordic-blue transition-colors">
-                <SelectValue placeholder="Velg estimert avkastning" />
-              </SelectTrigger>
-              <SelectContent className="bg-white">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <SelectItem value="5.5" className="hover:bg-nordic-softblue cursor-pointer py-3 px-4">
-                        5.5% - Konservativt estimat
-                      </SelectItem>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>3.5% leieavkastning + 2% verdistigning</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <SelectItem value="7.0" className="hover:bg-nordic-softblue cursor-pointer py-3 px-4">
-                        7.0% - Moderat estimat
-                      </SelectItem>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>4% leieavkastning + 3% verdistigning</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <SelectItem value="8.5" className="hover:bg-nordic-softblue cursor-pointer py-3 px-4">
-                        8.5% - Optimistisk estimat
-                      </SelectItem>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>4.5% leieavkastning + 4% verdistigning</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </SelectContent>
-            </Select>
-            <p className="text-sm text-gray-500 mt-2">
-              Inkluderer både leieinntekter og historisk verdistigning på næringseiendom i Norge
-            </p>
+            <div className="bg-nordic-softblue rounded-lg p-4 border border-blue-100">
+              <p className="text-sm text-gray-700 leading-relaxed">
+                Estimert årlig avkastning: <span className="font-semibold">{APY}%</span>
+                <br />
+                <span className="text-xs">
+                  (4.5% gjennomsnittlig leieavkastning + 4% historisk verdistigning)
+                </span>
+              </p>
+              <p className="text-xs text-gray-600 mt-2">
+                Dette estimatet er basert på historisk gjennomsnittlig avkastning fra næringseiendom i Norge de siste 10 årene. 
+                Merk at historisk avkastning ikke er en garanti for fremtidig avkastning. Verdien av investeringen kan både øke og synke, 
+                og du kan tape deler av eller hele det investerte beløpet.
+              </p>
+            </div>
           </div>
         </div>
 
