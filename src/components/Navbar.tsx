@@ -35,27 +35,28 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center gap-2 py-2 px-4 group">
-              <div className="relative w-6 h-6">
-                <div className="absolute inset-0 bg-[#2F4ECC] rounded-full overflow-hidden">
-                  <Home className="w-4 h-4 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+              <div className="relative w-8 h-8 transition-transform duration-300 group-hover:scale-110">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#345FF6] to-[#5a7dfc] rounded-full overflow-hidden shadow-lg">
+                  <Home className="w-5 h-5 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                 </div>
+                <div className="absolute inset-0 bg-white/10 rounded-full transform group-hover:scale-110 transition-transform duration-300"></div>
               </div>
               <div className="flex flex-col items-start relative">
                 <div className="relative flex items-baseline">
                   <span className="text-[28px] font-medium tracking-tight font-sans relative">
-                    <span className="inline-block transform translate-y-[-2px] transition-transform duration-300 group-hover:rotate-[0.5deg]" style={{ color: '#345FF6' }}>K</span>
-                    <span className="inline-block transform translate-y-[-1px] transition-transform duration-300 group-hover:rotate-[-0.5deg]" style={{ background: 'linear-gradient(to right, #345FF6, #4065f8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>v</span>
-                    <span className="inline-block transform translate-y-[-2px] transition-transform duration-300 group-hover:rotate-[0.5deg]" style={{ background: 'linear-gradient(to right, #4065f8, #4b6ffa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>a</span>
-                    <span className="inline-block transform translate-y-[1px] transition-transform duration-300 group-hover:rotate-[-0.5deg]" style={{ background: 'linear-gradient(to right, #4b6ffa, #5276fb)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>n</span>
-                    <span className="inline-block transform translate-y-[2px] transition-transform duration-300 group-hover:rotate-[0.5deg]" style={{ background: 'linear-gradient(to right, #5276fb, #5a7dfc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>t</span>
-                    <span className="inline-block transform translate-y-[1px] transition-transform duration-300 group-hover:rotate-[-0.5deg]" style={{ color: '#5a7dfc' }}>a</span>
+                    <span className="inline-block transform translate-y-[-2px] transition-all duration-300 group-hover:rotate-[0.5deg] group-hover:text-[#3d65f7]" style={{ color: '#345FF6' }}>K</span>
+                    <span className="inline-block transform translate-y-[-1px] transition-all duration-300 group-hover:rotate-[-0.5deg]" style={{ background: 'linear-gradient(to right, #345FF6, #4065f8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>v</span>
+                    <span className="inline-block transform translate-y-[-2px] transition-all duration-300 group-hover:rotate-[0.5deg]" style={{ background: 'linear-gradient(to right, #4065f8, #4b6ffa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>a</span>
+                    <span className="inline-block transform translate-y-[1px] transition-all duration-300 group-hover:rotate-[-0.5deg]" style={{ background: 'linear-gradient(to right, #4b6ffa, #5276fb)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>n</span>
+                    <span className="inline-block transform translate-y-[2px] transition-all duration-300 group-hover:rotate-[0.5deg]" style={{ background: 'linear-gradient(to right, #5276fb, #5a7dfc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>t</span>
+                    <span className="inline-block transform translate-y-[1px] transition-all duration-300 group-hover:rotate-[-0.5deg]" style={{ color: '#5a7dfc' }}>a</span>
                     <span className="text-sm font-medium absolute -right-4 top-0 text-[#e9f2ff] transition-colors duration-300 group-hover:text-white">.ai</span>
                   </span>
-                  <Badge variant="secondary" className="ml-6 text-xs bg-yellow-100/80 text-yellow-800 font-medium">
+                  <Badge variant="secondary" className="ml-6 text-xs bg-gradient-to-r from-yellow-50 to-yellow-100/80 text-yellow-800 font-medium shadow-sm">
                     Beta
                   </Badge>
                 </div>
-                <div className="h-[2px] w-full bg-gradient-to-r from-[#345FF6] to-[#5a7dfc] rounded-full mt-0.5 opacity-80" />
+                <div className="h-[2px] w-full bg-gradient-to-r from-[#345FF6] to-[#5a7dfc] rounded-full mt-0.5 opacity-80 transition-all duration-300 group-hover:opacity-100 group-hover:shadow-sm" />
               </div>
             </Link>
           </div>
@@ -81,7 +82,6 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile menu button */}
           <div className="sm:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -93,7 +93,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {isMenuOpen && (
         <div className="sm:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t">
