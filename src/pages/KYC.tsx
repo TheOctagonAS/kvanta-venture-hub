@@ -10,11 +10,28 @@ import { supabase } from "@/integrations/supabase/client";
 
 const KYC = () => {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    fullName: "",
+    address: "",
+    personalNumber: "",
+  });
   const [isPep, setIsPep] = useState(false);
+  const [gdprConsent, setGdprConsent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    if (!gdprConsent) {
+      toast.error("Du må godta brukervilkårene for å fortsette");
+      return;
+    }
+
+    if (!/^\d{11}$/.test(formData.personalNumber)) {
+      toast.error("Vennligst skriv inn et gyldig fødselsnummer (11 siffer)");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -28,7 +45,9 @@ const KYC = () => {
 
       if (error) throw error;
 
-      toast.success("KYC-verifisering fullført!");
+      toast.success("KYC-informasjon lagret. Fortsett til BankID-verifisering.");
+      // Her ville vi normalt gå videre til BankID-seksjonen
+      // For nå, går vi tilbake til Min side
       navigate("/minside");
     } catch (error) {
       console.error("KYC verification failed:", error);
@@ -55,14 +74,22 @@ const KYC = () => {
               <div className="grid gap-4">
                 <div className="grid gap-2">
                   <Label htmlFor="fullName">Fullt navn</Label>
-                  <Input id="fullName" required placeholder="Ola Nordmann" />
+                  <Input 
+                    id="fullName"
+                    value={formData.fullName}
+                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                    required
+                    placeholder="Ola Nordmann"
+                  />
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="ssn">Fødselsnummer (11 siffer)</Label>
+                  <Label htmlFor="personalNumber">Fødselsnummer (11 siffer)</Label>
                   <Input 
-                    id="ssn" 
-                    required 
+                    id="personalNumber"
+                    value={formData.personalNumber}
+                    onChange={(e) => setFormData({ ...formData, personalNumber: e.target.value })}
+                    required
                     placeholder="12345678901"
                     pattern="\d{11}"
                     title="Vennligst skriv inn et gyldig 11-sifret fødselsnummer"
@@ -71,24 +98,13 @@ const KYC = () => {
 
                 <div className="grid gap-2">
                   <Label htmlFor="address">Adresse</Label>
-                  <Input id="address" required placeholder="Kongens gate 1" />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="postalCode">Postnummer</Label>
-                    <Input 
-                      id="postalCode" 
-                      required 
-                      placeholder="0123"
-                      pattern="\d{4}"
-                      title="Vennligst skriv inn et gyldig 4-sifret postnummer"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="city">Poststed</Label>
-                    <Input id="city" required placeholder="Oslo" />
-                  </div>
+                  <Input 
+                    id="address"
+                    value={formData.address}
+                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                    required
+                    placeholder="Kongens gate 1"
+                  />
                 </div>
               </div>
             </div>
@@ -102,12 +118,27 @@ const KYC = () => {
               
               <div className="flex items-center space-x-2">
                 <Checkbox 
-                  id="pep" 
+                  id="pep"
                   checked={isPep}
                   onCheckedChange={(checked) => setIsPep(checked as boolean)}
                 />
                 <Label htmlFor="pep" className="text-sm text-gray-600">
-                  Jeg bekrefter at jeg er en politisk eksponert person (PEP)
+                  Jeg er en politisk eksponert person (PEP)
+                </Label>
+              </div>
+            </div>
+
+            {/* GDPR Consent */}
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="gdpr"
+                  checked={gdprConsent}
+                  onCheckedChange={(checked) => setGdprConsent(checked as boolean)}
+                  required
+                />
+                <Label htmlFor="gdpr" className="text-sm text-gray-600">
+                  Jeg samtykker til at Kvanta.ai lagrer mine opplysninger
                 </Label>
               </div>
             </div>
@@ -121,8 +152,7 @@ const KYC = () => {
               
               <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                 <p className="text-sm text-gray-600">
-                  For å fullføre KYC-prosessen må du signere med BankID.
-                  Dette steget vil bli aktivert når all informasjon er fylt ut.
+                  Etter å ha fylt ut skjemaet, vil du bli bedt om å signere med BankID.
                 </p>
               </div>
             </div>
@@ -132,7 +162,7 @@ const KYC = () => {
               className="w-full"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Behandler..." : "Fullfør KYC-verifisering"}
+              {isSubmitting ? "Behandler..." : "Neste: BankID-verifisering"}
             </Button>
           </form>
         </div>
