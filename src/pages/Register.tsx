@@ -17,37 +17,42 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      const { data: authData, error: authError } = await supabase.auth.signUp({
+      // Step 1: Sign up the user
+      const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            is_kyc: false // Set initial KYC status
+          }
+        }
       });
 
-      if (authError) {
-        if (authError.message.includes("already registered")) {
-          toast.error("E-postadressen er allerede registrert.");
-        } else {
-          toast.error("En feil oppstod under registrering. Prøv igjen senere.");
-        }
-        return;
-      }
+      if (signUpError) throw signUpError;
 
       if (authData.user) {
+        // Step 2: Create the user profile
         const { error: profileError } = await supabase
-          .from("profiles")
-          .insert([{ id: authData.user.id, is_kyc: false }]);
+          .from('profiles')
+          .insert([
+            {
+              id: authData.user.id,
+              is_kyc: false
+            }
+          ]);
 
-        if (profileError) {
-          console.error("Error creating profile:", profileError);
-          toast.error("Kunne ikke opprette brukerprofil.");
-          return;
-        }
+        if (profileError) throw profileError;
 
-        toast.success("Bruker opprettet! Du kan nå logge inn.");
+        toast.success("Registrering vellykket! Du kan nå logge inn.");
         navigate("/");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Registration error:", error);
-      toast.error("En uventet feil oppstod. Prøv igjen senere.");
+      if (error.message.includes("already registered")) {
+        toast.error("E-postadressen er allerede registrert");
+      } else {
+        toast.error("Det oppstod en feil under registrering. Vennligst prøv igjen.");
+      }
     } finally {
       setIsLoading(false);
     }
