@@ -13,6 +13,7 @@ import Eiendommer from "./pages/Eiendommer";
 import MinSide from "./pages/MinSide";
 import LesMer from "./pages/LesMer";
 import Lommebok from "./pages/Lommebok";
+import KYC from "./pages/KYC";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
                 <Route path="/minside" element={<MinSide />} />
                 <Route path="/les-mer" element={<LesMer />} />
                 <Route path="/lommebok" element={<Lommebok />} />
+                <Route path="/kyc" element={<KYC />} />
               </Routes>
             </div>
             <Footer />

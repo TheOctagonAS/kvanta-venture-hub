@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { CheckCircle2, XCircle } from "lucide-react";
 import KYCModal from "./KYCModal";
 
-const UserProfile = ({ isKyc, onStartKYC }: { isKyc: boolean; onStartKYC: () => void }) => {
+const UserProfile = ({ isKyc, onStartKYC }: { isKyc: boolean; onStartKYC: () => Promise<void> }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isKYCModalOpen, setIsKYCModalOpen] = useState(false);
@@ -15,6 +15,10 @@ const UserProfile = ({ isKyc, onStartKYC }: { isKyc: boolean; onStartKYC: () => 
     logout();
     toast.success("Du er nå logget ut");
     navigate("/");
+  };
+
+  const handleKYCClick = () => {
+    navigate("/kyc");
   };
 
   if (!user) return null;
@@ -44,7 +48,7 @@ const UserProfile = ({ isKyc, onStartKYC }: { isKyc: boolean; onStartKYC: () => 
       <div className="flex gap-4">
         {!isKyc && (
           <Button 
-            onClick={() => setIsKYCModalOpen(true)} 
+            onClick={handleKYCClick}
             variant="default"
           >
             Fullfør KYC
