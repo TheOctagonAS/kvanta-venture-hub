@@ -19,7 +19,12 @@ const TokenToMoneyAnimation = () => {
           }}
           className="text-nordic-blue"
         >
-          <Sparkles className="rotate-0 hover:rotate-12 transition-transform" size={36} />
+          <motion.div
+            whileHover={{ rotate: 12 }}
+            transition={{ duration: 0.2 }}
+          >
+            <Sparkles size={36} />
+          </motion.div>
         </motion.div>
 
         <motion.div
@@ -49,9 +54,7 @@ const TokenToMoneyAnimation = () => {
           className="text-accent"
         >
           <motion.div
-            animate={{
-              rotate: 360
-            }}
+            animate={{ rotate: 360 }}
             transition={{
               duration: 4,
               repeat: Infinity,
