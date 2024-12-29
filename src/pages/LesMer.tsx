@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Check, ArrowRight, Shield } from "lucide-react";
+import { Rocket, Shield, Coins } from "lucide-react";
 
 const LesMer = () => {
   return (
@@ -25,19 +25,36 @@ const LesMer = () => {
             Daglige leieinntekter – alt i en brukervennlig digital lommebok.
           </p>
 
-          {/* Benefits section with icons */}
-          <div className="grid grid-cols-3 gap-6 mb-8">
-            <div className="flex flex-col items-center text-center">
-              <Check className="w-8 h-8 text-primary mb-2" />
-              <span className="font-semibold">Enkelt</span>
+          {/* Updated Benefits section with icons */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-12">
+            <div className="bg-white rounded-lg p-6 shadow-sm text-center">
+              <div className="flex flex-col items-center">
+                <Rocket className="w-12 h-12 text-primary mb-4" />
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Enkelt</h3>
+                <p className="text-sm text-gray-600">
+                  Start din eiendomsreise med få klikk. Ingen kompliserte prosesser.
+                </p>
+              </div>
             </div>
-            <div className="flex flex-col items-center text-center">
-              <Shield className="w-8 h-8 text-primary mb-2" />
-              <span className="font-semibold">Trygt</span>
+
+            <div className="bg-white rounded-lg p-6 shadow-sm text-center">
+              <div className="flex flex-col items-center">
+                <Shield className="w-12 h-12 text-primary mb-4" />
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Trygt</h3>
+                <p className="text-sm text-gray-600">
+                  Kvalitetssikrede eiendommer og sikker plattform for dine investeringer.
+                </p>
+              </div>
             </div>
-            <div className="flex flex-col items-center text-center">
-              <ArrowRight className="w-8 h-8 text-primary mb-2" />
-              <span className="font-semibold">Lønnsomt</span>
+
+            <div className="bg-white rounded-lg p-6 shadow-sm text-center">
+              <div className="flex flex-col items-center">
+                <Coins className="w-12 h-12 text-primary mb-4" />
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Lønnsomt</h3>
+                <p className="text-sm text-gray-600">
+                  Daglige leieinntekter og potensial for verdistigning over tid.
+                </p>
+              </div>
             </div>
           </div>
 
