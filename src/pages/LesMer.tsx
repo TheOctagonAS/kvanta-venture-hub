@@ -98,6 +98,23 @@ const LesMer = () => {
                 </div>
               </div>
             </div>
+
+            {/* New Token Trading Box */}
+            <div className="bg-white p-4 shadow-sm rounded mt-6">
+              <h3 className="text-xl font-semibold mb-4 text-primary text-center">
+                Kjøp og salg av tokens – raskt og fleksibelt
+              </h3>
+              <div className="space-y-4">
+                <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                  <li>Klikk "Kjøp tokens" eller "Selg tokens"</li>
+                  <li>Velg antall tokens</li>
+                  <li>Bekreft handle</li>
+                </ul>
+                <p className="text-gray-700 mt-4">
+                  Gevinst kan realiseres når du vil, alt via intern markedsplass.
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="bg-nordic-softblue rounded-lg p-4 text-center mb-4">
