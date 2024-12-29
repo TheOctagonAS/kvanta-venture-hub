@@ -41,8 +41,8 @@ const Lommebok = () => {
               <Calculator className="w-8 h-8 text-primary animate-pulse" />
               <h2 className="text-sm font-medium text-primary">Regner inntekter...</h2>
             </div>
-            <h1 className="text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-500 to-blue-600">
-              Din Digitale Lommebok
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-500 to-blue-600">
+              Din Digitale Lommebok – Oversikt og Kontroll
             </h1>
             <div className="relative">
               <motion.div
@@ -52,8 +52,7 @@ const Lommebok = () => {
                 className="absolute h-1 bg-gradient-to-r from-transparent via-primary to-transparent bottom-0 left-0"
               />
               <p className="text-lg mb-8 text-nordic-charcoal/80">
-                Her kan du enkelt holde oversikt over dine investeringer, leieinntekter og verdistigning i sanntid.
-                Mens du ser på, regner vi kontinuerlig ut din avkastning.
+                Få full innsikt i dine eiendomstokens, daglige leieinntekter og fremtidig avkastning.
               </p>
             </div>
           </motion.div>
