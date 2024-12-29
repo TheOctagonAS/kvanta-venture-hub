@@ -39,6 +39,9 @@ export default {
           lightgray: "#F6F6F7",
           softblue: "#D3E4FD",
         },
+        sky: {
+          500: "#0EA5E9",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
