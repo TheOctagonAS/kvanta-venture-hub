@@ -6,52 +6,31 @@ import { supabase } from "@/lib/supabaseClient";
 import LoginForm from "@/components/LoginForm";
 import UserProfile from "@/components/UserProfile";
 import UserHoldings from "@/components/UserHoldings";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useQuery } from "@tanstack/react-query";
 
 const MinSide = () => {
   const { user } = useAuth();
-  const [isKyc, setIsKyc] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      if (!user) {
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single();
-
-        if (!profile) {
-          const { error: createError } = await supabase
-            .from('profiles')
-            .insert([{ id: user.id, is_kyc: false }]);
-
-          if (createError) throw createError;
-          setIsKyc(false);
-        } else {
-          setIsKyc(profile.is_kyc);
-        }
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-        toast.error('Kunne ikke hente profil');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchProfile();
-  }, [user]);
+  const { data: profile, refetch: refetchProfile } = useQuery({
+    queryKey: ['profile', user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user,
+  });
 
   const handleStartKYC = async () => {
-    if (!user) {
-      toast.error('Kunne ikke starte KYC-prosessen');
-      return;
-    }
+    if (!user) return;
 
     try {
       const { error } = await supabase
@@ -61,11 +40,11 @@ const MinSide = () => {
 
       if (error) throw error;
 
-      setIsKyc(true);
+      await refetchProfile();
       toast.success("KYC-verifisering fullført!");
     } catch (error) {
       console.error('Error updating KYC status:', error);
-      toast.error('Kunne ikke oppdatere KYC-status');
+      toast.error("Kunne ikke fullføre KYC-verifisering");
     }
   };
 
@@ -90,7 +69,14 @@ const MinSide = () => {
             <LoginForm />
           ) : (
             <>
-              <UserProfile isKyc={isKyc} onStartKYC={handleStartKYC} />
+              <UserProfile isKyc={profile?.is_kyc || false} onStartKYC={handleStartKYC} />
+              {!profile?.is_kyc && (
+                <Alert variant="warning" className="mb-6">
+                  <AlertDescription>
+                    Du må være KYC-verifisert for å kjøpe tokens
+                  </AlertDescription>
+                </Alert>
+              )}
               <UserHoldings />
             </>
           )}

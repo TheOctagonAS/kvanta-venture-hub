@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { CheckCircle2 } from "lucide-react";
 
 const UserProfile = ({ isKyc, onStartKYC }: { isKyc: boolean; onStartKYC: () => void }) => {
   const { user, logout } = useAuth();
@@ -28,19 +29,19 @@ const UserProfile = ({ isKyc, onStartKYC }: { isKyc: boolean; onStartKYC: () => 
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="p-4 bg-gray-50 rounded-lg">
-          <p className="text-gray-700">
-            KYC-status:{" "}
-            <span
-              className={`font-semibold ${
-                isKyc ? "text-green-600" : "text-yellow-600"
-              }`}
-            >
-              {isKyc ? "Verifisert" : "Ikke verifisert"}
-            </span>
-          </p>
-          <p className="text-gray-700 mt-2">
-            Total opptjent leie: {user.accumulatedRent || 0} kr
-          </p>
+          <div className="flex items-center gap-2">
+            <span className="text-gray-700">KYC-status: </span>
+            {isKyc ? (
+              <span className="flex items-center gap-1 text-green-600 font-semibold">
+                <CheckCircle2 className="h-4 w-4" />
+                Verifisert
+              </span>
+            ) : (
+              <span className="text-yellow-600 font-semibold">
+                Ikke verifisert
+              </span>
+            )}
+          </div>
         </div>
 
         {!isKyc && (
