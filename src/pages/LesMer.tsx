@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Rocket, Shield, Coins } from "lucide-react";
+import { Rocket, Shield, Coins, UserPlus, ShieldCheck, Cash } from "lucide-react";
 
 const LesMer = () => {
   return (
@@ -25,7 +25,7 @@ const LesMer = () => {
             Daglige leieinntekter – alt i en brukervennlig digital lommebok.
           </p>
 
-          {/* Updated Benefits section with icons */}
+          {/* Benefits section with icons */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-12">
             <div className="bg-white rounded-lg p-6 shadow-sm text-center">
               <div className="flex flex-col items-center">
@@ -54,6 +54,48 @@ const LesMer = () => {
                 <p className="text-sm text-gray-600">
                   Daglige leieinntekter og potensial for verdistigning over tid.
                 </p>
+              </div>
+            </div>
+          </div>
+
+          {/* How it works section */}
+          <div className="mt-16 mb-12">
+            <h3 className="text-2xl font-semibold text-center mb-3">Hvordan det virker</h3>
+            <p className="text-gray-600 text-center mb-8">
+              Få avkastning på eiendom i fire enkle trinn.
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="bg-white p-4 rounded-lg shadow-sm text-center">
+                <div className="flex flex-col items-center">
+                  <UserPlus className="w-8 h-8 text-primary mb-2" />
+                  <div className="font-semibold mb-1">1. Opprett bruker</div>
+                  <p className="text-sm text-gray-600">Registrer deg enkelt med e-post</p>
+                </div>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg shadow-sm text-center">
+                <div className="flex flex-col items-center">
+                  <ShieldCheck className="w-8 h-8 text-primary mb-2" />
+                  <div className="font-semibold mb-1">2. Fullfør KYC</div>
+                  <p className="text-sm text-gray-600">Sikre trygg investering</p>
+                </div>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg shadow-sm text-center">
+                <div className="flex flex-col items-center">
+                  <Coins className="w-8 h-8 text-primary mb-2" />
+                  <div className="font-semibold mb-1">3. Kjøp tokens</div>
+                  <p className="text-sm text-gray-600">Velg eiendom, antall tokens</p>
+                </div>
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg shadow-sm text-center">
+                <div className="flex flex-col items-center">
+                  <Cash className="w-8 h-8 text-primary mb-2" />
+                  <div className="font-semibold mb-1">4. Motta inntekter</div>
+                  <p className="text-sm text-gray-600">Daglige leieutbetalinger</p>
+                </div>
               </div>
             </div>
           </div>
