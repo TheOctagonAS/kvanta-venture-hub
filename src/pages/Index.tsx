@@ -58,7 +58,7 @@ const Index = () => {
                     Opprett bruker
                   </Button>
                 </Link>
-                <Link to="/">
+                <Link to="/login">
                   <Button variant="outline" size="lg">
                     Logg inn
                   </Button>
