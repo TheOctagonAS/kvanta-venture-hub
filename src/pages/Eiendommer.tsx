@@ -15,12 +15,14 @@ type Property = {
   price_per_token: number;
   image_url: string | null;
   yield: number;
+  max_tokens: number;
+  tokens_sold: number;
 };
 
 const fetchProperties = async () => {
   const { data, error } = await supabase
     .from('properties')
-    .select('*');
+    .select('id, name, location, price_per_token, image_url, yield, max_tokens, tokens_sold');
   
   if (error) {
     console.error('Error fetching properties:', error);

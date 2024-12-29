@@ -15,6 +15,8 @@ type PropertyCardProps = {
     price_per_token: number;
     image_url: string | null;
     yield: number;
+    max_tokens: number;
+    tokens_sold: number;
   };
   onSelectProperty: (property: PropertyCardProps['property']) => void;
 };
@@ -22,6 +24,8 @@ type PropertyCardProps = {
 export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) => {
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  const availableTokens = property.max_tokens - property.tokens_sold;
 
   return (
     <motion.div
@@ -61,6 +65,9 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
               <span className="font-semibold text-lg text-primary">
                 {property.price_per_token} kr per token
               </span>
+            </div>
+            <div className="text-sm text-gray-600">
+              Tilgjengelige tokens: {availableTokens} / {property.max_tokens}
             </div>
           </div>
         </CardContent>
