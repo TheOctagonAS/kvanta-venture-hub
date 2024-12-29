@@ -18,6 +18,7 @@ const KYC = () => {
   const [isPep, setIsPep] = useState(false);
   const [gdprConsent, setGdprConsent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showBankID, setShowBankID] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,28 +33,35 @@ const KYC = () => {
       return;
     }
 
-    setIsSubmitting(true);
+    setShowBankID(true);
+  };
 
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Ingen bruker funnet");
+  const handleBankIDClick = async () => {
+    const confirmBankID = window.confirm(
+      "BankID-prosess vil i fremtiden linke til faktisk BankID API. For nå, klikk 'Ok' for å mock signering."
+    );
 
-      const { error } = await supabase
-        .from('profiles')
-        .update({ is_kyc: true })
-        .eq('id', user.id);
+    if (confirmBankID) {
+      setIsSubmitting(true);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) throw new Error("Ingen bruker funnet");
 
-      if (error) throw error;
+        const { error } = await supabase
+          .from('profiles')
+          .update({ is_kyc: true })
+          .eq('id', user.id);
 
-      toast.success("KYC-informasjon lagret. Fortsett til BankID-verifisering.");
-      // Her ville vi normalt gå videre til BankID-seksjonen
-      // For nå, går vi tilbake til Min side
-      navigate("/minside");
-    } catch (error) {
-      console.error("KYC verification failed:", error);
-      toast.error("Kunne ikke fullføre KYC-verifisering");
-    } finally {
-      setIsSubmitting(false);
+        if (error) throw error;
+
+        toast.success("KYC-verifisering fullført!");
+        navigate("/minside");
+      } catch (error) {
+        console.error("KYC verification failed:", error);
+        toast.error("Kunne ikke fullføre KYC-verifisering");
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -63,108 +71,115 @@ const KYC = () => {
         <div className="bg-white shadow-sm rounded-lg p-6">
           <h1 className="text-2xl font-bold mb-6">Fullfør KYC – steg for steg</h1>
 
-          <form onSubmit={handleSubmit} className="space-y-8">
-            {/* Personalia Section */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-lg font-semibold text-gray-700 mb-4">
-                <User className="h-5 w-5" />
-                <h2>Personalia</h2>
-              </div>
-              
-              <div className="grid gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="fullName">Fullt navn</Label>
-                  <Input 
-                    id="fullName"
-                    value={formData.fullName}
-                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                    required
-                    placeholder="Ola Nordmann"
-                  />
+          {!showBankID ? (
+            <form onSubmit={handleSubmit} className="space-y-8">
+              {/* Personalia Section */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-lg font-semibold text-gray-700 mb-4">
+                  <User className="h-5 w-5" />
+                  <h2>Personalia</h2>
                 </div>
+                
+                <div className="grid gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="fullName">Fullt navn</Label>
+                    <Input 
+                      id="fullName"
+                      value={formData.fullName}
+                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                      required
+                      placeholder="Ola Nordmann"
+                    />
+                  </div>
 
-                <div className="grid gap-2">
-                  <Label htmlFor="personalNumber">Fødselsnummer (11 siffer)</Label>
-                  <Input 
-                    id="personalNumber"
-                    value={formData.personalNumber}
-                    onChange={(e) => setFormData({ ...formData, personalNumber: e.target.value })}
-                    required
-                    placeholder="12345678901"
-                    pattern="\d{11}"
-                    title="Vennligst skriv inn et gyldig 11-sifret fødselsnummer"
-                  />
+                  <div className="grid gap-2">
+                    <Label htmlFor="personalNumber">Fødselsnummer (11 siffer)</Label>
+                    <Input 
+                      id="personalNumber"
+                      value={formData.personalNumber}
+                      onChange={(e) => setFormData({ ...formData, personalNumber: e.target.value })}
+                      required
+                      placeholder="12345678901"
+                      pattern="\d{11}"
+                      title="Vennligst skriv inn et gyldig 11-sifret fødselsnummer"
+                    />
+                  </div>
+
+                  <div className="grid gap-2">
+                    <Label htmlFor="address">Adresse</Label>
+                    <Input 
+                      id="address"
+                      value={formData.address}
+                      onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                      required
+                      placeholder="Kongens gate 1"
+                    />
+                  </div>
                 </div>
+              </div>
 
-                <div className="grid gap-2">
-                  <Label htmlFor="address">Adresse</Label>
-                  <Input 
-                    id="address"
-                    value={formData.address}
-                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                    required
-                    placeholder="Kongens gate 1"
+              {/* PEP Check Section */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-lg font-semibold text-gray-700 mb-4">
+                  <Shield className="h-5 w-5" />
+                  <h2>PEP-sjekk</h2>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="pep"
+                    checked={isPep}
+                    onCheckedChange={(checked) => setIsPep(checked as boolean)}
                   />
+                  <Label htmlFor="pep" className="text-sm text-gray-600">
+                    Er du en politisk eksponert person (PEP)?
+                  </Label>
                 </div>
               </div>
-            </div>
 
-            {/* PEP Check Section */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-lg font-semibold text-gray-700 mb-4">
-                <Shield className="h-5 w-5" />
-                <h2>PEP-sjekk</h2>
+              {/* GDPR Consent */}
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="gdpr"
+                    checked={gdprConsent}
+                    onCheckedChange={(checked) => setGdprConsent(checked as boolean)}
+                    required
+                  />
+                  <Label htmlFor="gdpr" className="text-sm text-gray-600">
+                    Jeg samtykker til at Kvanta.ai lagrer mine opplysninger
+                  </Label>
+                </div>
               </div>
-              
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="pep"
-                  checked={isPep}
-                  onCheckedChange={(checked) => setIsPep(checked as boolean)}
-                />
-                <Label htmlFor="pep" className="text-sm text-gray-600">
-                  Jeg er en politisk eksponert person (PEP)
-                </Label>
-              </div>
-            </div>
 
-            {/* GDPR Consent */}
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="gdpr"
-                  checked={gdprConsent}
-                  onCheckedChange={(checked) => setGdprConsent(checked as boolean)}
-                  required
-                />
-                <Label htmlFor="gdpr" className="text-sm text-gray-600">
-                  Jeg samtykker til at Kvanta.ai lagrer mine opplysninger
-                </Label>
-              </div>
-            </div>
-
-            {/* BankID Section */}
-            <div className="space-y-4">
+              <Button 
+                type="submit" 
+                className="w-full"
+                disabled={isSubmitting}
+              >
+                Neste
+              </Button>
+            </form>
+          ) : (
+            <div className="space-y-6">
               <div className="flex items-center gap-2 text-lg font-semibold text-gray-700 mb-4">
                 <CreditCard className="h-5 w-5" />
                 <h2>BankID-signering</h2>
               </div>
               
-              <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                <p className="text-sm text-gray-600">
-                  Etter å ha fylt ut skjemaet, vil du bli bedt om å signere med BankID.
-                </p>
-              </div>
-            </div>
+              <p className="text-gray-600 mb-6">
+                For å fullføre KYC-prosessen, må du signere med BankID.
+              </p>
 
-            <Button 
-              type="submit" 
-              className="w-full"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Behandler..." : "Neste: BankID-verifisering"}
-            </Button>
-          </form>
+              <Button 
+                onClick={handleBankIDClick}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Behandler..." : "Start BankID"}
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>
