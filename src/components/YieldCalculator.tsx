@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Calculator } from "lucide-react";
+import { Calculator, Info } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import YieldCards from "./calculator/YieldCards";
 import GrowthChart from "./calculator/GrowthChart";
 import CalculatorCTA from "./calculator/CalculatorCTA";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const YieldCalculator = () => {
   const [amount, setAmount] = useState<string>("100000");
@@ -60,31 +66,52 @@ const YieldCalculator = () => {
   };
 
   return (
-    <div className="bg-[#f8fbff] p-6 rounded-lg">
+    <div className="bg-[#f8fbff] p-4 rounded-lg">
       <Card className="bg-white shadow-sm">
-        <CardHeader className="space-y-1 border-b border-gray-100">
-          <CardTitle className="text-2xl font-bold flex items-center gap-2">
-            <Calculator className="w-6 h-6 text-nordic-blue" />
-            Kalkulator: Hva kan du tjene?
-          </CardTitle>
-          <p className="text-base text-gray-600">
-            Juster beløpet nedenfor for å se et omtrentlig estimat basert på historisk leieavkastning og verdistigning.
+        <CardHeader className="space-y-1 border-b border-gray-100 py-4">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-2xl font-bold flex items-center gap-2">
+              <Calculator className="w-6 h-6 text-nordic-blue" />
+              Kalkulator: Hva kan du tjene?
+            </CardTitle>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Info className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+                </TooltipTrigger>
+                <TooltipContent className="max-w-xs">
+                  <p className="text-sm">
+                    Estimert årlig avkastning: {APY}%
+                    <br />
+                    (4.5% gjennomsnittlig leieavkastning + 4% historisk verdistigning)
+                    <br /><br />
+                    Dette estimatet er basert på historisk gjennomsnittlig avkastning fra næringseiendom i Norge de siste 10 årene. 
+                    Merk at historisk avkastning ikke er en garanti for fremtidig avkastning.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+          <p className="text-sm text-gray-600">
+            Juster beløpet nedenfor for å se et omtrentlig estimat basert på historisk avkastning.
           </p>
         </CardHeader>
-        <CardContent className="grid gap-6 pt-6">
+        <CardContent className="grid gap-4 pt-4">
           <div className="grid gap-4">
-            <div className="bg-white p-6 rounded-lg shadow-sm space-y-4">
-              <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                Investeringsbeløp (NOK)
-              </label>
-              <div className="flex flex-col md:flex-row items-center gap-4">
-                <Input
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  className="w-full text-lg font-medium"
-                />
-                <div className="w-full">
+            <div className="bg-white rounded-lg shadow-sm">
+              <div className="flex flex-col md:flex-row md:items-end gap-4 p-4">
+                <div className="flex-1">
+                  <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-2 block">
+                    Investeringsbeløp (NOK)
+                  </label>
+                  <Input
+                    type="number"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    className="text-lg font-medium"
+                  />
+                </div>
+                <div className="flex-1">
                   <Slider
                     defaultValue={[100000]}
                     max={5000000}
@@ -94,22 +121,6 @@ const YieldCalculator = () => {
                     className="[&>.relative>.absolute]:bg-nordic-blue [&>.relative]:bg-nordic-softblue [&>.block]:border-nordic-blue [&>.block]:bg-white"
                   />
                 </div>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <div className="bg-nordic-softblue rounded-lg p-4 border border-blue-100">
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  Estimert årlig avkastning: <span className="font-semibold">{APY}%</span>
-                  <br />
-                  <span className="text-xs">
-                    (4.5% gjennomsnittlig leieavkastning + 4% historisk verdistigning)
-                  </span>
-                </p>
-                <p className="text-xs text-gray-600 mt-2">
-                  Dette estimatet er basert på historisk gjennomsnittlig avkastning fra næringseiendom i Norge de siste 10 årene. 
-                  Merk at historisk avkastning ikke er en garanti for fremtidig avkastning. Verdien av investeringen kan både øke og synke, 
-                  og du kan tape deler av eller hele det investerte beløpet.
-                </p>
               </div>
             </div>
           </div>
