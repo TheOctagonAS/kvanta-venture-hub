@@ -9,7 +9,7 @@ function Hero() {
   const { user } = useAuth();
   const [titleNumber, setTitleNumber] = useState(0);
   const titles = useMemo(
-    () => ["trygt", "enkelt", "lønnsomt", "transparent", "smart"],
+    () => ["trygt", "enkelt", "lønnsomt", "transparent", "smart", "tilgjengelig"],
     []
   );
 
@@ -69,8 +69,7 @@ function Hero() {
             </h1>
 
             <p className="text-lg md:text-xl leading-relaxed tracking-tight text-nordic-charcoal/80 max-w-2xl text-center">
-              Start din eiendomsreise i dag med så lite som 1000 kr. Få daglige leieinntekter 
-              og bygg opp din portefølje gradvis med vårt innovative tokeniseringssystem.
+              Start eiendomsreisen med bare 1000 kr. Opprett bruker og få daglige leieinntekter gjennom vår sikre, tokenbaserte plattform.
             </p>
           </div>
           <div className="flex flex-row gap-3">
