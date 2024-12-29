@@ -107,6 +107,21 @@ const Index = () => {
           <YieldCalculator />
         </motion.div>
 
+        {/* New "Les mer" section */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8, duration: 0.8 }}
+          className="bg-white rounded-xl shadow-lg p-6 mt-10 mb-10"
+        >
+          <h2 className="text-2xl sm:text-3xl font-semibold mb-4 text-center text-primary">
+            Les mer om Kvanta.ai
+          </h2>
+          <p className="text-lg text-gray-600 text-center max-w-2xl mx-auto">
+            En trygg og enkel plattform for brøkdelsinvestering i eiendom
+          </p>
+        </motion.div>
+
         {/* Why choose section */}
         <motion.div
           initial={{ opacity: 0 }}
