@@ -6,7 +6,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { useState } from "react";
 import TokenPurchaseModal from "../components/TokenPurchaseModal";
 import { useAuth } from "../contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabaseClient";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -26,7 +26,7 @@ const Eiendommer = () => {
     queryFn: fetchProperties,
   });
 
-  const handlePurchase = (tokenCount: number) => {
+  const handlePurchase = async (tokenCount: number) => {
     if (!user) {
       navigate("/login");
       return;
@@ -38,9 +38,43 @@ const Eiendommer = () => {
       return;
     }
 
-    if (selectedProperty) {
-      console.log(`Kjøp ${tokenCount} tokens i ${selectedProperty.name}`);
-      toast.success(`Kjøpte ${tokenCount} tokens i ${selectedProperty.name}`);
+    try {
+      // Check if user already has holdings for this property
+      const { data: existingHoldings } = await supabase
+        .from('user_holdings')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('property_id', selectedProperty.id)
+        .single();
+
+      if (existingHoldings) {
+        // Update existing holdings
+        const { error: updateError } = await supabase
+          .from('user_holdings')
+          .update({ 
+            token_count: existingHoldings.token_count + tokenCount 
+          })
+          .eq('id', existingHoldings.id);
+
+        if (updateError) throw updateError;
+      } else {
+        // Insert new holdings
+        const { error: insertError } = await supabase
+          .from('user_holdings')
+          .insert({
+            user_id: user.id,
+            property_id: selectedProperty.id,
+            token_count: tokenCount
+          });
+
+        if (insertError) throw insertError;
+      }
+
+      toast.success("Kjøp fullført!");
+      setSelectedProperty(null); // Close modal
+    } catch (error) {
+      console.error('Error purchasing tokens:', error);
+      toast.error("Kunne ikke fullføre kjøpet");
     }
   };
 
