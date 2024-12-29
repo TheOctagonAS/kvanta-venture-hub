@@ -49,6 +49,26 @@ const LesMer = () => {
               <p className="text-sm text-gray-600">Claim daily yield fra dine investeringer</p>
             </div>
           </div>
+
+          {/* New section about token trading */}
+          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+            <h3 className="text-xl font-semibold mb-4 text-primary text-center">
+              Kjøp og salg av tokens – like enkelt som netthandel!
+            </h3>
+            <div className="space-y-4">
+              <p className="text-gray-700">
+                Ønsker du å realisere gevinst? Ingen problem! Vår interne markedsplass gjør det enkelt å selge dine tokens når du måtte ønske. Med bare noen få klikk kan du:
+              </p>
+              <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                <li>Klikke på "Selg tokens"</li>
+                <li>Velge antall tokens du ønsker å selge</li>
+                <li>Bekrefte salget</li>
+              </ul>
+              <p className="text-gray-700 mt-4">
+                Som en bedriftskontrollert løsning sikrer vi at alle transaksjoner er trygge og transparente, samtidig som du har full kontroll over dine investeringer.
+              </p>
+            </div>
+          </div>
         </div>
       </motion.div>
     </div>
