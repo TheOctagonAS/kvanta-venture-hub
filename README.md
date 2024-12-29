@@ -10,48 +10,43 @@ For testing purposes, you can use these credentials:
 - Email: julian@example.com
 - Password: password123
 
+## Supabase Setup
+
+For å sette opp databasen i Supabase, kjør følgende SQL-kommandoer:
+
+```sql
+-- Opprett properties-tabellen
+CREATE TABLE public.properties (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    name TEXT NOT NULL,
+    location TEXT NOT NULL,
+    price_per_token INTEGER NOT NULL,
+    image_url TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+-- Legg til eksempeldata
+INSERT INTO public.properties (name, location, price_per_token, image_url) VALUES
+('Sentrumsleilighet i Oslo', 'Grünerløkka, Oslo', 1000, 'https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&q=80&w=2940&ixlib=rb-4.0.3'),
+('Næringsbygg i Stockholm', 'Södermalm, Stockholm', 1500, 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=2940&ixlib=rb-4.0.3'),
+('Hytte ved fjorden i Bergen', 'Nordnes, Bergen', 2000, 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&q=80&w=2940&ixlib=rb-4.0.3'),
+('Kontorbygg i København', 'Indre By, København', 1200, 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=2940&ixlib=rb-4.0.3');
+
+-- Aktiver Row Level Security
+ALTER TABLE public.properties ENABLE ROW LEVEL SECURITY;
+
+-- Tillat lesing for alle
+CREATE POLICY "Allow public read access" ON public.properties
+    FOR SELECT TO public USING (true);
+```
+
 ## Om Mock-funksjonalitet
 
-Dette er en ren frontend-implementasjon hvor all funksjonalitet er simulert:
+Dette er en ren frontend-implementasjon hvor noe funksjonalitet fortsatt er simulert:
 - Innlogging bruker lokal state management (ingen faktisk autentisering)
 - "Kjøp tokens"-knapper er ikke koblet til noe betalings-API
 - KYC-verifisering er simulert
-- Eiendomsdata og token-beholdning lagres kun i minnet
-
-## Integrering med Backend
-
-For å gjøre denne prototypen til en fullverdig applikasjon, kan mock-endepunktene erstattes med reelle API-kall:
-
-### REST API Integrasjon
-```typescript
-// Eksempel på hvordan kjøp av tokens kan implementeres med REST:
-const purchaseTokens = async (propertyId: number, tokenCount: number) => {
-  const response = await fetch('/api/tokens/purchase', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ propertyId, tokenCount }),
-  });
-  return response.json();
-};
-```
-
-### GraphQL Integrasjon
-```typescript
-// Eksempel på hvordan samme funksjonalitet kan implementeres med GraphQL:
-const PURCHASE_TOKENS = gql`
-  mutation PurchaseTokens($propertyId: ID!, $tokenCount: Int!) {
-    purchaseTokens(propertyId: $propertyId, tokenCount: $tokenCount) {
-      success
-      transaction {
-        id
-        status
-      }
-    }
-  }
-`;
-```
+- Token-beholdning lagres kun i minnet
 
 ## Supabase Konfigurasjon
 
@@ -100,4 +95,4 @@ Dette prosjektet er bygget med:
 - Vite
 - Tailwind CSS
 - TypeScript
-
+- Supabase
