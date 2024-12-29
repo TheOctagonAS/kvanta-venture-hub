@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Building2, MapPin, Coins } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,7 @@ import TokenPurchaseModal from "../components/TokenPurchaseModal";
 import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const fetchProperties = async () => {
   const { data, error } = await supabase.from('properties').select('*');
@@ -16,7 +18,8 @@ const fetchProperties = async () => {
 
 const Eiendommer = () => {
   const [selectedProperty, setSelectedProperty] = useState<any | null>(null);
-  const { addPropertyTokens } = useAuth();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   
   const { data: properties, isLoading, error } = useQuery({
     queryKey: ['properties'],
@@ -24,9 +27,20 @@ const Eiendommer = () => {
   });
 
   const handlePurchase = (tokenCount: number) => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    if (!user.isKYC) {
+      toast.error("Du må fullføre KYC før du kan kjøpe tokens");
+      navigate("/minside");
+      return;
+    }
+
     if (selectedProperty) {
       console.log(`Kjøp ${tokenCount} tokens i ${selectedProperty.name}`);
-      addPropertyTokens(selectedProperty.id, selectedProperty.name, tokenCount);
+      toast.success(`Kjøpte ${tokenCount} tokens i ${selectedProperty.name}`);
     }
   };
 
@@ -86,18 +100,31 @@ const Eiendommer = () => {
                   <div className="space-y-3">
                     <div className="flex items-center gap-2 text-gray-600">
                       <MapPin className="h-4 w-4" />
-                      <span>{property.location}</span>
+                      <span className="font-semibold text-lg">{property.location}</span>
                     </div>
                     <div className="flex items-center gap-2 text-gray-600">
                       <Coins className="h-4 w-4" />
-                      <span>{property.price_per_token} kr per token</span>
+                      <span className="font-semibold text-lg text-primary">
+                        {property.price_per_token} kr per token
+                      </span>
                     </div>
                   </div>
                 </CardContent>
                 <CardFooter>
                   <Button
                     className="w-full"
-                    onClick={() => setSelectedProperty(property)}
+                    onClick={() => {
+                      if (!user) {
+                        navigate("/login");
+                        return;
+                      }
+                      if (!user.isKYC) {
+                        toast.error("Du må fullføre KYC før du kan kjøpe tokens");
+                        navigate("/minside");
+                        return;
+                      }
+                      setSelectedProperty(property);
+                    }}
                   >
                     <Building2 className="mr-2 h-4 w-4" />
                     Kjøp tokens
