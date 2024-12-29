@@ -117,52 +117,13 @@ const LesMer = () => {
             </div>
           </div>
 
-          <div className="bg-nordic-softblue rounded-lg p-4 text-center mb-4">
-            <p className="text-gray-700">
-              All data lagres sikkert i Supabase, og KYC sikrer at alle investorer er verifiserte.
+          {/* Security & Technology Banner */}
+          <div className="bg-[#E9F2FF] rounded-lg px-4 py-3 text-[#345FF6] mb-8">
+            <h3 className="font-semibold mb-2">Sikkerhet & Teknologi</h3>
+            <p className="leading-relaxed">
+              Data lagres i Supabase, KYC sikrer verifiserte investorer, og alle transaksjoner krypteres. 
+              Du har full oversikt i lommeboken – ingen skjulte prosesser.
             </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8 mb-8">
-            <div className="bg-white p-4 rounded-lg shadow-sm text-center">
-              <div className="font-semibold mb-2 text-primary">1. Opprett bruker</div>
-              <p className="text-sm text-gray-600">Registrer deg enkelt med e-post</p>
-            </div>
-            
-            <div className="bg-white p-4 rounded-lg shadow-sm text-center">
-              <div className="font-semibold mb-2 text-primary">2. Fullfør KYC</div>
-              <p className="text-sm text-gray-600">Verifiser identiteten din</p>
-            </div>
-            
-            <div className="bg-white p-4 rounded-lg shadow-sm text-center">
-              <div className="font-semibold mb-2 text-primary">3. Kjøp tokens</div>
-              <p className="text-sm text-gray-600">Velg eiendom og antall tokens</p>
-            </div>
-            
-            <div className="bg-white p-4 rounded-lg shadow-sm text-center">
-              <div className="font-semibold mb-2 text-primary">4. Motta inntekter</div>
-              <p className="text-sm text-gray-600">Claim daily yield fra dine investeringer</p>
-            </div>
-          </div>
-
-          {/* Token trading section */}
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 mb-8">
-            <h3 className="text-xl font-semibold mb-4 text-primary text-center">
-              Kjøp og salg av tokens – like enkelt som netthandel!
-            </h3>
-            <div className="space-y-4">
-              <p className="text-gray-700">
-                Ønsker du å realisere gevinst? Ingen problem! Vår interne markedsplass gjør det enkelt å selge dine tokens når du måtte ønske. Med bare noen få klikk kan du:
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                <li>Klikke på "Selg tokens"</li>
-                <li>Velge antall tokens du ønsker å selge</li>
-                <li>Bekrefte salget</li>
-              </ul>
-              <p className="text-gray-700 mt-4">
-                Som en bedriftskontrollert løsning sikrer vi at alle transaksjoner er trygge og transparente, samtidig som du har full kontroll over dine investeringer.
-              </p>
-            </div>
           </div>
 
           {/* CTA section */}
