@@ -37,7 +37,10 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center gap-2 py-2 px-4 group">
               <KvantaLogo />
-              <Badge variant="secondary" className="ml-2 text-xs bg-gradient-to-r from-yellow-50 to-yellow-100/80 text-yellow-800 font-medium shadow-sm">
+              <Badge 
+                variant="secondary" 
+                className="ml-2 text-xs bg-gradient-to-r from-amber-50 to-amber-100/80 text-amber-800 font-medium shadow-sm"
+              >
                 Beta
               </Badge>
             </Link>

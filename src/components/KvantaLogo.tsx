@@ -18,33 +18,31 @@ export const KvantaLogo = () => {
         </linearGradient>
       </defs>
 
+      {/* Simplified geometric shape */}
       <path
-        d="M20 50 C10 40 10 20 20 10 L30 10 L30 20 L40 20 L40 30 L50 30 L50 50 Z" 
+        d="M20 50 L10 30 L20 10 L40 10 L40 20 L50 20 L50 50 Z" 
         fill="url(#kvantaGradient)"
         className="transform transition-transform duration-300 group-hover:scale-105"
       />
 
+      {/* "Kvanta" text - now all on the same baseline */}
       <text
         fontFamily="Nunito, sans-serif"
-        fontSize="28"
+        fontSize="32"
         fontWeight="700"
         fill="url(#kvantaGradient)"
         className="transition-transform duration-300"
       >
-        <tspan x="60" y="45" className="group-hover:translate-y-[-1px]">K</tspan>
-        <tspan x="75" y="40" className="group-hover:translate-y-[1px]">v</tspan>
-        <tspan x="90" y="45" className="group-hover:translate-y-[-1px]">a</tspan>
-        <tspan x="105" y="50" className="group-hover:translate-y-[1px]">n</tspan>
-        <tspan x="120" y="45" className="group-hover:translate-y-[-1px]">t</tspan>
-        <tspan x="135" y="40" className="group-hover:translate-y-[1px]">a</tspan>
+        <tspan x="60" y="45">Kvanta</tspan>
       </text>
 
+      {/* ".ai" integrated with main text */}
       <text
         fontFamily="Nunito, sans-serif"
-        fontSize="14"
+        fontSize="24"
         fontWeight="600"
-        className="transition-colors duration-300 group-hover:fill-white"
-        fill="#E9F2FF"
+        fill="#345FF6"
+        className="transition-transform duration-300"
       >
         <tspan x="175" y="45">.ai</tspan>
       </text>
