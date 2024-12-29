@@ -64,11 +64,14 @@ const Statistics = () => {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="text-center">
-          <p className="text-3xl font-bold text-gray-900">
-            Beregnet daglig utbetaling: {dailyPayout.toFixed(2)} kr
+          <p className="text-sm text-gray-600 mb-2">
+            Est. daily yield
           </p>
-          <p className="text-sm text-gray-500 mt-2 italic">
-            *Simulert avkastning, ikke garantert.
+          <p className="text-4xl font-bold" style={{ color: '#47c757' }}>
+            {dailyPayout.toFixed(2)} kr
+          </p>
+          <p className="text-xs text-gray-500 mt-2 italic">
+            *Simulert, ingen garanti.
           </p>
         </div>
       </CardContent>
