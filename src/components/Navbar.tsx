@@ -1,10 +1,11 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Beta } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 
 const Navbar = () => {
   const location = useLocation();
@@ -32,9 +33,15 @@ const Navbar = () => {
     <nav className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="text-xl font-bold text-primary">
-            Kvanta.ai
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link to="/" className="text-xl font-bold text-primary">
+              Kvanta.ai
+            </Link>
+            <Badge variant="secondary" className="bg-white/80 backdrop-blur-sm text-nordic-charcoal font-medium">
+              <Beta className="w-4 h-4 mr-1" />
+              Beta
+            </Badge>
+          </div>
           
           <div className="hidden sm:flex items-center space-x-8">
             <Link to="/" className={`${isActive("/")} transition-colors duration-200`}>

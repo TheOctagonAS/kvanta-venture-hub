@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Clock, Banknote, ArrowUpRight, Wallet } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -39,20 +38,6 @@ const Index = () => {
       </div>
       <div className="relative z-10">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center pt-8"
-          >
-            <Badge 
-              variant="secondary" 
-              className="mb-4 bg-white/80 backdrop-blur-sm text-nordic-charcoal font-medium"
-            >
-              Nå i Beta
-            </Badge>
-          </motion.div>
-
           <Hero />
 
           {/* Features section */}
