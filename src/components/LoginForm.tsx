@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -19,13 +21,17 @@ const LoginForm = () => {
     setIsLoading(true);
 
     if (!isSupabaseConfigured()) {
-      toast.error("Vennligst koble til Supabase via integrasjonsmenyen øverst til høyre.");
       setIsLoading(false);
+      toast.error("Vennligst koble til Supabase via integrasjonsmenyen øverst til høyre.");
       return;
     }
 
     try {
-      const { data, error } = await supabase!.auth.signInWithPassword({
+      if (!supabase) {
+        throw new Error("Supabase client not initialized");
+      }
+
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
@@ -59,6 +65,14 @@ const LoginForm = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
+        {!isSupabaseConfigured() && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              Vennligst koble til Supabase via integrasjonsmenyen øverst til høyre.
+            </AlertDescription>
+          </Alert>
+        )}
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="space-y-2">
             <label htmlFor="email" className="text-sm font-medium">
@@ -71,7 +85,7 @@ const LoginForm = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="din@epost.no"
-              disabled={isLoading}
+              disabled={isLoading || !isSupabaseConfigured()}
             />
           </div>
           <div className="space-y-2">
@@ -85,10 +99,14 @@ const LoginForm = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="••••••••"
-              disabled={isLoading}
+              disabled={isLoading || !isSupabaseConfigured()}
             />
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button 
+            type="submit" 
+            className="w-full" 
+            disabled={isLoading || !isSupabaseConfigured()}
+          >
             {isLoading ? "Logger inn..." : "Logg inn"}
           </Button>
         </form>
