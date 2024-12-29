@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import LoginForm from "@/components/LoginForm";
 import UserProfile from "@/components/UserProfile";
@@ -71,7 +71,7 @@ const MinSide = () => {
             <>
               <UserProfile isKyc={profile?.is_kyc || false} onStartKYC={handleStartKYC} />
               {!profile?.is_kyc && (
-                <Alert variant="warning" className="mb-6">
+                <Alert className="mb-6 border-yellow-500 bg-yellow-50 text-yellow-800">
                   <AlertDescription>
                     Du må være KYC-verifisert for å kjøpe tokens
                   </AlertDescription>
