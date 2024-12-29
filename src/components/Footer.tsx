@@ -2,7 +2,7 @@ import { MapPin, Mail, Phone } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="bg-white mt-auto">
+    <footer className="bg-nordic-lightgray mt-auto">
       <div className="container mx-auto px-4">
         <div className="py-24 flex flex-col items-center space-y-6 text-nordic-charcoal">
           <h3 className="font-semibold text-2xl mb-2">Hahn Holding AS</h3>
@@ -39,7 +39,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="h-24 bg-nordic-lightgray"></div>
     </footer>
   );
 };
