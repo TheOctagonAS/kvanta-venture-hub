@@ -8,8 +8,8 @@ const Header = () => {
       transition={{ duration: 0.5 }}
       className="text-center space-y-6"
     >
-      <div className="bg-nordic-softblue p-8 rounded-xl hover:scale-105 transition-transform duration-200">
-        <h1 className="text-4xl font-bold text-[#222] tracking-wide">
+      <div className="bg-nordic-softblue p-8 rounded-xl">
+        <h1 className="text-4xl font-bold text-[#222] tracking-wide font-sans">
           Din Digitale Lommebok: Fremtidens Eiendomsverktøy
         </h1>
         <p className="text-xl mt-4 text-[#555]">

@@ -6,7 +6,7 @@ const WhySection = () => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="max-w-3xl mx-auto bg-white rounded-xl shadow-sm p-8 space-y-4 hover:scale-105 transition-transform duration-200"
+      className="mt-12 max-w-3xl mx-auto bg-white rounded-xl shadow-sm p-8 space-y-4 hover:shadow-md transition-all duration-200"
     >
       <h2 className="text-xl font-bold text-[#222] tracking-wide">
         Hvorfor er dette så bra?

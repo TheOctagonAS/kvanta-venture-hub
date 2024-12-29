@@ -14,7 +14,7 @@ const KeyFeatures = () => {
       </h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
-        <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-400 hover:scale-105 transition-transform duration-200">
+        <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-400 hover:shadow-md transition-all duration-200 hover:scale-105">
           <div className="flex flex-col items-start">
             <Eye className="w-8 h-8 text-blue-600 mb-4" />
             <h3 className="text-lg font-semibold text-[#222] tracking-wide mb-2">Full Oversikt</h3>
@@ -24,7 +24,7 @@ const KeyFeatures = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-400 hover:scale-105 transition-transform duration-200">
+        <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-400 hover:shadow-md transition-all duration-200 hover:scale-105">
           <div className="flex flex-col items-start">
             <DollarSign className="w-8 h-8 text-blue-600 mb-4" />
             <h3 className="text-lg font-semibold text-[#222] tracking-wide mb-2">Daglig Avkastning</h3>
@@ -34,7 +34,7 @@ const KeyFeatures = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-400 hover:scale-105 transition-transform duration-200">
+        <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-400 hover:shadow-md transition-all duration-200 hover:scale-105">
           <div className="flex flex-col items-start">
             <Shield className="w-8 h-8 text-blue-600 mb-4" />
             <h3 className="text-lg font-semibold text-[#222] tracking-wide mb-2">Trygg og Transparent</h3>
@@ -44,7 +44,7 @@ const KeyFeatures = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-400 hover:scale-105 transition-transform duration-200">
+        <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-400 hover:shadow-md transition-all duration-200 hover:scale-105">
           <div className="flex flex-col items-start">
             <ArrowUp className="w-8 h-8 text-blue-600 mb-4" />
             <h3 className="text-lg font-semibold text-[#222] tracking-wide mb-2">Fleksibel Uttak</h3>

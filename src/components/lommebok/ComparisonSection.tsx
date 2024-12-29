@@ -10,7 +10,7 @@ const ComparisonSection = () => {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.6 }}
-        className="bg-white rounded-xl shadow-sm p-8 hover:scale-105 transition-transform duration-200"
+        className="bg-white rounded-xl shadow-sm p-8 hover:shadow-md transition-all duration-200"
       >
         <h2 className="text-2xl font-bold text-[#222] tracking-wide mb-8">
           Hvorfor Eiendom er Fremtidens Investering
