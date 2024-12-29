@@ -17,24 +17,24 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      // Step 1: Sign up the user
       const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/minside`
-        }
       });
 
-      if (signUpError) {
-        throw signUpError;
-      }
+      if (signUpError) throw signUpError;
 
       if (!authData.user) {
         throw new Error("No user data returned after signup");
       }
 
-      // Step 2: Create the user profile
+      // Get the session to ensure we have the user's ID
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError) throw sessionError;
+      if (!session) throw new Error("No session after signup");
+
+      // Create the user profile
       const { error: profileError } = await supabase
         .from('profiles')
         .insert([
@@ -44,12 +44,9 @@ const Register = () => {
           }
         ]);
 
-      if (profileError) {
-        console.error("Profile creation error:", profileError);
-        throw new Error("Could not create user profile");
-      }
+      if (profileError) throw profileError;
 
-      toast.success("Registrering vellykket! Vennligst sjekk e-posten din for verifisering.");
+      toast.success("Registrering vellykket! Sjekk e-posten din for verifisering.");
       navigate("/");
     } catch (error: any) {
       console.error("Registration error:", error);
