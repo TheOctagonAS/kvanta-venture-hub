@@ -50,6 +50,7 @@ const UserProfile = ({ isKyc, onStartKYC }: { isKyc: boolean; onStartKYC: () => 
           <Button 
             onClick={handleKYCClick}
             variant="default"
+            className="bg-blue-600 hover:bg-blue-700"
           >
             Fullfør KYC
           </Button>
