@@ -7,13 +7,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Coins } from "lucide-react";
 
+type Property = {
+  price_per_token: number;
+  yield: number;
+};
+
 type HoldingWithProperty = {
   id: string;
   token_count: number;
-  property: {
-    price_per_token: number;
-    yield: number;
-  };
+  property: Property;
 };
 
 const RentClaim = () => {
@@ -37,20 +39,19 @@ const RentClaim = () => {
           )
         `)
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (holdingsError) throw holdingsError;
 
       let totalRent = 0;
 
-      const holding = holdings;
-      if (holding) {
+      if (holdings) {
         const dailyRent = (
-          holding.token_count *
-          holding.property.yield /
+          holdings.token_count *
+          holdings.property.yield /
           365 /
           100 *
-          holding.property.price_per_token
+          holdings.property.price_per_token
         );
 
         totalRent += dailyRent;
@@ -61,7 +62,7 @@ const RentClaim = () => {
             accumulated_rent: dailyRent,
             last_claim_at: new Date().toISOString()
           })
-          .eq('id', holding.id);
+          .eq('id', holdings.id);
 
         if (updateError) throw updateError;
       }

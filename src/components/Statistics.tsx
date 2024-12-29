@@ -3,12 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
 
+type Property = {
+  price_per_token: number;
+  yield: number;
+};
+
 type HoldingWithProperty = {
   token_count: number;
-  property: {
-    price_per_token: number;
-    yield: number;
-  };
+  property: Property;
 };
 
 const Statistics = () => {
@@ -30,7 +32,7 @@ const Statistics = () => {
         .eq('user_id', user.id);
       
       if (error) throw error;
-      return (data || []) as HoldingWithProperty[];
+      return data || [];
     },
     enabled: !!user,
   });

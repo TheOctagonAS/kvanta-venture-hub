@@ -13,14 +13,16 @@ import { supabase } from "@/lib/supabaseClient";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import RentClaim from "./RentClaim";
 
+type Property = {
+  id: string;
+  name: string;
+  price_per_token: number;
+};
+
 type HoldingWithProperty = {
   id: string;
   token_count: number;
-  property: {
-    id: string;
-    name: string;
-    price_per_token: number;
-  };
+  property: Property;
 };
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
@@ -43,11 +45,10 @@ const UserHoldings = () => {
             price_per_token
           )
         `)
-        .eq('user_id', user.id)
-        .single();
+        .eq('user_id', user.id);
       
       if (error) throw error;
-      return [data] as HoldingWithProperty[];
+      return data || [];
     },
     enabled: !!user,
   });
