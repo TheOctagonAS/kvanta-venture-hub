@@ -6,7 +6,6 @@ import { Clock, Banknote, ArrowUpRight, Wallet } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import YieldCalculator from "@/components/YieldCalculator";
-import AuroraBackground from "@/components/AuroraBackground";
 
 const Index = () => {
   const { user } = useAuth();
@@ -34,8 +33,8 @@ const Index = () => {
   ];
 
   return (
-    <AuroraBackground>
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+      <main className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -168,8 +167,8 @@ const Index = () => {
             Vi samarbeider med etablerte eiendomsaktører og finansinstitusjoner for å sikre en trygg og transparent investeringsplattform.
           </p>
         </motion.div>
-      </div>
-    </AuroraBackground>
+      </main>
+    </div>
   );
 };
 
