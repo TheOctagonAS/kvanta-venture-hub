@@ -66,21 +66,21 @@ const YieldCalculator = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-[#f8fbff] p-3 rounded-lg">
+    <div className="max-w-md mx-auto bg-[#f8fbff] p-2 rounded-lg">
       <Card className="bg-white shadow-sm">
-        <CardHeader className="space-y-1 border-b border-gray-100 py-3">
+        <CardHeader className="space-y-1 border-b border-gray-100 py-2">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <CardTitle className="text-lg font-bold flex items-center gap-2">
-              <Calculator className="w-5 h-5 text-nordic-blue" />
+            <CardTitle className="text-base font-bold flex items-center gap-2">
+              <Calculator className="w-4 h-4 text-nordic-blue" />
               Kalkulator
             </CardTitle>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
-                  <div className="flex items-center gap-1">
-                    <span className="text-sm font-medium text-nordic-charcoal">Årlig avkastning:</span>
-                    <span className="text-lg font-bold text-nordic-blue">{APY}%</span>
-                    <Info className="w-4 h-4 text-gray-400 hover:text-gray-600" />
+                  <div className="flex items-center gap-1 text-sm">
+                    <span className="font-medium text-nordic-charcoal">Årlig avkastning:</span>
+                    <span className="font-bold text-nordic-blue">{APY}%</span>
+                    <Info className="w-3 h-3 text-gray-400 hover:text-gray-600" />
                   </div>
                 </TooltipTrigger>
                 <TooltipContent className="max-w-[200px]">
@@ -92,10 +92,10 @@ const YieldCalculator = () => {
             </TooltipProvider>
           </div>
         </CardHeader>
-        <CardContent className="grid gap-3 pt-3">
-          <div className="grid gap-3">
+        <CardContent className="grid gap-2 pt-2">
+          <div className="grid gap-2">
             <div className="bg-white rounded-lg shadow-sm">
-              <div className="flex flex-col gap-2 p-3">
+              <div className="flex flex-col gap-2 p-2">
                 <div className="flex-1">
                   <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-1 block">
                     Investeringsbeløp (NOK)
