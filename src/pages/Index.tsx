@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { MovingBorderButton } from "@/components/ui/moving-border-button";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Banknote, ArrowUpRight, Wallet } from "lucide-react";
@@ -46,37 +46,45 @@ const Index = () => {
             transition={{ duration: 0.8 }}
             className="text-center py-32"
           >
-            <Badge variant="secondary" className="mb-4">
+            <Badge 
+              variant="secondary" 
+              className="mb-4 bg-white/80 backdrop-blur-sm text-nordic-charcoal font-medium"
+            >
               Nå i Beta
             </Badge>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary mb-6">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-nordic-charcoal mb-6">
               Kjøp eiendom like enkelt som å handle på nett
             </h1>
-            <p className="text-xl sm:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl sm:text-2xl text-nordic-charcoal/80 mb-8 max-w-3xl mx-auto">
               Invester i førsteklasses eiendommer og motta daglig leieinntekt
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               {!user && (
                 <>
                   <Link to="/register">
-                    <MovingBorderButton>
+                    <Button 
+                      className="h-12 px-8 bg-primary hover:bg-primary/90 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all"
+                    >
                       Opprett bruker
-                    </MovingBorderButton>
+                    </Button>
                   </Link>
                   <Link to="/login">
-                    <MovingBorderButton
-                      className="bg-transparent backdrop-blur-none border-slate-800"
+                    <Button
+                      variant="secondary"
+                      className="h-12 px-8 bg-white/80 hover:bg-white/90 backdrop-blur-sm text-nordic-charcoal font-medium rounded-full shadow-lg hover:shadow-xl transition-all border border-nordic-charcoal/10"
                     >
                       Logg inn
-                    </MovingBorderButton>
+                    </Button>
                   </Link>
                 </>
               )}
               {user && (
                 <Link to="/eiendommer">
-                  <MovingBorderButton>
+                  <Button 
+                    className="h-12 px-8 bg-primary hover:bg-primary/90 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all"
+                  >
                     Se eiendommer
-                  </MovingBorderButton>
+                  </Button>
                 </Link>
               )}
             </div>
@@ -90,15 +98,15 @@ const Index = () => {
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-24"
           >
             {features.map((feature, index) => (
-              <Card key={index} className="border-none shadow-lg hover:shadow-xl transition-shadow backdrop-blur-sm bg-white/80">
+              <Card key={index} className="border-none shadow-lg hover:shadow-xl transition-shadow backdrop-blur-sm bg-white/90">
                 <CardHeader className="text-center">
                   <div className="mx-auto mb-4">
                     {feature.icon}
                   </div>
-                  <CardTitle className="text-xl mb-2">{feature.title}</CardTitle>
+                  <CardTitle className="text-xl mb-2 text-nordic-charcoal">{feature.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 text-center">{feature.description}</p>
+                  <p className="text-nordic-charcoal/80 text-center">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -109,7 +117,7 @@ const Index = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="max-w-4xl mx-auto mb-24"
+            className="max-w-4xl mx-auto mb-24 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-8"
           >
             <YieldCalculator />
           </motion.div>
@@ -122,11 +130,12 @@ const Index = () => {
             className="text-center mb-24"
           >
             <Link to="/les-mer">
-              <MovingBorderButton
-                className="bg-transparent backdrop-blur-none border-slate-800"
+              <Button
+                variant="secondary"
+                className="h-12 px-8 bg-white/80 hover:bg-white/90 backdrop-blur-sm text-nordic-charcoal font-medium rounded-full shadow-lg hover:shadow-xl transition-all border border-nordic-charcoal/10"
               >
                 Les mer om Kvanta.ai
-              </MovingBorderButton>
+              </Button>
             </Link>
           </motion.div>
 
@@ -135,27 +144,27 @@ const Index = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="backdrop-blur-sm bg-white/80 rounded-xl p-8 shadow-lg mb-24"
+            className="backdrop-blur-sm bg-white/90 rounded-xl p-8 shadow-lg mb-24"
           >
-            <h2 className="text-2xl sm:text-3xl font-semibold mb-6 text-center text-primary">
+            <h2 className="text-2xl sm:text-3xl font-semibold mb-6 text-center text-nordic-charcoal">
               Hvorfor velge Kvanta.ai?
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center p-4">
-                <h3 className="font-semibold mb-2 text-lg">Daglige Utbetalinger</h3>
-                <p className="text-gray-600">
+                <h3 className="font-semibold mb-2 text-lg text-nordic-charcoal">Daglige Utbetalinger</h3>
+                <p className="text-nordic-charcoal/80">
                   Få din del av leieinntektene utbetalt hver dag, ikke vent på månedlige eller årlige utbetalinger
                 </p>
               </div>
               <div className="text-center p-4">
-                <h3 className="font-semibold mb-2 text-lg">Automatisk Reinvestering</h3>
-                <p className="text-gray-600">
+                <h3 className="font-semibold mb-2 text-lg text-nordic-charcoal">Automatisk Reinvestering</h3>
+                <p className="text-nordic-charcoal/80">
                   La pengene jobbe for deg med automatisk reinvestering av daglige utbetalinger
                 </p>
               </div>
               <div className="text-center p-4">
-                <h3 className="font-semibold mb-2 text-lg">Full Åpenhet</h3>
-                <p className="text-gray-600">
+                <h3 className="font-semibold mb-2 text-lg text-nordic-charcoal">Full Åpenhet</h3>
+                <p className="text-nordic-charcoal/80">
                   Se alle transaksjoner og eiendomsdetaljer i sanntid på plattformen
                 </p>
               </div>
@@ -169,10 +178,10 @@ const Index = () => {
             transition={{ delay: 0.8, duration: 0.8 }}
             className="text-center mb-24"
           >
-            <h2 className="text-2xl sm:text-3xl font-semibold mb-4">
+            <h2 className="text-2xl sm:text-3xl font-semibold mb-4 text-nordic-charcoal">
               Støttet av ledende aktører i Norden
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-nordic-charcoal/80 max-w-2xl mx-auto">
               Vi samarbeider med etablerte eiendomsaktører og finansinstitusjoner for å sikre en trygg og transparent investeringsplattform.
             </p>
           </motion.div>
