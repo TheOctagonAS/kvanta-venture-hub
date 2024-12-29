@@ -11,72 +11,67 @@ interface YieldCardsProps {
 
 const YieldCards = ({ yields }: YieldCardsProps) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div className="bg-nordic-softblue p-6 rounded-lg flex flex-col justify-between h-full border border-blue-100">
-        <div className="flex items-center gap-2 mb-2">
-          <Clock className="w-5 h-5 text-nordic-blue" />
-          <p className="text-sm text-gray-600">Daglig avkastning</p>
+    <div className="flex overflow-x-auto gap-4 pb-2 -mx-2 px-2">
+      <div className="min-w-[150px] max-w-[150px] bg-nordic-softblue p-3 rounded-lg flex flex-col items-center justify-between border border-blue-100 shadow-sm">
+        <div className="flex items-center gap-1 mb-1">
+          <Clock className="w-4 h-4 text-nordic-blue" />
+          <p className="text-xs text-gray-600">Daglig</p>
         </div>
-        <div>
-          <p className="text-2xl font-bold text-nordic-blue">
-            {yields.daily.toLocaleString('nb-NO', { 
-              style: 'currency', 
-              currency: 'NOK',
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2 
-            })}
-          </p>
-        </div>
+        <p className="text-lg font-bold text-nordic-blue">
+          {yields.daily.toLocaleString('nb-NO', { 
+            style: 'currency', 
+            currency: 'NOK',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0 
+          })}
+        </p>
       </div>
-      <div className="bg-nordic-softblue p-6 rounded-lg flex flex-col justify-between h-full border border-blue-100">
-        <div className="flex items-center gap-2 mb-2">
-          <Calendar className="w-5 h-5 text-nordic-blue" />
-          <p className="text-sm text-gray-600">Månedlig avkastning</p>
+
+      <div className="min-w-[150px] max-w-[150px] bg-nordic-softblue p-3 rounded-lg flex flex-col items-center justify-between border border-blue-100 shadow-sm">
+        <div className="flex items-center gap-1 mb-1">
+          <Calendar className="w-4 h-4 text-nordic-blue" />
+          <p className="text-xs text-gray-600">Månedlig</p>
         </div>
-        <div>
-          <p className="text-2xl font-bold text-nordic-blue">
-            {yields.monthly.toLocaleString('nb-NO', { 
-              style: 'currency', 
-              currency: 'NOK',
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2 
-            })}
-          </p>
-        </div>
+        <p className="text-lg font-bold text-nordic-blue">
+          {yields.monthly.toLocaleString('nb-NO', { 
+            style: 'currency', 
+            currency: 'NOK',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0 
+          })}
+        </p>
       </div>
-      <div className="bg-nordic-softblue p-6 rounded-lg flex flex-col justify-between h-full border border-blue-100">
-        <div className="flex items-center gap-2 mb-2">
-          <TrendingUp className="w-5 h-5 text-nordic-blue" />
-          <p className="text-sm text-gray-600">Årlig avkastning</p>
+
+      <div className="min-w-[150px] max-w-[150px] bg-nordic-softblue p-3 rounded-lg flex flex-col items-center justify-between border border-blue-100 shadow-sm">
+        <div className="flex items-center gap-1 mb-1">
+          <TrendingUp className="w-4 h-4 text-nordic-blue" />
+          <p className="text-xs text-gray-600">Årlig</p>
         </div>
-        <div>
-          <p className="text-2xl font-bold text-nordic-blue">
-            {yields.yearly.toLocaleString('nb-NO', { 
-              style: 'currency', 
-              currency: 'NOK',
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2 
-            })}
-          </p>
-          <p className="text-xs text-gray-600 mt-2">Uten reinvestering</p>
-        </div>
+        <p className="text-lg font-bold text-nordic-blue">
+          {yields.yearly.toLocaleString('nb-NO', { 
+            style: 'currency', 
+            currency: 'NOK',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0 
+          })}
+        </p>
+        <p className="text-[10px] text-gray-600 mt-1">Uten reinvestering</p>
       </div>
-      <div className="bg-nordic-softblue p-6 rounded-lg flex flex-col justify-between h-full border border-blue-100">
-        <div className="flex items-center gap-2 mb-2">
-          <TrendingUp className="w-5 h-5 text-nordic-blue" />
-          <p className="text-sm text-gray-600">Årlig avkastning med reinvestering</p>
+
+      <div className="min-w-[150px] max-w-[150px] bg-nordic-softblue p-3 rounded-lg flex flex-col items-center justify-between border border-blue-100 shadow-sm">
+        <div className="flex items-center gap-1 mb-1">
+          <TrendingUp className="w-4 h-4 text-nordic-blue" />
+          <p className="text-xs text-gray-600">Årlig m/reinv.</p>
         </div>
-        <div>
-          <p className="text-2xl font-bold text-nordic-blue">
-            {yields.compoundedYearly.toLocaleString('nb-NO', { 
-              style: 'currency', 
-              currency: 'NOK',
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2 
-            })}
-          </p>
-          <p className="text-xs text-gray-600 mt-2">Med daglig reinvestering</p>
-        </div>
+        <p className="text-lg font-bold text-nordic-blue">
+          {yields.compoundedYearly.toLocaleString('nb-NO', { 
+            style: 'currency', 
+            currency: 'NOK',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0 
+          })}
+        </p>
+        <p className="text-[10px] text-gray-600 mt-1">Med daglig reinvestering</p>
       </div>
     </div>
   );
