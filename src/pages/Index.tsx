@@ -45,10 +45,10 @@ const Index = () => {
           <Badge variant="secondary" className="mb-4">
             Nå i Beta
           </Badge>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-primary mb-6">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-nordic-charcoal mb-6">
             Kjøp eiendom like enkelt som å handle på nett
           </h1>
-          <p className="text-xl sm:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl sm:text-2xl text-nordic-charcoal mb-8 max-w-3xl mx-auto">
             Invester i førsteklasses eiendommer og motta daglig leieinntekt
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
@@ -89,10 +89,10 @@ const Index = () => {
                 <div className="mx-auto mb-4">
                   {feature.icon}
                 </div>
-                <CardTitle className="text-xl mb-2">{feature.title}</CardTitle>
+                <CardTitle className="text-xl text-nordic-charcoal mb-2">{feature.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 text-center">{feature.description}</p>
+                <p className="text-nordic-charcoal">{feature.description}</p>
               </CardContent>
             </Card>
           ))}
@@ -129,25 +129,25 @@ const Index = () => {
           transition={{ delay: 0.6, duration: 0.8 }}
           className="bg-nordic-softblue rounded-xl p-8 shadow-lg mb-24"
         >
-          <h2 className="text-2xl sm:text-3xl font-semibold mb-6 text-center text-primary">
+          <h2 className="text-2xl sm:text-3xl font-semibold mb-6 text-center text-nordic-charcoal">
             Hvorfor velge Kvanta.ai?
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center p-4">
-              <h3 className="font-semibold mb-2 text-lg">Daglige Utbetalinger</h3>
-              <p className="text-gray-600">
+              <h3 className="font-semibold mb-2 text-lg text-nordic-charcoal">Daglige Utbetalinger</h3>
+              <p className="text-nordic-charcoal">
                 Få din del av leieinntektene utbetalt hver dag, ikke vent på månedlige eller årlige utbetalinger
               </p>
             </div>
             <div className="text-center p-4">
-              <h3 className="font-semibold mb-2 text-lg">Automatisk Reinvestering</h3>
-              <p className="text-gray-600">
+              <h3 className="font-semibold mb-2 text-lg text-nordic-charcoal">Automatisk Reinvestering</h3>
+              <p className="text-nordic-charcoal">
                 La pengene jobbe for deg med automatisk reinvestering av daglige utbetalinger
               </p>
             </div>
             <div className="text-center p-4">
-              <h3 className="font-semibold mb-2 text-lg">Full Åpenhet</h3>
-              <p className="text-gray-600">
+              <h3 className="font-semibold mb-2 text-lg text-nordic-charcoal">Full Åpenhet</h3>
+              <p className="text-nordic-charcoal">
                 Se alle transaksjoner og eiendomsdetaljer i sanntid på plattformen
               </p>
             </div>
@@ -161,10 +161,10 @@ const Index = () => {
           transition={{ delay: 0.8, duration: 0.8 }}
           className="text-center mb-24"
         >
-          <h2 className="text-2xl sm:text-3xl font-semibold mb-4">
+          <h2 className="text-2xl sm:text-3xl font-semibold mb-4 text-nordic-charcoal">
             Støttet av ledende aktører i Norden
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-nordic-charcoal max-w-2xl mx-auto">
             Vi samarbeider med etablerte eiendomsaktører og finansinstitusjoner for å sikre en trygg og transparent investeringsplattform.
           </p>
         </motion.div>
