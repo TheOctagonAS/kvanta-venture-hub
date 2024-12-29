@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const LesMer = () => {
   return (
@@ -68,6 +69,17 @@ const LesMer = () => {
                 Som en bedriftskontrollert løsning sikrer vi at alle transaksjoner er trygge og transparente, samtidig som du har full kontroll over dine investeringer.
               </p>
             </div>
+          </div>
+
+          {/* New CTA section */}
+          <div className="text-center mt-12 space-y-4">
+            <Link 
+              to="/register" 
+              className="inline-block bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition-colors text-lg font-semibold"
+            >
+              Registrer deg nå
+            </Link>
+            <p className="text-gray-600">Start din eiendomsreise i dag!</p>
           </div>
         </div>
       </motion.div>
