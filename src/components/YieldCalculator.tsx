@@ -26,6 +26,12 @@ const YieldCalculator = () => {
     const yearlyYield = investment * apyRate;
 
     // Calculate compound interest (reinvesting daily returns)
+    // Using the compound interest formula: A = P(1 + r)^t
+    // Where:
+    // A = Final amount
+    // P = Principal (initial investment)
+    // r = Daily interest rate
+    // t = Number of times interest is compounded (365 for daily compounding)
     const compoundedAmount = investment * Math.pow(1 + dailyRate, 365);
     const compoundedYearlyYield = compoundedAmount - investment;
 
