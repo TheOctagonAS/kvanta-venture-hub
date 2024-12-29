@@ -1,4 +1,4 @@
-import { Building2, Ban, Bell } from "lucide-react";
+import { Building2, Ban, Bell, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
