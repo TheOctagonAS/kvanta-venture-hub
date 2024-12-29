@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Wallet, Coins, ArrowDownToLine, Clock } from "lucide-react";
-import { Boxes } from "@/components/ui/background-boxes";
+import { BoxesBackground } from "@/components/BoxesBackground";
 
 const Lommebok = () => {
   const features = [
@@ -30,7 +30,7 @@ const Lommebok = () => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-900">
       <div className="absolute inset-0 w-full h-full bg-slate-900 z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
-      <Boxes />
+      <BoxesBackground />
       
       <div className="relative z-10 container mx-auto px-4 py-16">
         <motion.div
