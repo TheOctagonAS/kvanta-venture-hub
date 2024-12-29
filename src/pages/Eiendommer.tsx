@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Building2, MapPin, Coins } from "lucide-react";
+import { Building2, MapPin, Coins, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
@@ -152,15 +152,21 @@ const Eiendommer = () => {
                       <MapPin className="h-4 w-4" />
                       <span className="font-semibold text-lg">{property.location}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-gray-600">
-                      <Coins className="h-4 w-4" />
-                      <span className="font-semibold text-lg text-primary">
-                        {property.price_per_token} kr per token
-                      </span>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <Coins className="h-4 w-4" />
+                        <span className="font-semibold text-lg text-primary">
+                          {property.price_per_token} kr per token
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-500 text-sm">
+                        <TrendingUp className="h-3 w-3" />
+                        <span>APY: {property.yield}%</span>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="flex flex-col gap-2">
                   <Button
                     className="w-full"
                     onClick={() => {
@@ -179,6 +185,9 @@ const Eiendommer = () => {
                     <Building2 className="mr-2 h-4 w-4" />
                     Kjøp tokens
                   </Button>
+                  <p className="text-xs text-gray-500 italic text-center">
+                    *APY er estimert årlig avkastning, ikke garantert.
+                  </p>
                 </CardFooter>
               </Card>
             </motion.div>
