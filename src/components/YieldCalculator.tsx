@@ -77,16 +77,15 @@ const YieldCalculator = () => {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
-                  <Info className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+                  <div className="flex items-center gap-2">
+                    <span className="text-base font-bold text-nordic-charcoal">Estimert årlig avkastning:</span>
+                    <span className="text-lg font-bold text-nordic-blue">{APY}%</span>
+                    <Info className="w-4 h-4 text-gray-400 hover:text-gray-600" />
+                  </div>
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs">
                   <p className="text-sm">
-                    Estimert årlig avkastning: {APY}%
-                    <br />
-                    (4.5% gjennomsnittlig leieavkastning + 4% historisk verdistigning)
-                    <br /><br />
-                    Dette estimatet er basert på historisk gjennomsnittlig avkastning fra næringseiendom i Norge de siste 10 årene. 
-                    Merk at historisk avkastning ikke er en garanti for fremtidig avkastning.
+                    Beregnet av gj.snitt leie + antatt verdiøkning. (Historisk data, ingen garanti)
                   </p>
                 </TooltipContent>
               </Tooltip>
