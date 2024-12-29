@@ -6,10 +6,9 @@ const TokenToMoneyAnimation = () => {
     <div className="flex justify-center items-center py-12 mt-8 border-t border-nordic-softblue">
       <div className="relative flex items-center gap-12">
         <motion.div
-          initial={{ scale: 1, opacity: 0.7 }}
+          initial={{ scale: 1 }}
           animate={{
             scale: [1, 1.2, 1],
-            opacity: [0.7, 1, 0.7],
           }}
           transition={{
             duration: 3,
@@ -40,10 +39,9 @@ const TokenToMoneyAnimation = () => {
         />
 
         <motion.div
-          initial={{ scale: 0.8, opacity: 0.5 }}
+          initial={{ scale: 0.8 }}
           animate={{
             scale: [0.8, 1.1, 0.8],
-            opacity: [0.5, 1, 0.5],
           }}
           transition={{
             duration: 4,
