@@ -10,7 +10,6 @@ const TokenToMoneyAnimation = () => {
           animate={{
             scale: [1, 1.2, 1],
             opacity: [0.7, 1, 0.7],
-            rotate: [0, 15, -15, 0],
           }}
           transition={{
             duration: 3,
@@ -20,7 +19,7 @@ const TokenToMoneyAnimation = () => {
           }}
           className="text-nordic-blue"
         >
-          <Sparkles size={36} />
+          <Sparkles className="rotate-0 hover:rotate-12 transition-transform" size={36} />
         </motion.div>
 
         <motion.div
@@ -40,7 +39,6 @@ const TokenToMoneyAnimation = () => {
           animate={{
             scale: [0.8, 1.1, 0.8],
             opacity: [0.5, 1, 0.5],
-            rotate: [0, -360],
           }}
           transition={{
             duration: 4,
@@ -50,7 +48,18 @@ const TokenToMoneyAnimation = () => {
           }}
           className="text-accent"
         >
-          <Infinity size={36} />
+          <motion.div
+            animate={{
+              rotate: 360
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          >
+            <Infinity size={36} />
+          </motion.div>
         </motion.div>
       </div>
     </div>
