@@ -41,10 +41,15 @@ const Navbar = () => {
                 </div>
               </div>
               <div className="flex flex-col items-start relative">
-                <div className="relative">
-                  <span className="text-[28px] font-medium tracking-tight font-sans bg-gradient-to-r from-[#345FF6] to-[#5a7dfc] bg-clip-text text-transparent relative">
-                    Kvanta
-                    <span className="text-sm font-medium absolute -right-4 top-0 text-[#345FF6]">.ai</span>
+                <div className="relative flex items-baseline">
+                  <span className="text-[28px] font-medium tracking-tight font-sans relative">
+                    <span className="inline-block transform translate-y-[-2px]" style={{ color: '#345FF6' }}>K</span>
+                    <span className="inline-block transform translate-y-[-1px]" style={{ background: 'linear-gradient(to right, #345FF6, #4065f8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>v</span>
+                    <span className="inline-block transform translate-y-[-2px]" style={{ background: 'linear-gradient(to right, #4065f8, #4b6ffa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>a</span>
+                    <span className="inline-block transform translate-y-[1px]" style={{ background: 'linear-gradient(to right, #4b6ffa, #5276fb)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>n</span>
+                    <span className="inline-block transform translate-y-[2px]" style={{ background: 'linear-gradient(to right, #5276fb, #5a7dfc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>t</span>
+                    <span className="inline-block transform translate-y-[1px]" style={{ color: '#5a7dfc' }}>a</span>
+                    <span className="text-sm font-medium absolute -right-4 top-0 text-[#e9f2ff]">.ai</span>
                   </span>
                   <Badge variant="secondary" className="ml-6 text-xs bg-yellow-100/80 text-yellow-800 font-medium">
                     Beta
