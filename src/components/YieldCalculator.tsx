@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Calculator, TrendingUp, Calendar, Clock } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
+import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const YieldCalculator = () => {
   const [amount, setAmount] = useState<string>("100000");
@@ -12,6 +13,11 @@ const YieldCalculator = () => {
     yearly: 0,
     compoundedYearly: 0,
   });
+  const [growthData, setGrowthData] = useState<Array<{
+    day: number;
+    standard: number;
+    compound: number;
+  }>>([]);
 
   const APY = 8.5;
 
@@ -33,6 +39,19 @@ const YieldCalculator = () => {
       yearly: yearlyYield,
       compoundedYearly: compoundedYearlyYield,
     });
+
+    // Calculate growth data for the chart
+    const data = [];
+    for (let day = 0; day <= 30; day++) {
+      const standardGrowth = investment + (dailyYield * day);
+      const compoundGrowth = investment * Math.pow(1 + dailyRate, day);
+      data.push({
+        day,
+        standard: standardGrowth,
+        compound: compoundGrowth,
+      });
+    }
+    setGrowthData(data);
   }, [amount]);
 
   const handleSliderChange = (value: number[]) => {
@@ -160,6 +179,55 @@ const YieldCalculator = () => {
                 </p>
                 <p className="text-xs text-gray-600 mt-2">Med daglig reinvestering</p>
               </div>
+            </div>
+          </div>
+
+          {/* Growth Simulation Chart */}
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <h3 className="text-lg font-semibold mb-4">Simulert vekst over tid</h3>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={growthData}>
+                  <XAxis 
+                    dataKey="day" 
+                    label={{ value: 'Dager', position: 'bottom' }}
+                  />
+                  <YAxis 
+                    tickFormatter={(value) => 
+                      new Intl.NumberFormat('nb-NO', {
+                        style: 'currency',
+                        currency: 'NOK',
+                        notation: 'compact',
+                        maximumFractionDigits: 1
+                      }).format(value)
+                    }
+                  />
+                  <Tooltip 
+                    formatter={(value: number) => 
+                      new Intl.NumberFormat('nb-NO', {
+                        style: 'currency',
+                        currency: 'NOK',
+                        maximumFractionDigits: 0
+                      }).format(value)
+                    }
+                  />
+                  <Legend />
+                  <Line 
+                    type="monotone" 
+                    dataKey="standard" 
+                    stroke="#345FF6" 
+                    name="Uten reinvestering"
+                    strokeWidth={2}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="compound" 
+                    stroke="#47C757" 
+                    name="Med reinvestering"
+                    strokeWidth={2}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </CardContent>
