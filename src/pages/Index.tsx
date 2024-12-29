@@ -4,8 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Building2, Coins, LineChart, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
+  const { user } = useAuth();
   const features = [
     {
       icon: <Building2 className="w-10 h-10 text-primary" />,
@@ -48,16 +50,27 @@ const Index = () => {
             Kvanta.ai gjør det mulig å kjøpe brøkdeler av eiendom i Norden. Start din investeringsreise med så lite som 1000 kr.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link to="/eiendommer">
-              <Button size="lg">
-                Kom i gang
-              </Button>
-            </Link>
-            <Link to="/eiendommer">
-              <Button variant="outline" size="lg">
-                Se eiendommer
-              </Button>
-            </Link>
+            {!user && (
+              <>
+                <Link to="/register">
+                  <Button size="lg" variant="default">
+                    Opprett bruker
+                  </Button>
+                </Link>
+                <Link to="/">
+                  <Button variant="outline" size="lg">
+                    Logg inn
+                  </Button>
+                </Link>
+              </>
+            )}
+            {user && (
+              <Link to="/eiendommer">
+                <Button size="lg">
+                  Se eiendommer
+                </Button>
+              </Link>
+            )}
           </div>
         </motion.div>
 
