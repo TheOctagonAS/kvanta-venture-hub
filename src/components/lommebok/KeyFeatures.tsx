@@ -12,45 +12,46 @@ const KeyFeatures = () => {
       <h2 className="text-2xl font-bold text-gray-900 mb-8">
         Nøkkelfunksjoner i Din Lommebok
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <div className="flex items-center gap-3 mb-3">
-            <Eye className="w-6 h-6 text-blue-600" />
-            <h3 className="text-lg font-semibold text-gray-900">Full Oversikt</h3>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
+        <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-400 hover:shadow-md transition-shadow">
+          <div className="flex flex-col items-start">
+            <Eye className="w-8 h-8 text-blue-600 mb-4" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Full Oversikt</h3>
+            <p className="text-sm text-gray-600">
+              Se tokens, avkastning og eiendomsverdi i sanntid.
+            </p>
           </div>
-          <p className="text-gray-600">
-            Se dine tokens, avkastning, og eiendomsverdi i sanntid.
-          </p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <div className="flex items-center gap-3 mb-3">
-            <DollarSign className="w-6 h-6 text-blue-600" />
-            <h3 className="text-lg font-semibold text-gray-900">Daglig Avkastning</h3>
+        <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-400 hover:shadow-md transition-shadow">
+          <div className="flex flex-col items-start">
+            <DollarSign className="w-8 h-8 text-blue-600 mb-4" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Daglig Avkastning</h3>
+            <p className="text-sm text-gray-600">
+              Motta og claim leieinntekter når du vil.
+            </p>
           </div>
-          <p className="text-gray-600">
-            Motta leie daglig, 'claim' dem når du vil, akkurat som i krypto-verdens staking.
-          </p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <div className="flex items-center gap-3 mb-3">
-            <Shield className="w-6 h-6 text-blue-600" />
-            <h3 className="text-lg font-semibold text-gray-900">Trygg og Transparent</h3>
+        <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-400 hover:shadow-md transition-shadow">
+          <div className="flex flex-col items-start">
+            <Shield className="w-8 h-8 text-blue-600 mb-4" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Trygg og Transparent</h3>
+            <p className="text-sm text-gray-600">
+              Full historikk over kjøp, salg og inntekter.
+            </p>
           </div>
-          <p className="text-gray-600">
-            All historikk er synlig. Se når du har kjøpt, solgt og claimet inntekter.
-          </p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <div className="flex items-center gap-3 mb-3">
-            <ArrowUp className="w-6 h-6 text-blue-600" />
-            <h3 className="text-lg font-semibold text-gray-900">Fleksibel Uttak</h3>
+        <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-400 hover:shadow-md transition-shadow">
+          <div className="flex flex-col items-start">
+            <ArrowUp className="w-8 h-8 text-blue-600 mb-4" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Fleksibel Uttak</h3>
+            <p className="text-sm text-gray-600">
+              Overfør til bankkonto når som helst.
+            </p>
           </div>
-          <p className="text-gray-600">
-            Overfør leieinntekter til bankkontoen din når som helst.
-          </p>
         </div>
       </div>
     </motion.div>
