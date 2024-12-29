@@ -4,7 +4,7 @@ import { useState } from "react";
 import TokenPurchaseModal from "../components/TokenPurchaseModal";
 import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { PropertyCard } from "@/components/PropertyCard";
 
@@ -36,6 +36,7 @@ const Eiendommer = () => {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   
   const { data: properties, isLoading, error } = useQuery({
     queryKey: ['properties'],
@@ -43,26 +44,26 @@ const Eiendommer = () => {
   });
 
   const handlePurchase = async (tokenCount: number) => {
-    if (!user) {
-      navigate("/login");
-      return;
-    }
-
-    if (!user.isKYC) {
-      toast.error("Du må fullføre KYC før du kan kjøpe tokens");
-      navigate("/minside");
-      return;
-    }
+    if (!user || !selectedProperty) return;
 
     try {
+      // Check if purchase would exceed max tokens
+      if (selectedProperty.tokens_sold + tokenCount > selectedProperty.max_tokens) {
+        toast.error("Ikke nok tilgjengelige tokens for dette kjøpet");
+        return;
+      }
+
+      // Get existing holdings
       const { data: existingHoldings } = await supabase
         .from('user_holdings')
         .select('*')
         .eq('user_id', user.id)
-        .eq('property_id', selectedProperty?.id)
-        .single();
+        .eq('property_id', selectedProperty.id)
+        .maybeSingle();
 
+      // Start a transaction by using multiple updates
       if (existingHoldings) {
+        // Update existing holdings
         const { error: updateError } = await supabase
           .from('user_holdings')
           .update({ 
@@ -72,16 +73,31 @@ const Eiendommer = () => {
 
         if (updateError) throw updateError;
       } else {
+        // Create new holdings
         const { error: insertError } = await supabase
           .from('user_holdings')
           .insert({
             user_id: user.id,
-            property_id: selectedProperty?.id,
+            property_id: selectedProperty.id,
             token_count: tokenCount
           });
 
         if (insertError) throw insertError;
       }
+
+      // Update tokens_sold in properties table
+      const { error: propertyUpdateError } = await supabase
+        .from('properties')
+        .update({ 
+          tokens_sold: selectedProperty.tokens_sold + tokenCount 
+        })
+        .eq('id', selectedProperty.id);
+
+      if (propertyUpdateError) throw propertyUpdateError;
+
+      // Invalidate queries to refresh the data
+      await queryClient.invalidateQueries({ queryKey: ['properties'] });
+      await queryClient.invalidateQueries({ queryKey: ['holdings'] });
 
       toast.success("Kjøp fullført!");
       setSelectedProperty(null);
