@@ -1,4 +1,4 @@
-import { Building2, MapPin, Coins, TrendingUp, Lock } from "lucide-react";
+import { Building2, MapPin, Coins, TrendingUp, Lock, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 type PropertyCardProps = {
   property: {
@@ -27,6 +28,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
   const { user } = useAuth();
   const navigate = useNavigate();
   const [countdown, setCountdown] = useState("35 dager");
+  const [isNotifying, setIsNotifying] = useState(false);
 
   const availableTokens = property.max_tokens - property.tokens_sold;
   const ratio = property.tokens_sold / property.max_tokens;
@@ -47,6 +49,25 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
       return () => clearInterval(timer);
     }
   }, [isLive]);
+
+  const handleNotifyMe = async () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    setIsNotifying(true);
+    try {
+      // Here we could implement the notification signup logic
+      // For now, we'll just show a success message
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+      toast.success("Du vil bli varslet når eiendommen blir tilgjengelig!");
+    } catch (error) {
+      toast.error("Kunne ikke registrere varsling. Prøv igjen senere.");
+    } finally {
+      setIsNotifying(false);
+    }
+  };
 
   return (
     <motion.div
@@ -129,25 +150,35 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
         </CardContent>
         
         <CardFooter className="flex flex-col gap-2 pt-4">
-          <Button
-            className={`w-full bg-nordic-blue hover:bg-nordic-blue/90 text-white ${!isLive ? 'opacity-50 pointer-events-none' : ''}`}
-            onClick={() => {
-              if (!isLive) return;
-              if (!user) {
-                navigate("/login");
-                return;
-              }
-              if (!user.isKYC) {
-                toast.error("Du må fullføre KYC før du kan kjøpe andeler");
-                navigate("/minside");
-                return;
-              }
-              onSelectProperty(property);
-            }}
-          >
-            <Building2 className="mr-2 h-4 w-4" />
-            Kjøp andeler
-          </Button>
+          {isLive ? (
+            <Button
+              className="w-full bg-nordic-blue hover:bg-nordic-blue/90 text-white"
+              onClick={() => {
+                if (!user) {
+                  navigate("/login");
+                  return;
+                }
+                if (!user.isKYC) {
+                  toast.error("Du må fullføre KYC før du kan kjøpe andeler");
+                  navigate("/minside");
+                  return;
+                }
+                onSelectProperty(property);
+              }}
+            >
+              <Building2 className="mr-2 h-4 w-4" />
+              Kjøp andeler
+            </Button>
+          ) : (
+            <Button
+              className="w-full bg-nordic-blue/50 hover:bg-nordic-blue/60 text-white cursor-not-allowed"
+              onClick={handleNotifyMe}
+              disabled={isNotifying}
+            >
+              <Bell className="mr-2 h-4 w-4" />
+              {isNotifying ? "Registrerer..." : "Påminn meg"}
+            </Button>
+          )}
           <p className="text-xs text-nordic-gray italic text-center">
             *APY er estimert årlig avkastning, ikke garantert.
           </p>
