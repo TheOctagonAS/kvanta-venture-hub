@@ -4,24 +4,25 @@ import { Check, ArrowRight, Shield } from "lucide-react";
 
 const LesMer = () => {
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 py-12 bg-[#f8f9fa]">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
-        className="bg-white rounded-xl shadow-lg p-8 mt-10 mb-10"
+        className="bg-white rounded-xl shadow-sm p-6 mt-10 mb-10"
       >
         <h2 className="text-2xl sm:text-3xl font-semibold mb-4 text-center text-primary">
-          Les mer om Kvanta.ai
+          Les mer om Kvanta.ai – din trygge vei til eiendomsinvestering
         </h2>
         <p className="text-lg text-gray-600 text-center max-w-2xl mx-auto mb-8">
-          En trygg og enkel plattform for brøkdelsinvestering i eiendom
+          En enkel plattform for brøkdelsinvestering – start med bare noen få klikk.
         </p>
         
         <div className="space-y-6 max-w-3xl mx-auto">
-          <p className="text-gray-700 text-center mb-4">
-            Med Kvanta.ai kan du enkelt kjøpe og selge brøkdeler av attraktive eiendommer med bare noen få klikk. 
-            Du bestemmer selv hvor mye du vil investere, og kan starte med et lite beløp.
+          <p className="text-gray-700 text-center mb-8">
+            Kjøp og selg brøkdeler av kvalitetsikrede eiendommer i Norden. 
+            Du bestemmer selv beløp, og kan begynne lavt. 
+            Daglige leieinntekter – alt i en brukervennlig digital lommebok.
           </p>
 
           {/* Benefits section with icons */}
@@ -69,7 +70,7 @@ const LesMer = () => {
           </div>
 
           {/* Token trading section */}
-          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100 mb-8">
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 mb-8">
             <h3 className="text-xl font-semibold mb-4 text-primary text-center">
               Kjøp og salg av tokens – like enkelt som netthandel!
             </h3>
@@ -92,7 +93,7 @@ const LesMer = () => {
           <div className="text-center mt-12 space-y-4">
             <Link 
               to="/register" 
-              className="inline-block bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition-colors text-lg font-semibold"
+              className="inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors text-lg font-semibold"
             >
               Registrer deg nå
             </Link>
