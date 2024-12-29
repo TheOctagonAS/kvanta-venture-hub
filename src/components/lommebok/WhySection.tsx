@@ -6,12 +6,12 @@ const WhySection = () => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="mt-12 max-w-3xl mx-auto bg-white rounded-xl shadow-sm p-8 space-y-4"
+      className="max-w-3xl mx-auto bg-white rounded-xl shadow-sm p-8 space-y-4 hover:scale-105 transition-transform duration-200"
     >
-      <h2 className="text-xl font-bold text-gray-900">
+      <h2 className="text-xl font-bold text-[#222] tracking-wide">
         Hvorfor er dette så bra?
       </h2>
-      <div className="space-y-4 text-gray-600">
+      <div className="space-y-4 text-[#555]">
         <p>
           Eiendom er historisk stabilt, nå tokenisert for enkel tilgang. Dette er fremtidens måte å investere i eiendom på, 
           med alle fordelene fra tradisjonell eiendomsinvestering, men uten kompleksiteten.
