@@ -56,6 +56,7 @@ export type Database = {
       }
       user_holdings: {
         Row: {
+          accumulated_rent: number
           created_at: string
           id: string
           property_id: string
@@ -63,6 +64,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          accumulated_rent?: number
           created_at?: string
           id?: string
           property_id: string
@@ -70,6 +72,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          accumulated_rent?: number
           created_at?: string
           id?: string
           property_id?: string
