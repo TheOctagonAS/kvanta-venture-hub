@@ -6,72 +6,55 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
-const RATE_LIMIT_SECONDS = 15;
-
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [lastAttemptTime, setLastAttemptTime] = useState(0);
   const navigate = useNavigate();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Check rate limit
-    const now = Date.now();
-    const timeSinceLastAttempt = (now - lastAttemptTime) / 1000;
-    
-    if (timeSinceLastAttempt < RATE_LIMIT_SECONDS) {
-      const remainingSeconds = Math.ceil(RATE_LIMIT_SECONDS - timeSinceLastAttempt);
-      toast.error(`Vennligst vent ${remainingSeconds} sekunder før du prøver igjen.`);
-      return;
-    }
-
     setIsLoading(true);
-    setLastAttemptTime(now);
 
     try {
       // Step 1: Sign up the user
       const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email,
-        password
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/minside`
+        }
       });
 
-      if (signUpError) throw signUpError;
-
-      if (authData.user) {
-        // Wait for session to be established
-        const { data: sessionData } = await supabase.auth.getSession();
-        
-        if (!sessionData.session) {
-          throw new Error("No session established after signup");
-        }
-
-        // Step 2: Create the user profile
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert([
-            {
-              id: authData.user.id,
-              is_kyc: false
-            }
-          ]);
-
-        if (profileError) {
-          console.error("Profile creation error:", profileError);
-          throw new Error("Could not create user profile");
-        }
-
-        toast.success("Registrering vellykket! Du kan nå logge inn.");
-        navigate("/");
+      if (signUpError) {
+        throw signUpError;
       }
+
+      if (!authData.user) {
+        throw new Error("No user data returned after signup");
+      }
+
+      // Step 2: Create the user profile
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert([
+          {
+            id: authData.user.id,
+            is_kyc: false
+          }
+        ]);
+
+      if (profileError) {
+        console.error("Profile creation error:", profileError);
+        throw new Error("Could not create user profile");
+      }
+
+      toast.success("Registrering vellykket! Vennligst sjekk e-posten din for verifisering.");
+      navigate("/");
     } catch (error: any) {
       console.error("Registration error:", error);
       if (error.message.includes("already registered")) {
         toast.error("E-postadressen er allerede registrert");
-      } else if (error.message.includes("rate_limit")) {
-        toast.error("Vennligst vent litt før du prøver igjen.");
       } else {
         toast.error("Det oppstod en feil under registrering. Vennligst prøv igjen.");
       }
@@ -116,6 +99,7 @@ const Register = () => {
                 required
                 placeholder="••••••••"
                 disabled={isLoading}
+                minLength={6}
               />
             </div>
             <Button 
