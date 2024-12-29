@@ -1,13 +1,14 @@
-import { Building2, MapPin, Coins, TrendingUp, Lock, Bell } from "lucide-react";
+import { Building2, Ban, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { PropertyBadges } from "./property/PropertyBadges";
+import { PropertyImage } from "./property/PropertyImage";
+import { PropertyDetails } from "./property/PropertyDetails";
 
 type PropertyCardProps = {
   property: {
@@ -32,6 +33,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
 
   const availableTokens = property.max_tokens - property.tokens_sold;
   const ratio = property.tokens_sold / property.max_tokens;
+  const isSoldOut = availableTokens === 0;
   
   const calculateIsLive = (launchDate: string | null): boolean => {
     if (!launchDate) return true;
@@ -47,7 +49,6 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
     const launch = new Date(launchDate);
     const diffTime = launch.getTime() - now.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    const diffHours = Math.ceil((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     
     if (diffDays <= 0) return "";
     return `${diffDays} dager`;
@@ -60,8 +61,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
       };
       
       updateCountdown();
-      const timer = setInterval(updateCountdown, 60000); // Update every minute
-
+      const timer = setInterval(updateCountdown, 60000);
       return () => clearInterval(timer);
     }
   }, [isLive, property.launch_date]);
@@ -74,8 +74,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
 
     setIsNotifying(true);
     try {
-      // Here we could implement the notification signup logic
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
       toast.success("Du vil bli varslet når eiendommen blir tilgjengelig!");
     } catch (error) {
       toast.error("Kunne ikke registrere varsling. Prøv igjen senere.");
@@ -92,9 +91,8 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
     >
       <Card className="h-full flex flex-col bg-white hover:shadow-lg transition-all duration-300 hover:scale-105 relative overflow-hidden">
         {!isLive && (
-          <>
-            <div className="absolute inset-0 z-20 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center px-4">
-              <div className="w-[80%] md:w-full flex flex-col items-center">
+          <div className="absolute inset-0 z-20 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center px-4">
+            <div className="w-[80%] md:w-full flex flex-col items-center">
                 <Lock className="h-8 w-8 md:h-12 md:w-12 text-nordic-blue mb-2" />
                 <div className="text-center">
                   <span className="text-sm md:text-base text-nordic-blue font-medium block">
@@ -118,26 +116,12 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
                 >
                   Forhåndsinfo: Eiendommen blir tilgjengelig {countdown}. Følg med for å sikre deg tokens tidlig!
                 </motion.p>
-              </div>
             </div>
-          </>
+          </div>
         )}
         
-        <Badge 
-          variant="secondary" 
-          className="absolute top-4 right-4 z-10 bg-nordic-softblue text-nordic-blue border border-nordic-blue font-medium text-sm"
-        >
-          <TrendingUp className="h-3 w-3 mr-1" />
-          APY: {property.yield}%
-        </Badge>
-        
-        <div className="relative h-48 overflow-hidden">
-          <img
-            src={property.image_url || '/placeholder.svg'}
-            alt={property.name}
-            className="w-full h-full object-cover"
-          />
-        </div>
+        <PropertyBadges yield={property.yield} isSoldOut={isSoldOut} />
+        <PropertyImage imageUrl={property.image_url} propertyName={property.name} />
         
         <CardHeader className="pb-2">
           <CardTitle className="text-xl font-bold text-nordic-charcoal">
@@ -145,36 +129,28 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
           </CardTitle>
         </CardHeader>
         
-        <CardContent className="flex-grow space-y-4">
-          <div className="flex items-center gap-2 text-nordic-gray">
-            <MapPin className="h-4 w-4" />
-            <span className="font-medium">{property.location}</span>
-          </div>
-          <div className="flex items-center gap-2 text-nordic-blue">
-            <Coins className="h-4 w-4" />
-            <span className="font-medium">
-              {property.price_per_token} kr per token
-            </span>
-          </div>
-          
-          <div>
-            <div className="h-2 bg-nordic-softblue rounded-full overflow-hidden">
-              <div 
-                className="bg-nordic-blue h-full transition-all duration-300"
-                style={{ width: `${ratio * 100}%` }}
-              />
-            </div>
-            <p className="text-sm text-nordic-gray mt-2">
-              {availableTokens} andeler igjen
-            </p>
-          </div>
+        <CardContent className="flex-grow">
+          <PropertyDetails 
+            location={property.location}
+            pricePerToken={property.price_per_token}
+            availableTokens={availableTokens}
+            ratio={ratio}
+          />
         </CardContent>
         
         <CardFooter className="flex flex-col gap-2 pt-4">
           {isLive ? (
             <Button
-              className="w-full bg-nordic-blue hover:bg-nordic-blue/90 text-white"
+              className={`w-full ${
+                isSoldOut 
+                  ? 'bg-gray-400 hover:bg-gray-400 cursor-not-allowed' 
+                  : 'bg-nordic-blue hover:bg-nordic-blue/90'
+              } text-white`}
               onClick={() => {
+                if (isSoldOut) {
+                  toast.error("Beklager, denne eiendommen er utsolgt");
+                  return;
+                }
                 if (!user) {
                   navigate("/login");
                   return;
@@ -186,9 +162,19 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
                 }
                 onSelectProperty(property);
               }}
+              disabled={isSoldOut}
             >
-              <Building2 className="mr-2 h-4 w-4" />
-              Kjøp andeler
+              {isSoldOut ? (
+                <>
+                  <Ban className="mr-2 h-4 w-4" />
+                  Utsolgt
+                </>
+              ) : (
+                <>
+                  <Building2 className="mr-2 h-4 w-4" />
+                  Kjøp andeler
+                </>
+              )}
             </Button>
           ) : (
             <Button
