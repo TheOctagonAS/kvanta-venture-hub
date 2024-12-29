@@ -4,10 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calculator, TrendingUp, Calendar, Clock } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const YieldCalculator = () => {
   const [amount, setAmount] = useState<string>("100000");
-  const [apy, setApy] = useState<string>("5");
+  const [apy, setApy] = useState<string>("5.5");
   const [yields, setYields] = useState({
     daily: 0,
     monthly: 0,
@@ -62,30 +63,56 @@ const YieldCalculator = () => {
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              Estimert APY
+              Estimert total årlig avkastning
             </label>
             <Select value={apy} onValueChange={setApy}>
               <SelectTrigger className="w-full bg-white border border-gray-200 hover:border-nordic-blue transition-colors">
-                <SelectValue placeholder="Velg APY" />
+                <SelectValue placeholder="Velg estimert avkastning" />
               </SelectTrigger>
               <SelectContent className="bg-white">
-                <SelectItem value="5" className="hover:bg-nordic-softblue cursor-pointer py-3 px-4">
-                  5%
-                </SelectItem>
-                <SelectItem value="8" className="hover:bg-nordic-softblue cursor-pointer py-3 px-4">
-                  8%
-                </SelectItem>
-                <SelectItem value="10" className="hover:bg-nordic-softblue cursor-pointer py-3 px-4">
-                  10%
-                </SelectItem>
-                <SelectItem value="12" className="hover:bg-nordic-softblue cursor-pointer py-3 px-4">
-                  12%
-                </SelectItem>
-                <SelectItem value="15" className="hover:bg-nordic-softblue cursor-pointer py-3 px-4">
-                  15%
-                </SelectItem>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <SelectItem value="5.5" className="hover:bg-nordic-softblue cursor-pointer py-3 px-4">
+                        5.5% - Konservativt estimat
+                      </SelectItem>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>3.5% leieavkastning + 2% verdistigning</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <SelectItem value="7.0" className="hover:bg-nordic-softblue cursor-pointer py-3 px-4">
+                        7.0% - Moderat estimat
+                      </SelectItem>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>4% leieavkastning + 3% verdistigning</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <SelectItem value="8.5" className="hover:bg-nordic-softblue cursor-pointer py-3 px-4">
+                        8.5% - Optimistisk estimat
+                      </SelectItem>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>4.5% leieavkastning + 4% verdistigning</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </SelectContent>
             </Select>
+            <p className="text-sm text-gray-500 mt-2">
+              Inkluderer både leieinntekter og historisk verdistigning på næringseiendom i Norge
+            </p>
           </div>
         </div>
 
