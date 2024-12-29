@@ -56,8 +56,8 @@ const Statistics = () => {
     <Card className="bg-white shadow-lg">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <ChartBar className="h-6 w-6 text-blue-600" />
-          <CardTitle>
+          <ChartBar className="h-6 w-6 text-nordic-blue" />
+          <CardTitle className="text-xl font-semibold">
             Statistikk & Prognoser
           </CardTitle>
         </div>

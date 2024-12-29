@@ -85,8 +85,8 @@ const UserHoldings = () => {
       <Card className="bg-white shadow-lg">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <Wallet className="h-6 w-6 text-blue-600" />
-            <CardTitle className="text-2xl font-bold">
+            <Wallet className="h-6 w-6 text-nordic-blue" />
+            <CardTitle className="text-xl font-semibold">
               Din DeFi Portefølje
             </CardTitle>
           </div>
