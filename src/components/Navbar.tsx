@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Home } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -34,13 +34,20 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-6">
-            <Link to="/" className="flex items-baseline">
-              <span className="text-[32px] font-medium text-[#345FF6] tracking-tight">
-                Kvanta
-              </span>
-              <span className="text-sm font-medium text-[#345FF6] ml-0.5">
-                .ai
-              </span>
+            <Link to="/" className="flex items-center gap-2">
+              <div className="relative w-6 h-6">
+                <div className="absolute inset-0 bg-[#2F4ECC] rounded-full overflow-hidden">
+                  <Home className="w-4 h-4 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                </div>
+              </div>
+              <div className="flex items-baseline">
+                <span className="text-[28px] font-medium text-[#345FF6] tracking-tight font-sans">
+                  Kvanta
+                </span>
+                <span className="text-sm font-medium text-[#345FF6] ml-0.5 -mb-0.5">
+                  .ai
+                </span>
+              </div>
             </Link>
             <Badge variant="secondary" className="bg-white/80 text-nordic-charcoal font-medium text-xs">
               Beta
