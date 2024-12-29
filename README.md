@@ -4,6 +4,12 @@ Velkommen til Kvanta.ai – Eiendomsinvestering for alle i Norden.
 
 Dette er en konseptuell frontend-demo som viser hvordan tokenisert eiendomsinvestering kan fungere i praksis. Prosjektet er bygget som en prototype for å visualisere brukeropplevelsen og funksjonaliteten i en slik tjeneste.
 
+## Test User Credentials
+
+For testing purposes, you can use these credentials:
+- Email: julian@example.com
+- Password: password123
+
 ## Om Mock-funksjonalitet
 
 Dette er en ren frontend-implementasjon hvor all funksjonalitet er simulert:
@@ -94,3 +100,4 @@ Dette prosjektet er bygget med:
 - Vite
 - Tailwind CSS
 - TypeScript
+
