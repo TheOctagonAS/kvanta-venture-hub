@@ -127,14 +127,28 @@ const LesMer = () => {
           </div>
 
           {/* CTA section */}
-          <div className="text-center mt-12 space-y-4">
-            <Link 
-              to="/register" 
-              className="inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors text-lg font-semibold"
-            >
-              Registrer deg nå
-            </Link>
-            <p className="text-gray-600">Start din eiendomsreise i dag!</p>
+          <div className="bg-blue-600 text-white p-6 rounded-lg text-center mt-12">
+            <h3 className="text-2xl font-semibold mb-3">Klar for å starte?</h3>
+            <p className="text-lg mb-6">
+              Bli med nå og få daglige leieinntekter fra dine eiendomstokens.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
+              <Link
+                to="/register"
+                className="bg-white text-blue-600 px-6 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors"
+              >
+                Opprett bruker
+              </Link>
+              <Link
+                to="/eiendommer"
+                className="border border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+              >
+                Se Eiendommer
+              </Link>
+            </div>
+            <p className="text-sm text-white/90 italic">
+              Din eiendomsreise begynner her!
+            </p>
           </div>
         </div>
       </motion.div>
