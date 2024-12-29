@@ -34,7 +34,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="h-full flex flex-col hover:shadow-lg transition-all duration-300 hover:scale-105 relative overflow-hidden">
+      <Card className="h-full flex flex-col bg-white hover:shadow-lg transition-all duration-300 hover:scale-105 relative overflow-hidden border border-gray-100">
         <Badge 
           variant="secondary" 
           className="absolute top-4 right-4 z-10 bg-nordic-softblue text-nordic-blue border border-nordic-blue font-medium text-sm"
@@ -51,40 +51,40 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
           />
         </div>
         
-        <CardHeader>
-          <CardTitle className="text-xl font-bold">{property.name}</CardTitle>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-xl font-bold text-nordic-charcoal">
+            {property.name}
+          </CardTitle>
         </CardHeader>
         
-        <CardContent className="flex-grow">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 text-gray-600">
-              <MapPin className="h-4 w-4" />
-              <span className="font-semibold text-lg">{property.location}</span>
+        <CardContent className="flex-grow space-y-4">
+          <div className="flex items-center gap-2 text-nordic-gray">
+            <MapPin className="h-4 w-4" />
+            <span className="font-medium">{property.location}</span>
+          </div>
+          <div className="flex items-center gap-2 text-nordic-blue">
+            <Coins className="h-4 w-4" />
+            <span className="font-medium">
+              {property.price_per_token} kr per token
+            </span>
+          </div>
+          
+          <div>
+            <div className="h-2 bg-nordic-softblue rounded-full overflow-hidden">
+              <div 
+                className="bg-nordic-blue h-full transition-all duration-300"
+                style={{ width: `${ratio * 100}%` }}
+              />
             </div>
-            <div className="flex items-center gap-2 text-gray-600">
-              <Coins className="h-4 w-4" />
-              <span className="font-semibold text-lg text-primary">
-                {property.price_per_token} kr per token
-              </span>
-            </div>
-            
-            <div className="mt-2 mb-2">
-              <div className="h-2 bg-gray-200 rounded overflow-hidden">
-                <div 
-                  className="bg-blue-500 h-full transition-all duration-300"
-                  style={{ width: `${ratio * 100}%` }}
-                />
-              </div>
-              <p className="text-sm text-gray-600 mt-1">
-                {availableTokens} andeler igjen
-              </p>
-            </div>
+            <p className="text-sm text-nordic-gray mt-2">
+              {availableTokens} andeler igjen
+            </p>
           </div>
         </CardContent>
         
-        <CardFooter className="flex flex-col gap-2">
+        <CardFooter className="flex flex-col gap-2 pt-4">
           <Button
-            className="w-full"
+            className="w-full bg-nordic-blue hover:bg-nordic-blue/90 text-white"
             onClick={() => {
               if (!user) {
                 navigate("/login");
@@ -101,7 +101,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
             <Building2 className="mr-2 h-4 w-4" />
             Kjøp andeler
           </Button>
-          <p className="text-xs text-gray-500 italic text-center">
+          <p className="text-xs text-nordic-gray italic text-center">
             *APY er estimert årlig avkastning, ikke garantert.
           </p>
         </CardFooter>

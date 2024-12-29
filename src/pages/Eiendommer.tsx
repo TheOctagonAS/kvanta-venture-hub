@@ -109,22 +109,22 @@ const Eiendommer = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center">
-        <div className="text-gray-600">Laster eiendommer...</div>
+      <div className="min-h-screen bg-nordic-lightgray flex items-center justify-center">
+        <div className="text-nordic-gray animate-pulse">Laster eiendommer...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center">
+      <div className="min-h-screen bg-nordic-lightgray flex items-center justify-center">
         <div className="text-red-600">Kunne ikke laste eiendommer</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <div className="min-h-screen bg-nordic-lightgray">
       <main className="container mx-auto px-4 py-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -132,11 +132,11 @@ const Eiendommer = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <h1 className="text-4xl sm:text-5xl font-bold text-primary mb-6">
+          <h1 className="text-4xl font-bold text-nordic-charcoal tracking-heading mb-6">
             Tilgjengelige Eiendommer
           </h1>
-          <p className="text-xl text-gray-600 mb-8">
-            Utforsk våre nøye utvalgte eiendommer i Norden
+          <p className="text-xl text-nordic-gray max-w-2xl mx-auto">
+            Utforsk våre nøye utvalgte eiendommer i Norden. Invester trygt og enkelt med tokenisert eiendom.
           </p>
         </motion.div>
 
