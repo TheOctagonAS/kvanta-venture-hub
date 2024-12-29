@@ -13,7 +13,7 @@ const YieldCalculator = () => {
     compoundedYearly: 0,
   });
 
-  const APY = 8.5; // Optimistic estimate as default
+  const APY = 8.5;
 
   useEffect(() => {
     const investment = parseFloat(amount) || 0;
@@ -53,26 +53,28 @@ const YieldCalculator = () => {
         </CardHeader>
         <CardContent className="grid gap-6 pt-6">
           <div className="grid gap-4">
-            <div className="space-y-4">
+            <div className="bg-white p-6 rounded-lg shadow-sm space-y-4">
               <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Investeringsbeløp (NOK)
               </label>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col md:flex-row items-center gap-4">
                 <Input
                   type="number"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   className="w-full text-lg font-medium"
                 />
+                <div className="w-full">
+                  <Slider
+                    defaultValue={[100000]}
+                    max={5000000}
+                    step={1000}
+                    value={[parseFloat(amount) || 0]}
+                    onValueChange={handleSliderChange}
+                    className="[&>.relative>.absolute]:bg-nordic-blue [&>.relative]:bg-nordic-softblue [&>.block]:border-nordic-blue [&>.block]:bg-white"
+                  />
+                </div>
               </div>
-              <Slider
-                defaultValue={[100000]}
-                max={5000000}
-                step={1000}
-                value={[parseFloat(amount) || 0]}
-                onValueChange={handleSliderChange}
-                className="py-4"
-              />
             </div>
             <div className="space-y-2">
               <div className="bg-nordic-softblue rounded-lg p-4 border border-blue-100">
