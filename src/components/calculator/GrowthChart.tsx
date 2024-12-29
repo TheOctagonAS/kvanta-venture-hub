@@ -9,15 +9,19 @@ interface GrowthChartProps {
 }
 
 const GrowthChart = ({ data }: GrowthChartProps) => {
+  // Filter data to show fewer points
+  const filteredData = data.filter(item => item.day % 5 === 0);
+
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm">
-      <h3 className="text-lg font-semibold mb-4">Simulert vekst over tid</h3>
-      <div className="h-64">
+    <div className="bg-white p-4 rounded-lg shadow-sm">
+      <h3 className="text-sm font-medium mb-2">Simulert vekst over tid</h3>
+      <div className="h-[180px] w-[300px] mx-auto">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data}>
+          <LineChart data={filteredData} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
             <XAxis 
               dataKey="day" 
-              label={{ value: 'Dager', position: 'bottom' }}
+              tick={{ fontSize: 10 }}
+              ticks={[0, 5, 10, 15, 20, 25, 30]}
             />
             <YAxis 
               tickFormatter={(value) => 
@@ -28,6 +32,7 @@ const GrowthChart = ({ data }: GrowthChartProps) => {
                   maximumFractionDigits: 1
                 }).format(value)
               }
+              tick={{ fontSize: 10 }}
             />
             <Tooltip 
               formatter={(value: number) => 
@@ -37,21 +42,29 @@ const GrowthChart = ({ data }: GrowthChartProps) => {
                   maximumFractionDigits: 0
                 }).format(value)
               }
+              contentStyle={{ fontSize: '12px' }}
             />
-            <Legend />
+            <Legend 
+              align="right"
+              verticalAlign="bottom"
+              iconSize={8}
+              wrapperStyle={{ fontSize: '10px' }}
+            />
             <Line 
               type="monotone" 
               dataKey="standard" 
               stroke="#345FF6" 
-              name="Uten reinvestering"
-              strokeWidth={2}
+              name="Uten reinvest"
+              strokeWidth={1.5}
+              dot={false}
             />
             <Line 
               type="monotone" 
               dataKey="compound" 
               stroke="#47C757" 
-              name="Med reinvestering"
-              strokeWidth={2}
+              name="Med reinvest"
+              strokeWidth={1.5}
+              dot={false}
             />
           </LineChart>
         </ResponsiveContainer>
