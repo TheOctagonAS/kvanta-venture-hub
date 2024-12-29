@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Beta } from "lucide-react";
+import { Menu, X, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -38,7 +38,7 @@ const Navbar = () => {
               Kvanta.ai
             </Link>
             <Badge variant="secondary" className="bg-white/80 backdrop-blur-sm text-nordic-charcoal font-medium">
-              <Beta className="w-4 h-4 mr-1" />
+              <Sparkles className="w-4 h-4 mr-1" />
               Beta
             </Badge>
           </div>
