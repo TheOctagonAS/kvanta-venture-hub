@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import UserProfile from "@/components/UserProfile";
 import UserHoldings from "@/components/UserHoldings";
 import Statistics from "@/components/Statistics";
+import TokenToMoneyAnimation from "@/components/TokenToMoneyAnimation";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { motion } from "framer-motion";
 
@@ -15,7 +16,6 @@ const MinSide = () => {
     queryFn: async () => {
       if (!user) return null;
       
-      // Get both profile and KYC data
       const [profileResponse, kycResponse] = await Promise.all([
         supabase
           .from('profiles')
@@ -33,7 +33,6 @@ const MinSide = () => {
         throw profileResponse.error;
       }
 
-      // Don't throw error if KYC data doesn't exist
       if (kycResponse.error && kycResponse.error.code !== 'PGRST116') {
         throw kycResponse.error;
       }
@@ -61,16 +60,16 @@ const MinSide = () => {
   return (
     <div className="min-h-screen bg-[#f8faff]">
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">
-          Portefølje
-        </h1>
-        
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className="max-w-7xl mx-auto space-y-8"
         >
+          <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">
+            Portefølje
+          </h1>
+
           {!user ? (
             <div>Please log in</div>
           ) : (
@@ -89,6 +88,8 @@ const MinSide = () => {
                   </AlertDescription>
                 </Alert>
               )}
+              
+              <TokenToMoneyAnimation />
               
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="space-y-6">
