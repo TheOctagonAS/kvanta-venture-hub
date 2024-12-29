@@ -33,16 +33,16 @@ const Navbar = () => {
     <nav className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             <Link to="/" className="flex items-baseline">
               <span className="text-[32px] font-medium text-[#345FF6] tracking-tight">
                 Kvanta
               </span>
-              <span className="text-base font-medium text-[#345FF6] ml-0.5">
+              <span className="text-sm font-medium text-[#345FF6] ml-0.5">
                 .ai
               </span>
             </Link>
-            <Badge variant="secondary" className="bg-white/80 text-nordic-charcoal font-medium">
+            <Badge variant="secondary" className="bg-white/80 text-nordic-charcoal font-medium text-xs">
               Beta
             </Badge>
           </div>
