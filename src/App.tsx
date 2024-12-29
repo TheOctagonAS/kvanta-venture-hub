@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import Navbar from "./components/Navbar";
 import Index from "./pages/Index";
+import Register from "./pages/Register";
 import Eiendommer from "./pages/Eiendommer";
 import MinSide from "./pages/MinSide";
 
@@ -22,6 +23,7 @@ const App = () => (
             <Navbar />
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/register" element={<Register />} />
               <Route path="/eiendommer" element={<Eiendommer />} />
               <Route path="/minside" element={<MinSide />} />
             </Routes>
