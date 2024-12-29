@@ -8,6 +8,14 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
+    --white: white;
+    --black: black;
+    --transparent: transparent;
+    --blue-300: #93c5fd;
+    --blue-400: #60a5fa;
+    --blue-500: #3b82f6;
+    --indigo-300: #a5b4fc;
+    --violet-200: #ddd6fe;
 
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;

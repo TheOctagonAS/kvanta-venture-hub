@@ -25,7 +25,7 @@ export default {
         background: "#f4f7fb",
         foreground: "#2A2A2A",
         primary: {
-          DEFAULT: "#2563eb", // blue-600
+          DEFAULT: "#2563eb",
           foreground: "#FFFFFF",
         },
         secondary: {
@@ -47,6 +47,16 @@ export default {
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
+      },
+      animation: {
+        aurora: "aurora 60s linear infinite",
+      },
+      keyframes: {
+        aurora: {
+          "0%": { backgroundPosition: "50% 50%, 50% 50%" },
+          "50%": { backgroundPosition: "0% 50%, 0% 50%" },
+          "100%": { backgroundPosition: "50% 50%, 50% 50%" },
+        },
       },
     },
   },
