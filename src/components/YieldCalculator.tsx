@@ -66,19 +66,19 @@ const YieldCalculator = () => {
   };
 
   return (
-    <div className="bg-[#f8fbff] p-4 rounded-lg">
+    <div className="max-w-md mx-auto bg-[#f8fbff] p-3 rounded-lg">
       <Card className="bg-white shadow-sm">
-        <CardHeader className="space-y-1 border-b border-gray-100 py-4">
+        <CardHeader className="space-y-1 border-b border-gray-100 py-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-2xl font-bold flex items-center gap-2">
-              <Calculator className="w-6 h-6 text-nordic-blue" />
+            <CardTitle className="text-lg font-bold flex items-center gap-2">
+              <Calculator className="w-5 h-5 text-nordic-blue" />
               Kalkulator: Hva kan du tjene?
             </CardTitle>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
-                  <div className="flex items-center gap-2">
-                    <span className="text-base font-bold text-nordic-charcoal">Estimert årlig avkastning:</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm font-medium text-nordic-charcoal">Estimert årlig avkastning:</span>
                     <span className="text-lg font-bold text-nordic-blue">{APY}%</span>
                     <Info className="w-4 h-4 text-gray-400 hover:text-gray-600" />
                   </div>
@@ -91,23 +91,20 @@ const YieldCalculator = () => {
               </Tooltip>
             </TooltipProvider>
           </div>
-          <p className="text-sm text-gray-600">
-            Juster beløpet nedenfor for å se et omtrentlig estimat basert på historisk avkastning.
-          </p>
         </CardHeader>
-        <CardContent className="grid gap-4 pt-4">
-          <div className="grid gap-4">
+        <CardContent className="grid gap-3 pt-3">
+          <div className="grid gap-3">
             <div className="bg-white rounded-lg shadow-sm">
-              <div className="flex flex-col md:flex-row md:items-end gap-4 p-4">
+              <div className="flex flex-col gap-2 p-3">
                 <div className="flex-1">
-                  <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-2 block">
+                  <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-1 block">
                     Investeringsbeløp (NOK)
                   </label>
                   <Input
                     type="number"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    className="text-lg font-medium"
+                    className="text-base font-medium"
                   />
                 </div>
                 <div className="flex-1">
