@@ -8,14 +8,16 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { BalanceModal } from "./BalanceModal";
 
-type HoldingWithProperty = {
+interface Property {
+  price_per_token: number;
+  yield: number;
+}
+
+interface HoldingWithProperty {
   token_count: number;
   accumulated_rent: number;
-  property: {
-    price_per_token: number;
-    yield: number;
-  };
-};
+  property: Property;
+}
 
 const PropertyOverview = () => {
   const { user } = useAuth();
@@ -39,7 +41,7 @@ const PropertyOverview = () => {
         .eq('user_id', user.id);
       
       if (error) throw error;
-      return data || [];
+      return (data || []) as HoldingWithProperty[];
     },
     enabled: !!user,
   });
@@ -51,6 +53,7 @@ const PropertyOverview = () => {
       const { data, error } = await supabase
         .from('user_balance')
         .select('*')
+        .eq('user_id', user.id)
         .single();
       
       if (error && error.code !== 'PGRST116') throw error;
