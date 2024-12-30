@@ -22,6 +22,32 @@ For testing kan du bruke følgende påloggingsinformasjon:
 - Automatisk beregning av leieinntekter
 - Porteføljeadministrasjon
 
+## Skatt (Norge) Feature, versjon 2
+
+Nye forbedringer i skatteoversikten:
+
+- Collapsible "Fradragsoversikt" for enkel registrering av fradragsberettigede utgifter
+- Forbedret eksportfunksjonalitet med valg mellom PDF og CSV format
+- Månedlig oversiktsgraf som viser opptjent vs. uttatt leie
+- Direkte tilgang fra "Min side" via "Se skatteoversikt"-lenke
+
+### Viktige merknader
+
+**Ansvarsfraskrivelse:**
+- Kvanta.ai tilbyr ikke offisiell skatterådgivning
+- Brukere må selv kontrollere lokale skatteregler og forskrifter
+- Tallene som vises er veiledende og må verifiseres med skattemyndighetene
+- Vi anbefaler å konsultere en autorisert regnskapsfører eller skatterådgiver
+
+### Fremtidige utvidelser
+
+Planlagte forbedringer inkluderer:
+- Integrasjon med faktiske månedsdata for leieinntekter
+- Støtte for delvis eierskapsendringer og skatteberegning
+- Automatisk kategorisering av fradrag
+- Integrasjon med Skatteetatens systemer (under utredning)
+- Utvidet støtte for ulike eierstrukturer og selskapsformer
+
 ## Algorand Integrasjonsplan
 
 Vi har implementert en første versjon av Algorand-integrasjon:
