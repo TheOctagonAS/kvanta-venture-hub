@@ -24,11 +24,11 @@ export default {
         ring: "hsl(var(--ring))",
         background: {
           DEFAULT: "#f8f9fa",
-          dark: "#101010",
+          dark: "#1a1a1a",
         },
         foreground: {
           DEFAULT: "#333333",
-          dark: "#eeeeee",
+          dark: "#f1f1f1",
         },
         primary: {
           DEFAULT: "#345FF6",
@@ -49,15 +49,15 @@ export default {
           blue: "#345FF6",
           charcoal: {
             DEFAULT: "#333333",
-            dark: "#eeeeee",
+            dark: "#f1f1f1",
           },
           gray: {
             DEFAULT: "#555555",
-            dark: "#A0A0A0",
+            dark: "#e0e0e0",
           },
           lightgray: {
             DEFAULT: "#f8f9fa",
-            dark: "#101010",
+            dark: "#1a1a1a",
           },
           softblue: {
             DEFAULT: "#E9F2FF",

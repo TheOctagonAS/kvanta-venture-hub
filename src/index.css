@@ -90,25 +90,29 @@
   }
 
   h1, .h1 {
-    @apply text-4xl font-bold text-nordic-charcoal dark:text-nordic-charcoal-dark tracking-heading mb-6;
+    @apply text-4xl font-bold text-nordic-charcoal dark:text-[#fff] tracking-heading mb-6;
   }
 
   h2, .h2 {
-    @apply text-3xl font-semibold text-nordic-charcoal dark:text-nordic-charcoal-dark tracking-heading mb-4;
+    @apply text-3xl font-semibold text-nordic-charcoal dark:text-[#f1f1f1] tracking-heading mb-4;
   }
 
   h3, .h3 {
-    @apply text-2xl font-medium text-nordic-charcoal dark:text-nordic-charcoal-dark tracking-heading mb-3;
+    @apply text-2xl font-medium text-nordic-charcoal dark:text-[#f1f1f1] tracking-heading mb-3;
   }
 
   p {
-    @apply text-nordic-gray dark:text-nordic-gray-dark mb-4;
+    @apply text-nordic-gray dark:text-[#e0e0e0] mb-4;
+  }
+
+  a {
+    @apply text-primary hover:text-primary/90 dark:text-primary-dark dark:hover:text-primary-dark/90 transition-colors;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 hover:shadow-lg;
+    @apply bg-blue-600 hover:bg-blue-700 dark:bg-primary-dark dark:hover:bg-primary-dark/90 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 hover:shadow-lg;
   }
 
   .btn-secondary {
