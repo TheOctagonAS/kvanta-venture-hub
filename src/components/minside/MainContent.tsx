@@ -8,7 +8,12 @@ import UserHoldings from "@/components/UserHoldings";
 import StatisticsRow from "@/components/property-overview/StatisticsRow";
 import { usePropertyData } from "@/components/property-overview/usePropertyData";
 
-const MainContent = () => {
+interface MainContentProps {
+  isKyc: boolean;
+  onStartKYC: () => Promise<void>;
+}
+
+const MainContent = ({ isKyc, onStartKYC }: MainContentProps) => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { 
@@ -38,7 +43,7 @@ const MainContent = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-nordic-charcoal">Min portefølje</h1>
-        {profile?.is_kyc && (
+        {isKyc && (
           <Button 
             onClick={() => navigate('/liste-eiendom')}
             className="flex items-center gap-2"
