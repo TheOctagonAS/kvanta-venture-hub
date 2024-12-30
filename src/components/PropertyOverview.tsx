@@ -5,6 +5,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DollarSign, Home, ChartBar, Plus, Minus } from "lucide-react";
 import { toast } from "sonner";
+import { useState } from "react";
+import { BalanceModal } from "./BalanceModal";
 
 type HoldingWithProperty = {
   token_count: number;
@@ -17,8 +19,10 @@ type HoldingWithProperty = {
 
 const PropertyOverview = () => {
   const { user } = useAuth();
+  const [showDepositModal, setShowDepositModal] = useState(false);
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
 
-  const { data: holdings } = useQuery<HoldingWithProperty[]>({
+  const { data: holdings, refetch: refetchHoldings } = useQuery({
     queryKey: ['holdings-overview', user?.id],
     queryFn: async () => {
       if (!user) return [];
@@ -40,6 +44,25 @@ const PropertyOverview = () => {
     enabled: !!user,
   });
 
+  const { data: userBalance, refetch: refetchBalance } = useQuery({
+    queryKey: ['user-balance', user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+      const { data, error } = await supabase
+        .from('user_balance')
+        .select('*')
+        .single();
+      
+      if (error && error.code !== 'PGRST116') throw error;
+      return data;
+    },
+    enabled: !!user,
+  });
+
+  const handleBalanceUpdate = async () => {
+    await Promise.all([refetchBalance(), refetchHoldings()]);
+  };
+
   const calculateTotalValue = () => {
     if (!holdings) return 0;
     return holdings.reduce((total, holding) => 
@@ -57,14 +80,6 @@ const PropertyOverview = () => {
     const totalYield = holdings.reduce((sum, holding) => 
       sum + (holding.property.yield || 0), 0);
     return (totalYield / holdings.length).toFixed(1);
-  };
-
-  const handleDeposit = () => {
-    toast.info("Innskudd-funksjonalitet kommer snart");
-  };
-
-  const handleWithdraw = () => {
-    toast.info("Uttak-funksjonalitet kommer snart");
   };
 
   return (
@@ -85,11 +100,13 @@ const PropertyOverview = () => {
             </div>
             <div>
               <h3 className="text-sm text-gray-600 mb-2">Tilgjengelig saldo</h3>
-              <p className="text-2xl font-bold text-nordic-charcoal">0 NOK</p>
+              <p className="text-2xl font-bold text-nordic-charcoal">
+                {(userBalance?.balance || 0).toLocaleString()} NOK
+              </p>
             </div>
             <div className="flex gap-2">
               <Button
-                onClick={handleDeposit}
+                onClick={() => setShowDepositModal(true)}
                 variant="outline"
                 size="sm"
                 className="flex items-center gap-1"
@@ -97,7 +114,7 @@ const PropertyOverview = () => {
                 <Plus className="h-4 w-4" /> Innskudd
               </Button>
               <Button
-                onClick={handleWithdraw}
+                onClick={() => setShowWithdrawModal(true)}
                 variant="outline"
                 size="sm"
                 className="flex items-center gap-1"
@@ -108,7 +125,6 @@ const PropertyOverview = () => {
           </div>
         </Card>
 
-        {/* Rent Balance Box */}
         <Card className="p-6 bg-white">
           <div className="space-y-6">
             <div>
@@ -162,6 +178,20 @@ const PropertyOverview = () => {
           </p>
         </div>
       </div>
+
+      <BalanceModal
+        isOpen={showDepositModal}
+        onClose={() => setShowDepositModal(false)}
+        type="deposit"
+        onSuccess={handleBalanceUpdate}
+      />
+
+      <BalanceModal
+        isOpen={showWithdrawModal}
+        onClose={() => setShowWithdrawModal(false)}
+        type="withdraw"
+        onSuccess={handleBalanceUpdate}
+      />
     </div>
   );
 };
