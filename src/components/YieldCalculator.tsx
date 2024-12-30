@@ -81,29 +81,34 @@ const YieldCalculator = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-4">
-      <h2 className="text-2xl font-bold text-nordic-charcoal mt-10 mb-10">
-        Hvor langt kan investeringen* din gå?
-      </h2>
+    <div className="w-full max-w-4xl mx-auto space-y-6">
+      <div className="text-center space-y-4 mb-8">
+        <h2 className="text-4xl font-bold bg-gradient-to-r from-nordic-blue to-accent bg-clip-text text-transparent">
+          Utforsk Investeringspotensialet
+        </h2>
+        <p className="text-lg text-nordic-gray max-w-2xl mx-auto">
+          Se hvordan investeringen din kan vokse over tid med eiendomsutleie og verdiøkning
+        </p>
+      </div>
       
-      <Card className="bg-white shadow-sm border-0">
-        <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
-            <div className="p-2 rounded-full bg-nordic-softblue">
-              <Home className="w-6 h-6 text-nordic-blue" />
+      <Card className="bg-white shadow-lg border-0 overflow-hidden">
+        <CardContent className="p-8">
+          <div className="flex flex-col md:flex-row md:items-center gap-6 mb-8">
+            <div className="p-3 rounded-full bg-gradient-to-br from-nordic-softblue to-nordic-blue/20">
+              <Home className="w-8 h-8 text-nordic-blue" />
             </div>
             <div className="flex-1">
-              <p className="text-lg text-nordic-charcoal">
-                Når du investerer for
+              <p className="text-lg text-nordic-charcoal mb-2">
+                Investeringsbeløp
               </p>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <Input
                   type="number"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="text-2xl font-bold border-none shadow-none p-0 h-auto w-48"
+                  className="text-3xl font-bold border-none shadow-none p-0 h-auto w-48 focus:ring-0"
                 />
-                <span className="text-2xl font-bold text-nordic-charcoal">NOK</span>
+                <span className="text-3xl font-bold text-nordic-charcoal">NOK</span>
               </div>
             </div>
           </div>
@@ -114,19 +119,19 @@ const YieldCalculator = () => {
             step={1000}
             value={[parseFloat(amount) || 0]}
             onValueChange={handleSliderChange}
-            className="mb-8 [&>.relative>.absolute]:bg-nordic-blue [&>.relative]:bg-nordic-softblue [&>.block]:border-nordic-blue [&>.block]:bg-white"
+            className="mb-10 [&>.relative>.absolute]:bg-nordic-blue [&>.relative]:bg-nordic-softblue [&>.block]:border-nordic-blue [&>.block]:bg-white"
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div className="col-span-1 md:col-span-4 bg-white shadow-sm rounded-lg p-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div className="col-span-1 md:col-span-4 bg-gradient-to-r from-[#47C757]/10 to-[#47C757]/5 rounded-xl p-6">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-full bg-[#47C757]/10">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-full bg-[#47C757]/20">
                     <Gift className="w-6 h-6 text-[#47C757]" />
                   </div>
                   <div>
-                    <p className="text-lg text-nordic-charcoal">Total årlig avkastning*</p>
-                    <p className="text-3xl font-bold text-[#47C757]">
+                    <p className="text-lg text-nordic-charcoal mb-1">Total årlig avkastning*</p>
+                    <p className="text-4xl font-bold text-[#47C757]">
                       {yields.compoundedYearly.toLocaleString('nb-NO', {
                         style: 'currency',
                         currency: 'NOK',
@@ -139,10 +144,10 @@ const YieldCalculator = () => {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      <Info className="w-5 h-5 text-gray-400" />
+                      <Info className="w-5 h-5 text-gray-400 hover:text-gray-600 transition-colors" />
                     </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="text-sm max-w-[200px]">
+                    <TooltipContent className="max-w-xs">
+                      <p className="text-sm">
                         Basert på {APY}% årlig leieavkastning og {PROPERTY_APPRECIATION}% årlig verdiøkning på eiendommen, med reinvestering av utbytte
                       </p>
                     </TooltipContent>
@@ -151,12 +156,13 @@ const YieldCalculator = () => {
               </div>
             </div>
 
-            <div className="bg-white shadow-sm rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-2">
+            {/* Yield Cards */}
+            <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-3 mb-3">
                 <Gift className="w-5 h-5 text-[#47C757]" />
                 <p className="text-sm font-medium text-nordic-charcoal">Daglig</p>
               </div>
-              <p className="text-3xl font-bold text-[#47C757]">
+              <p className="text-2xl font-bold text-[#47C757]">
                 {yields.daily.toLocaleString('nb-NO', {
                   style: 'currency',
                   currency: 'NOK',
@@ -165,12 +171,12 @@ const YieldCalculator = () => {
               </p>
             </div>
 
-            <div className="bg-white shadow-sm rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-2">
+            <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-3 mb-3">
                 <Gift className="w-5 h-5 text-[#47C757]" />
                 <p className="text-sm font-medium text-nordic-charcoal">Månedlig</p>
               </div>
-              <p className="text-3xl font-bold text-[#47C757]">
+              <p className="text-2xl font-bold text-[#47C757]">
                 {yields.monthly.toLocaleString('nb-NO', {
                   style: 'currency',
                   currency: 'NOK',
@@ -179,12 +185,12 @@ const YieldCalculator = () => {
               </p>
             </div>
 
-            <div className="bg-white shadow-sm rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-2">
+            <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-3 mb-3">
                 <Gift className="w-5 h-5 text-[#47C757]" />
                 <p className="text-sm font-medium text-nordic-charcoal">Årlig</p>
               </div>
-              <p className="text-3xl font-bold text-[#47C757]">
+              <p className="text-2xl font-bold text-[#47C757]">
                 {yields.yearly.toLocaleString('nb-NO', {
                   style: 'currency',
                   currency: 'NOK',
@@ -194,7 +200,7 @@ const YieldCalculator = () => {
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-8">
             <GrowthChart data={growthData} />
             <CalculatorCTA />
           </div>
