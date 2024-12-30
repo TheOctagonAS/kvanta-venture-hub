@@ -1,13 +1,14 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Building2, MapPin, Star, Users } from "lucide-react";
+import { Building2, MapPin, Star, Users, Calendar, Phone, Briefcase } from "lucide-react";
 import { PropertyImage } from "@/components/property/PropertyImage";
 import { TradeButton } from "@/components/trade/TradeButton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PriceHistoryChart } from "@/components/property/PriceHistoryChart";
+import { Separator } from "@/components/ui/separator";
 
 const PropertyDetail = () => {
   const { id } = useParams();
@@ -79,50 +80,85 @@ const PropertyDetail = () => {
 
           <PriceHistoryChart propertyId={id!} />
 
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-semibold mb-4">Property Details</h2>
-              <div className="grid md:grid-cols-2 gap-4">
+          {/* Property Details Grid */}
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Left Column - Property Details */}
+            <Card className="p-6 space-y-4">
+              <h2 className="text-xl font-semibold mb-4">Eiendomsdetaljer</h2>
+              <div className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <Building2 className="h-5 w-5 text-nordic-blue" />
                   <div>
-                    <p className="text-sm text-gray-600">Property Type</p>
-                    <p className="font-medium">Commercial</p>
+                    <p className="text-sm text-gray-600">Eiendomstype</p>
+                    <p className="text-base">{property.property_type}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Users className="h-5 w-5 text-nordic-blue" />
                   <div>
-                    <p className="text-sm text-gray-600">Occupancy</p>
-                    <p className="font-medium">100%</p>
+                    <p className="text-sm text-gray-600">Utleiegrad</p>
+                    <p className="text-base">100%</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Calendar className="h-5 w-5 text-nordic-blue" />
+                  <div>
+                    <p className="text-sm text-gray-600">Byggeår</p>
+                    <p className="text-base">2015</p>
                   </div>
                 </div>
               </div>
-            </div>
+            </Card>
 
-            <div>
-              <h2 className="text-2xl font-semibold mb-4">Reviews</h2>
-              <div className="flex items-center space-x-2">
-                {[1, 2, 3, 4, 5].map((rating) => (
-                  <Star
-                    key={rating}
-                    className="h-5 w-5 text-yellow-400"
-                    fill="currentColor"
-                  />
-                ))}
-                <span className="text-gray-600 ml-2">(12 reviews)</span>
+            {/* Right Column - Sponsor Info */}
+            <Card className="p-6 space-y-4">
+              <h2 className="text-xl font-semibold mb-4">Selgerinfo</h2>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <Briefcase className="h-5 w-5 text-nordic-blue" />
+                  <div>
+                    <p className="text-sm text-gray-600">Organisasjonsnummer</p>
+                    <p className="text-base">123 456 789</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Phone className="h-5 w-5 text-nordic-blue" />
+                  <div>
+                    <p className="text-sm text-gray-600">Kontakt</p>
+                    <p className="text-base">+47 123 45 678</p>
+                  </div>
+                </div>
+                
+                <Separator className="my-4" />
+                
+                <div className="space-y-2">
+                  <h3 className="text-lg font-medium">Vurderinger</h3>
+                  <div className="flex items-center space-x-2">
+                    {[1, 2, 3, 4, 5].map((rating) => (
+                      <Star
+                        key={rating}
+                        className="h-5 w-5 text-yellow-400"
+                        fill="currentColor"
+                      />
+                    ))}
+                    <span className="text-sm text-gray-600 ml-2">(12)</span>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-2">
+                    "Veldig fornøyd med investeringen og oppfølgingen fra selger."
+                  </p>
+                </div>
               </div>
-            </div>
+            </Card>
           </div>
         </div>
 
         {/* Quick Info Box */}
         <div className="lg:col-span-1">
-          <Card className="sticky top-4 p-6 bg-white dark:bg-gray-800 shadow-md border border-gray-100">
+          <Card className="sticky top-4 p-6 bg-white shadow-md border border-gray-100">
             <div className="space-y-6">
               <div>
-                <h3 className="text-base text-gray-600 dark:text-gray-400 mb-1">
-                  Price per token
+                <h3 className="text-base text-gray-600 mb-1">
+                  Pris per token
                 </h3>
                 <p className="text-2xl font-bold text-nordic-blue">
                   {property.price_per_token.toLocaleString()} NOK
@@ -131,8 +167,8 @@ const PropertyDetail = () => {
 
               <div className="space-y-4">
                 <div>
-                  <h4 className="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                    Projected Annual Return
+                  <h4 className="text-sm text-gray-600 mb-1">
+                    Forventet årlig avkastning
                   </h4>
                   <p className="text-base font-semibold text-accent">
                     {property.yield}%
@@ -140,11 +176,11 @@ const PropertyDetail = () => {
                 </div>
 
                 <div>
-                  <h4 className="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                    Available Tokens
+                  <h4 className="text-sm text-gray-600 mb-1">
+                    Tilgjengelige tokens
                   </h4>
-                  <p className="text-base font-medium">
-                    {property.max_tokens - property.tokens_sold} of{" "}
+                  <p className="text-base">
+                    {property.max_tokens - property.tokens_sold} av{" "}
                     {property.max_tokens}
                   </p>
                 </div>
