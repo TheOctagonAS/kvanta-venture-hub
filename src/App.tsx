@@ -15,6 +15,7 @@ import LesMer from "./pages/LesMer";
 import Lommebok from "./pages/Lommebok";
 import KYC from "./pages/KYC";
 import PropertyDetail from "./pages/PropertyDetail";
+import OrderPage from "./pages/OrderPage";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
                 <Route path="/login" element={<Login />} />
                 <Route path="/eiendommer" element={<Eiendommer />} />
                 <Route path="/property/:id" element={<PropertyDetail />} />
+                <Route path="/orders/buy" element={<OrderPage />} />
                 <Route path="/minside" element={<MinSide />} />
                 <Route path="/les-mer" element={<LesMer />} />
                 <Route path="/lommebok" element={<Lommebok />} />
