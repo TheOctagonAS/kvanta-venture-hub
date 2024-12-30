@@ -17,7 +17,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
   const isActive = (path: string) => {
-    return location.pathname === path ? "text-primary font-semibold" : "text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-white";
+    return location.pathname === path ? "text-primary font-semibold" : "text-gray-400 hover:text-white dark:text-[#ccc] dark:hover:text-white transition-colors duration-200";
   };
 
   const handleLogout = async () => {
@@ -33,12 +33,12 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white dark:bg-gray-900 shadow-sm sticky top-0 z-50 transition-colors duration-200">
+    <nav className="bg-white dark:bg-[#1a1a1a] shadow-sm border-b border-gray-200 dark:border-[#2a2a2a] sticky top-0 z-50 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center gap-2 py-2 px-4 group">
-              <KvantaLogo />
+              <KvantaLogo className="text-primary dark:text-white" />
               <Badge 
                 variant="secondary" 
                 className="ml-2 text-xs bg-gradient-to-r from-rose-500 to-rose-600 text-white font-medium shadow-sm"
@@ -66,16 +66,16 @@ const Navbar = () => {
               title={theme === 'dark' ? 'Bytt til lys modus' : 'Bytt til mørk modus'}
             >
               {theme === 'dark' ? (
-                <Sun className="h-5 w-5 text-yellow-500" />
+                <Sun className="h-5 w-5 text-white" />
               ) : (
-                <Moon className="h-5 w-5 text-gray-600" />
+                <Moon className="h-5 w-5 text-[#bbb]" />
               )}
             </Button>
             {user && (
               <Button
                 variant="outline"
                 onClick={handleLogout}
-                className="ml-4"
+                className="ml-4 dark:text-white dark:border-[#2a2a2a] dark:hover:bg-gray-800"
               >
                 Logg ut
               </Button>
@@ -85,7 +85,7 @@ const Navbar = () => {
           <div className="sm:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-600 dark:text-gray-300 hover:text-primary"
+              className="text-gray-600 dark:text-[#ccc] hover:text-primary dark:hover:text-white"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -95,7 +95,7 @@ const Navbar = () => {
 
       {isMenuOpen && (
         <div className="sm:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 bg-white dark:bg-gray-900 border-t dark:border-gray-800">
+          <div className="px-2 pt-2 pb-3 space-y-1 bg-white dark:bg-[#1a1a1a] border-t dark:border-[#2a2a2a]">
             <Link
               to="/"
               className={`${isActive("/")} block px-3 py-2 rounded-md text-base transition-colors duration-200`}
@@ -122,16 +122,16 @@ const Navbar = () => {
                 variant="ghost"
                 size="sm"
                 onClick={toggleTheme}
-                className="w-full justify-start gap-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+                className="w-full justify-start gap-2 hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-[#ccc] transition-colors duration-200"
               >
                 {theme === 'dark' ? (
                   <>
-                    <Sun className="h-4 w-4 text-yellow-500" />
+                    <Sun className="h-4 w-4 text-white" />
                     <span>Lys modus</span>
                   </>
                 ) : (
                   <>
-                    <Moon className="h-4 w-4 text-gray-600" />
+                    <Moon className="h-4 w-4 text-[#bbb]" />
                     <span>Mørk modus</span>
                   </>
                 )}
@@ -141,7 +141,7 @@ const Navbar = () => {
               <Button
                 variant="outline"
                 onClick={handleLogout}
-                className="w-full mt-2"
+                className="w-full mt-2 dark:text-white dark:border-[#2a2a2a] dark:hover:bg-gray-800"
               >
                 Logg ut
               </Button>
