@@ -5,6 +5,7 @@ import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { OrderForm } from "@/components/order/OrderForm";
 import { PropertyPreview } from "@/components/order/PropertyPreview";
+import { Property, isValidPropertyStatus } from "@/types/property";
 
 const OrderPage = () => {
   const navigate = useNavigate();
@@ -21,7 +22,13 @@ const OrderPage = () => {
         .single();
       
       if (error) throw error;
-      return data;
+      
+      // Validate the status field
+      if (!data.status || !isValidPropertyStatus(data.status)) {
+        throw new Error(`Invalid property status: ${data.status}`);
+      }
+
+      return data as Property;
     },
     enabled: !!propertyId,
   });
