@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Wallet } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { vippsService } from "@/services/vippsService";
 
 function Hero() {
   const { user } = useAuth();
@@ -24,10 +23,6 @@ function Hero() {
     }, 2000);
     return () => clearTimeout(timeoutId);
   }, [titleNumber, titles]);
-
-  const handleVippsLogin = () => {
-    window.location.href = vippsService.getVippsLoginUrl();
-  };
 
   return (
     <div className="w-full">
@@ -77,26 +72,8 @@ function Hero() {
               Start eiendomsreisen med bare 1000 kr. Opprett bruker og få <span className="font-bold">daglige</span> leieinntekter og verdistigning rett i din lommebok gjennom vår sikre, tokenbaserte plattform.
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-3">
-            {!user ? (
-              <>
-                <Button 
-                  onClick={handleVippsLogin}
-                  size="lg" 
-                  className="gap-4 bg-[#ff5b24] hover:bg-[#ff5b24]/90 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all"
-                >
-                  Logg inn med Vipps <ArrowUpRight className="w-4 h-4" />
-                </Button>
-                <Link to="/register">
-                  <Button 
-                    size="lg" 
-                    className="gap-4 bg-primary hover:bg-primary/90 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all"
-                  >
-                    Opprett bruker <ArrowUpRight className="w-4 h-4" />
-                  </Button>
-                </Link>
-              </>
-            ) : (
+          {user && (
+            <div className="flex flex-col sm:flex-row gap-3">
               <Link to="/eiendommer">
                 <Button 
                   size="lg" 
@@ -105,8 +82,8 @@ function Hero() {
                   Se eiendommer <ArrowUpRight className="w-4 h-4" />
                 </Button>
               </Link>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
