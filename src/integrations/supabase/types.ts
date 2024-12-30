@@ -115,11 +115,14 @@ export type Database = {
           created_at: string
           id: string
           image_url: string | null
+          is_featured: boolean
           launch_date: string | null
           location: string
           max_tokens: number
           name: string
           price_per_token: number
+          property_type: string
+          status: string
           tokens_sold: number
           yield: number
         }
@@ -127,11 +130,14 @@ export type Database = {
           created_at?: string
           id?: string
           image_url?: string | null
+          is_featured?: boolean
           launch_date?: string | null
           location: string
           max_tokens?: number
           name: string
           price_per_token: number
+          property_type?: string
+          status?: string
           tokens_sold?: number
           yield?: number
         }
@@ -139,11 +145,14 @@ export type Database = {
           created_at?: string
           id?: string
           image_url?: string | null
+          is_featured?: boolean
           launch_date?: string | null
           location?: string
           max_tokens?: number
           name?: string
           price_per_token?: number
+          property_type?: string
+          status?: string
           tokens_sold?: number
           yield?: number
         }

@@ -25,6 +25,9 @@ interface Property {
   max_tokens: number;
   tokens_sold: number;
   launch_date: string | null;
+  status: string;
+  is_featured: boolean;
+  property_type: string;
 }
 
 interface PropertyCardProps {
@@ -47,7 +50,12 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
       <div onClick={handleCardClick}>
         <div className="relative">
           <PropertyImage imageUrl={property.image_url} name={property.name} />
-          <PropertyBadges yield={property.yield} isSoldOut={isSoldOut} />
+          <PropertyBadges 
+            yield={property.yield} 
+            isSoldOut={isSoldOut} 
+            status={property.status}
+            isFeatured={property.is_featured}
+          />
         </div>
         
         <div className="p-6 space-y-4">
@@ -57,12 +65,16 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
               <MapPin className="h-4 w-4 mr-1" />
               <span>{property.location}</span>
             </div>
+            <div className="flex items-center text-gray-600">
+              <Building2 className="h-4 w-4 mr-1" />
+              <span>{property.property_type}</span>
+            </div>
           </div>
 
           <div className="space-y-2">
             <div className="flex justify-between items-center text-sm">
               <span className="text-gray-600">Projected Rental Yield</span>
-              <span className="font-semibold text-nordic-blue">{property.yield}%</span>
+              <span className="font-semibold text-[#345FF6]">{property.yield}%</span>
             </div>
             <div className="flex justify-between items-center text-sm">
               <span className="text-gray-600">Tokens Available</span>
@@ -77,7 +89,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
       <div className="p-6 pt-0">
         <div className="mb-4">
           <span className="text-sm text-gray-600">Price per token</span>
-          <div className="text-xl font-bold text-nordic-blue">
+          <div className="text-xl font-bold text-[#345FF6]">
             {property.price_per_token.toLocaleString()} NOK
           </div>
         </div>
@@ -87,15 +99,19 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
             <button 
               className={`w-full py-3 px-4 rounded-lg font-medium transition-colors ${
                 isLive && !isSoldOut
-                  ? "bg-nordic-blue text-white hover:bg-nordic-blue/90"
+                  ? "bg-[#345FF6] text-white hover:bg-[#345FF6]/90"
                   : "bg-gray-100 text-gray-400 cursor-not-allowed"
               }`}
               disabled={!isLive || isSoldOut}
               onClick={(e) => {
-                e.stopPropagation(); // Prevent navigation when clicking the trade button
+                e.stopPropagation();
               }}
             >
-              {isSoldOut ? "Utsolgt" : isLive ? "Handle tokens" : "Kommer snart"}
+              {property.status === 'Coming Soon' 
+                ? "Coming Soon" 
+                : property.status === 'Sold Out' 
+                  ? "Utsolgt" 
+                  : "Handle tokens"}
             </button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
