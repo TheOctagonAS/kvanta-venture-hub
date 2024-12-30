@@ -2,7 +2,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { differenceInDays } from "date-fns";
 
@@ -20,7 +20,7 @@ type HoldingWithProperty = {
 const RentClaim = () => {
   const { user } = useAuth();
 
-  const { data: holding } = useQuery<HoldingWithProperty | null>({
+  const { data: holding, refetch } = useQuery({
     queryKey: ['holdings-for-claim', user?.id],
     queryFn: async () => {
       if (!user) return null;
@@ -37,14 +37,12 @@ const RentClaim = () => {
         .eq('user_id', user.id)
         .maybeSingle();
       
-      if (error) throw error;
-      if (!data) return null;
+      if (error) {
+        toast.error("Kunne ikke hente holdings data");
+        throw error;
+      }
       
-      return {
-        token_count: data.token_count,
-        last_claim_at: data.last_claim_at,
-        property: data.property[0]
-      } as HoldingWithProperty;
+      return data;
     },
     enabled: !!user,
   });
@@ -55,10 +53,15 @@ const RentClaim = () => {
     try {
       const { error } = await supabase
         .from('user_holdings')
-        .update({ last_claim_at: new Date().toISOString() })
+        .update({ 
+          last_claim_at: new Date().toISOString(),
+          accumulated_rent: holding.token_count * (holding.property.price_per_token * (holding.property.yield / 100) / 365)
+        })
         .eq('user_id', user.id);
 
       if (error) throw error;
+      
+      await refetch();
       toast.success("Utbetaling er krevd!");
     } catch (error) {
       console.error('Error claiming rent:', error);
@@ -78,15 +81,15 @@ const RentClaim = () => {
   if (!user || !holding) return null;
 
   return (
-    <Card className="bg-white shadow-lg">
+    <Card className="bg-white dark:bg-[#1f1f1f] shadow-lg">
       <CardHeader>
-        <CardTitle>Claim Utbetaling</CardTitle>
+        <CardTitle className="text-nordic-charcoal dark:text-white">Claim Utbetaling</CardTitle>
       </CardHeader>
       <CardContent>
         <Button
           onClick={handleClaim}
           disabled={!canClaim()}
-          className="w-full"
+          className="w-full bg-nordic-blue hover:bg-nordic-blue/90 text-white"
         >
           {canClaim() ? "Claim daglig utbetaling" : "Allerede claimet i dag"}
         </Button>
