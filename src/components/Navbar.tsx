@@ -53,11 +53,11 @@ const Navbar = () => {
             <Link to="/eiendommer" className={`${isActive("/eiendommer")} transition-colors duration-200`}>
               Eiendommer
             </Link>
-            <Link to="/minside" className={`${isActive("/minside")} transition-colors duration-200`}>
-              Min side
-            </Link>
-            {user && (
+            {user ? (
               <>
+                <Link to="/minside" className={`${isActive("/minside")} transition-colors duration-200`}>
+                  Min side
+                </Link>
                 <Link to="/skatt" className={`${isActive("/skatt")} transition-colors duration-200`}>
                   Skatt
                 </Link>
@@ -69,6 +69,14 @@ const Navbar = () => {
                   Logg ut
                 </Button>
               </>
+            ) : (
+              <Button
+                variant="default"
+                onClick={() => navigate("/auth/login")}
+                className="ml-4"
+              >
+                Logg inn
+              </Button>
             )}
           </div>
 
@@ -100,15 +108,15 @@ const Navbar = () => {
             >
               Eiendommer
             </Link>
-            <Link
-              to="/minside"
-              className={`${isActive("/minside")} block px-3 py-2 rounded-md text-base transition-colors duration-200`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Min side
-            </Link>
-            {user && (
+            {user ? (
               <>
+                <Link
+                  to="/minside"
+                  className={`${isActive("/minside")} block px-3 py-2 rounded-md text-base transition-colors duration-200`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Min side
+                </Link>
                 <Link
                   to="/skatt"
                   className={`${isActive("/skatt")} block px-3 py-2 rounded-md text-base transition-colors duration-200`}
@@ -124,6 +132,17 @@ const Navbar = () => {
                   Logg ut
                 </Button>
               </>
+            ) : (
+              <Button
+                variant="default"
+                onClick={() => {
+                  navigate("/auth/login");
+                  setIsMenuOpen(false);
+                }}
+                className="w-full mt-2"
+              >
+                Logg inn
+              </Button>
             )}
           </div>
         </div>
