@@ -66,9 +66,9 @@ const YieldCalculator = () => {
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto bg-[#f8fbff] dark:bg-[#1f1f1f] p-2 rounded-lg">
-      <Card className="bg-white dark:bg-[#1f1f1f] shadow-sm dark:border dark:border-[#333]">
-        <CardHeader className="space-y-1 border-b border-gray-100 dark:border-[#333] p-3">
+    <div className="w-full max-w-lg mx-auto bg-[#f8fbff] dark:bg-[#101010]/50 p-2 rounded-lg">
+      <Card className="bg-white dark:bg-[#1a1a1a] shadow-sm">
+        <CardHeader className="space-y-1 border-b border-gray-100 dark:border-gray-800 p-3">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <CardTitle className="text-base font-bold flex items-center gap-2 text-[#333] dark:text-[#eee]">
               <Calculator className="w-4 h-4 text-nordic-blue" />
@@ -94,7 +94,7 @@ const YieldCalculator = () => {
         </CardHeader>
         <CardContent className="grid gap-2 p-3">
           <div className="grid gap-2">
-            <div className="bg-white dark:bg-[#1f1f1f] rounded-lg">
+            <div className="bg-white dark:bg-[#1a1a1a] rounded-lg">
               <div className="flex flex-col gap-2">
                 <div className="flex-1">
                   <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-1 block text-[#333] dark:text-[#eee]">
@@ -104,7 +104,7 @@ const YieldCalculator = () => {
                     type="number"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    className="text-base font-medium dark:bg-[#2a2a2a] dark:text-[#ccc] dark:border-[#333]"
+                    className="text-base font-medium dark:bg-[#2a2a2a] dark:text-[#eee] dark:border-gray-600"
                   />
                 </div>
                 <div className="flex-1">
