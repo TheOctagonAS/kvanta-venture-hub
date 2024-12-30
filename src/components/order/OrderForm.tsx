@@ -11,13 +11,9 @@ import { toast } from "sonner";
 import { PaymentMethodSelector } from "./PaymentMethodSelector";
 import { Separator } from "@/components/ui/separator";
 import { algorandService } from "@/services/AlgorandService";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { OrderPreviewDialog } from "./OrderPreviewDialog";
+import { OrderSummary } from "./OrderSummary";
+import { supabase } from "@/integrations/supabase/client";
 
 interface OrderFormProps {
   property: Property;
@@ -35,6 +31,28 @@ export const OrderForm = ({ property }: OrderFormProps) => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  const handleQuantitySelect = (quantity: number) => {
+    setTokenCount(quantity);
+  };
+
+  const handleCustomQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value) || 0;
+    const maxTokens = property.max_tokens - property.tokens_sold;
+    setTokenCount(Math.min(Math.max(0, value), maxTokens));
+  };
+
+  const checkKYCStatus = async () => {
+    if (!user) return false;
+    
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('is_kyc')
+      .eq('id', user.id)
+      .single();
+
+    return profile?.is_kyc || false;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) {
@@ -47,8 +65,20 @@ export const OrderForm = ({ property }: OrderFormProps) => {
       return;
     }
 
+    // Check KYC status for crypto payments
+    if (paymentMethod === "algorand") {
+      const isKycVerified = await checkKYCStatus();
+      if (!isKycVerified) {
+        toast.error("Du må fullføre KYC-verifisering før du kan betale med krypto");
+        navigate("/kyc");
+        return;
+      }
+    }
+
     setIsLoading(true);
     try {
+      let onChainTxId = null;
+      
       if (paymentMethod === "algorand") {
         // Mock Algorand transaction
         const txResult = await algorandService.signTransaction({
@@ -58,6 +88,7 @@ export const OrderForm = ({ property }: OrderFormProps) => {
           note: `Purchase ${tokenCount} tokens of ${property.name}`
         });
 
+        onChainTxId = txResult;
         console.log("Mock Algorand transaction completed:", txResult);
       }
 
@@ -65,7 +96,8 @@ export const OrderForm = ({ property }: OrderFormProps) => {
         property.id,
         tokenCount,
         property.price_per_token,
-        paymentMethod
+        paymentMethod,
+        onChainTxId
       );
       
       toast.success("Ordre opprettet!");
@@ -77,18 +109,6 @@ export const OrderForm = ({ property }: OrderFormProps) => {
       setIsLoading(false);
     }
   };
-
-  const handleQuantitySelect = (quantity: number) => {
-    setTokenCount(quantity);
-  };
-
-  const handleCustomQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value) || 0;
-    const maxTokens = property.max_tokens - property.tokens_sold;
-    setTokenCount(Math.min(Math.max(0, value), maxTokens));
-  };
-
-  const totalAmount = tokenCount * property.price_per_token;
 
   return (
     <Card className="p-6 bg-white shadow-sm rounded-lg">
@@ -124,13 +144,6 @@ export const OrderForm = ({ property }: OrderFormProps) => {
         </div>
 
         <div className="space-y-2">
-          <Label>Pris per token</Label>
-          <div className="text-lg font-semibold bg-[#f8f9fa] p-4 rounded-lg">
-            {property.price_per_token.toLocaleString()} NOK
-          </div>
-        </div>
-
-        <div className="space-y-2">
           <Label>Betalingsmetode</Label>
           <PaymentMethodSelector
             selectedMethod={paymentMethod}
@@ -141,21 +154,11 @@ export const OrderForm = ({ property }: OrderFormProps) => {
         <Separator className="my-6" />
 
         <div className="space-y-4">
-          <div className="bg-[#f8f9fa] p-4 rounded-lg shadow-sm">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Antall tokens:</span>
-              <span className="font-medium">{tokenCount}</span>
-            </div>
-            <div className="flex justify-between items-center mt-2">
-              <span className="text-gray-600">Pris per token:</span>
-              <span className="font-medium">{property.price_per_token.toLocaleString()} NOK</span>
-            </div>
-            <Separator className="my-3" />
-            <div className="flex justify-between items-center text-lg font-bold">
-              <span>Total:</span>
-              <span className="text-nordic-blue">{totalAmount.toLocaleString()} NOK</span>
-            </div>
-          </div>
+          <OrderSummary
+            tokenCount={tokenCount}
+            property={property}
+            paymentMethod={paymentMethod}
+          />
 
           <div className="flex flex-col gap-3">
             <Button
@@ -177,42 +180,13 @@ export const OrderForm = ({ property }: OrderFormProps) => {
         </div>
       </form>
 
-      <Dialog open={showPreviewDialog} onOpenChange={setShowPreviewDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Ordresammendrag</DialogTitle>
-            <DialogDescription>
-              Vennligst bekreft ordreinformasjonen under
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 pt-4">
-            <div className="bg-[#f8f9fa] p-4 rounded-lg">
-              <p>Du er i ferd med å kjøpe:</p>
-              <ul className="list-none space-y-2 mt-2">
-                <li className="flex justify-between">
-                  <span>Antall tokens:</span>
-                  <span className="font-medium">{tokenCount}</span>
-                </li>
-                <li className="flex justify-between">
-                  <span>Pris per token:</span>
-                  <span className="font-medium">{property.price_per_token.toLocaleString()} NOK</span>
-                </li>
-                <Separator className="my-2" />
-                <li className="flex justify-between font-bold">
-                  <span>Total sum:</span>
-                  <span>{totalAmount.toLocaleString()} NOK</span>
-                </li>
-                <li className="flex justify-between mt-2">
-                  <span>Betalingsmetode:</span>
-                  <span className="font-medium capitalize">
-                    {paymentMethod?.replace('_', ' ') || 'Ikke valgt'}
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <OrderPreviewDialog
+        isOpen={showPreviewDialog}
+        onClose={() => setShowPreviewDialog(false)}
+        tokenCount={tokenCount}
+        property={property}
+        paymentMethod={paymentMethod}
+      />
     </Card>
   );
 };
