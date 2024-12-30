@@ -15,6 +15,7 @@ interface RentEarning {
   };
 }
 
+// Define the exact shape of what Supabase returns
 interface SupabaseRentEarningResponse {
   earned_amount: number;
   property: {
@@ -41,8 +42,7 @@ const Skatt = () => {
 
       if (error) throw error;
       
-      // Transform the data to match our RentEarning interface
-      return (data || []).map((item: SupabaseRentEarningResponse) => ({
+      return (data as SupabaseRentEarningResponse[] || []).map((item) => ({
         earned_amount: item.earned_amount,
         property: {
           name: item.property.name
