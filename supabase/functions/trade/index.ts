@@ -7,7 +7,6 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -41,6 +40,27 @@ serve(async (req) => {
       );
     }
 
+    // Check KYC status
+    const { data: profile, error: profileError } = await supabaseClient
+      .from('profiles')
+      .select('is_kyc')
+      .eq('id', user.id)
+      .single();
+
+    if (profileError || !profile) {
+      return new Response(
+        JSON.stringify({ error: 'Could not verify KYC status' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (!profile.is_kyc) {
+      return new Response(
+        JSON.stringify({ error: 'KYC verification required to trade' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const url = new URL(req.url);
     const path = url.pathname.split('/').pop();
 
@@ -50,21 +70,6 @@ serve(async (req) => {
         
         if (orderType === 'SELL') {
           // Reserve tokens when placing a sell order
-          const { data: holdings } = await supabaseClient
-            .from('user_holdings')
-            .select('token_count')
-            .eq('user_id', user.id)
-            .eq('property_id', propertyId)
-            .single();
-
-          if (!holdings || holdings.token_count < tokenCount) {
-            return new Response(
-              JSON.stringify({ error: 'Insufficient tokens' }),
-              { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-            );
-          }
-
-          // Reserve tokens using RPC function
           const { error: reserveError } = await supabaseClient.rpc('reserve_tokens', {
             p_user_id: user.id,
             p_property_id: propertyId,
@@ -130,6 +135,22 @@ serve(async (req) => {
           );
         }
 
+        // Transfer tokens using RPC function
+        const { error: transferError } = await supabaseClient.rpc('transfer_tokens', {
+          p_from_user_id: order.user_id,
+          p_to_user_id: user.id,
+          p_property_id: order.property_id,
+          p_token_count: order.token_count
+        });
+
+        if (transferError) {
+          console.error('Error transferring tokens:', transferError);
+          return new Response(
+            JSON.stringify({ error: 'Failed to transfer tokens' }),
+            { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
+
         // Update order status
         const { error: updateError } = await supabaseClient
           .from('orders')
@@ -144,22 +165,6 @@ serve(async (req) => {
           console.error('Error updating order:', updateError);
           return new Response(
             JSON.stringify({ error: 'Failed to execute order' }),
-            { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        }
-
-        // Transfer tokens using RPC function
-        const { error: transferError } = await supabaseClient.rpc('transfer_tokens', {
-          p_from_user_id: order.user_id,
-          p_to_user_id: user.id,
-          p_property_id: order.property_id,
-          p_token_count: order.token_count
-        });
-
-        if (transferError) {
-          console.error('Error transferring tokens:', transferError);
-          return new Response(
-            JSON.stringify({ error: 'Failed to transfer tokens' }),
             { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
           );
         }
