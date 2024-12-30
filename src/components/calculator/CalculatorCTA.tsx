@@ -16,15 +16,15 @@ const CalculatorCTA = () => {
       <div className="flex flex-col sm:flex-row gap-4 justify-center mb-4">
         <button
           onClick={handleVippsLogin}
-          className="bg-[#FF5B24] hover:bg-[#ff4a0a] text-white font-medium px-6 py-3 rounded-full transition-all flex items-center justify-center shadow-lg hover:shadow-xl text-base"
+          className="bg-[#FF5B24] hover:bg-[#ff4a0a] text-white font-medium px-4 py-2 rounded-full transition-all flex items-center justify-center shadow-lg hover:shadow-xl text-sm"
         >
-          <img src={VippsLogo} alt="Vipps" className="h-5 w-auto mr-2" />
+          <img src={VippsLogo} alt="Vipps" className="h-4 w-auto mr-2" />
           Registrer med Vipps
         </button>
         <Button 
           asChild 
           variant="outline" 
-          className="border-[#345FF6] text-[#345FF6] hover:bg-[#345FF6]/10 px-6 py-6 text-base h-auto rounded-full"
+          className="border-[#345FF6] text-[#345FF6] hover:bg-[#345FF6]/10 px-4 py-2 text-sm h-auto rounded-full"
         >
           <Link to="/eiendommer">Se Eiendommer</Link>
         </Button>
