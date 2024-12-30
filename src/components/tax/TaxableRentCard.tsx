@@ -5,14 +5,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Database } from "@/integrations/supabase/types";
+
+type RentEarning = Database["public"]["Tables"]["rent_earnings"]["Row"] & {
+  property: Pick<Database["public"]["Tables"]["properties"]["Row"], "name" | "id">;
+};
 
 interface TaxableRentCardProps {
-  rentEarnings: Array<{
-    earned_amount: number;
-    property: {
-      name: string;
-    };
-  }>;
+  rentEarnings: RentEarning[];
 }
 
 export const TaxableRentCard = ({ rentEarnings }: TaxableRentCardProps) => {

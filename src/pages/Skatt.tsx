@@ -22,26 +22,26 @@ const Skatt = () => {
   const { user } = useAuth();
   const currentYear = new Date().getFullYear();
 
-  const { data: rentEarnings } = useQuery<RentEarning[]>({
+  const { data: rentEarnings = [] } = useQuery<RentEarning[]>({
     queryKey: ["rent-earnings", user?.id, currentYear],
     queryFn: async () => {
       if (!user) return [];
       const { data, error } = await supabase
         .from("rent_earnings")
         .select(`
-          earned_amount,
+          *,
           property:properties(name, id)
         `)
         .eq("user_id", user.id)
         .eq("year", currentYear);
 
       if (error) throw error;
-      return data;
+      return data as RentEarning[];
     },
     enabled: !!user,
   });
 
-  const { data: deductions } = useQuery<TaxDeduction[]>({
+  const { data: deductions = [] } = useQuery<TaxDeduction[]>({
     queryKey: ["tax-deductions", user?.id, currentYear],
     queryFn: async () => {
       if (!user) return [];
@@ -57,12 +57,12 @@ const Skatt = () => {
     enabled: !!user,
   });
 
-  const totalEarnings = (rentEarnings || []).reduce(
+  const totalEarnings = rentEarnings.reduce(
     (sum, earning) => sum + Number(earning.earned_amount),
     0
   );
 
-  const totalDeductions = (deductions || []).reduce(
+  const totalDeductions = deductions.reduce(
     (sum, deduction) => sum + Number(deduction.amount),
     0
   );
@@ -97,7 +97,7 @@ const Skatt = () => {
 
   if (!user) return null;
 
-  const firstProperty = rentEarnings?.[0]?.property;
+  const firstProperty = rentEarnings[0]?.property;
 
   return (
     <div className="min-h-screen bg-[#f8faff] py-12">
@@ -143,7 +143,7 @@ const Skatt = () => {
           <Card className="p-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-6">
-                <TaxableRentCard rentEarnings={rentEarnings || []} />
+                <TaxableRentCard rentEarnings={rentEarnings} />
                 <EstimatedTaxCard
                   totalEarnings={totalEarnings}
                   totalDeductions={totalDeductions}
