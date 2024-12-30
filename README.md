@@ -22,9 +22,9 @@ For testing kan du bruke følgende påloggingsinformasjon:
 - Automatisk beregning av leieinntekter
 - Porteføljeadministrasjon
 
-## Skatt (Norge) Feature, versjon 2
+## Skatt (Norge) Feature
 
-Nye forbedringer i skatteoversikten:
+Skatteoversikten inkluderer:
 
 - Collapsible "Fradragsoversikt" for enkel registrering av fradragsberettigede utgifter
 - Forbedret eksportfunksjonalitet med valg mellom PDF og CSV format
@@ -48,20 +48,20 @@ Planlagte forbedringer inkluderer:
 - Integrasjon med Skatteetatens systemer (under utredning)
 - Utvidet støtte for ulike eierstrukturer og selskapsformer
 
-## Algorand Integrasjonsplan
+## Algorand Integrasjon
 
 Vi har implementert en første versjon av Algorand-integrasjon:
 
-- Ny `AlgorandService` for wallet-tilkobling og transaksjons-signering (mock)
-- Fremtidig plan: Utstede Algorand Standard Assets (ASA) for hver eiendom
-- Betalingsmetode "Crypto-lommebok" er tilgjengelig for KYC-verifiserte brukere (isKyc=true)
+- Ny `AlgorandService` for wallet-tilkobling og transaksjons-signering
+- Algorand Standard Assets (ASA) for hver eiendom
+- Betalingsmetode "Crypto-lommebok" er tilgjengelig for KYC-verifiserte brukere
 
 ### Brukerflyt for Algorand-kjøp:
 
 1. Velg eiendom fra porteføljen
 2. Velg antall tokens
 3. Velg betalingsmetode => "Algorand wallet"
-4. Signer transaksjon (mock i denne versjonen)
+4. Signer transaksjon
 5. Ved vellykket signering => ordre plassert => userHoldings oppdatert
 
 ## Teknisk Dokumentasjon
@@ -79,3 +79,8 @@ Se følgende filer for detaljert teknisk dokumentasjon:
 - Supabase for backend
 - React Query for datauthenting
 - Framer Motion for animasjoner
+
+## Deprecated Funksjonalitet
+
+Følgende funksjoner er ikke lenger aktive i applikasjonen:
+- Lån mot eiendom (property_loan_requests_deprecated)
