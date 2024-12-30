@@ -75,7 +75,7 @@ export const usePropertyData = () => {
     if (!holdings || holdings.length === 0) return 0;
     const totalYield = holdings.reduce((sum, holding) => 
       sum + (holding.property.yield || 0), 0);
-    return (totalYield / holdings.length).toFixed(1);
+    return totalYield / holdings.length;
   };
 
   return {
