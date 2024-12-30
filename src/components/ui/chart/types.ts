@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactNode } from 'react';
 
 export interface ChartConfig {
   xAxisKey: string;
@@ -14,5 +14,5 @@ export interface ChartContextType {
 export interface ChartProps {
   data: any[];
   config: ChartConfig;
-  children: ReactElement | ReactElement[];
+  children: ReactNode;
 }

@@ -1,4 +1,4 @@
-import { createContext, useContext, ReactElement } from 'react';
+import { createContext, useContext, ReactElement, ReactNode } from 'react';
 import { ResponsiveContainer } from 'recharts';
 import { ChartProps, ChartContextType } from './types';
 
@@ -16,7 +16,7 @@ export const ChartContainer = ({
   data, 
   config, 
   children 
-}: ChartProps) => {
+}: ChartProps & { children: ReactNode }) => {
   return (
     <ChartContext.Provider value={{ data, config }}>
       <ResponsiveContainer width="100%" height={400}>
