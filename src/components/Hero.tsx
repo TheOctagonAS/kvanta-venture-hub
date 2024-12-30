@@ -32,7 +32,7 @@ function Hero() {
   return (
     <div className="w-full">
       <div className="container mx-auto px-4">
-        <div className="flex gap-6 py-12 lg:py-20 items-center justify-center flex-col">
+        <div className="flex gap-4 py-8 lg:py-16 items-center justify-center flex-col">
           <div>
             <Link to="/les-mer">
               <Button 
@@ -44,8 +44,8 @@ function Hero() {
               </Button>
             </Link>
           </div>
-          <div className="flex gap-4 flex-col">
-            <h1 className="text-4xl md:text-6xl max-w-2xl tracking-tighter text-center font-regular text-nordic-charcoal px-2">
+          <div className="flex gap-3 flex-col">
+            <h1 className="text-3xl md:text-6xl max-w-2xl tracking-tighter text-center font-regular text-nordic-charcoal px-2">
               <span>Eiendomsinvestering gjort</span>
               <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-4 md:pt-1">
                 &nbsp;
@@ -82,14 +82,14 @@ function Hero() {
             <Button 
               onClick={handleVippsLogin}
               size="lg" 
-              className="text-lg px-8 py-6 gap-4 bg-[#FF5B2D] hover:bg-[#FF5B2D]/90 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all"
+              className="text-lg px-8 py-6 gap-4 bg-[#FF5B2D] hover:bg-[#FF5B2D]/90 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all mt-2"
             >
               Registrer med Vipps <ArrowUpRight className="w-5 h-5" />
             </Button>
           )}
 
           {user && (
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-3 mt-2">
               <Link to="/eiendommer">
                 <Button 
                   size="lg" 

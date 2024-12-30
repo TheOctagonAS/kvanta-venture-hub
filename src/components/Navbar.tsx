@@ -71,16 +71,25 @@ const Navbar = () => {
               </>
             ) : (
               <Button
-                variant="default"
+                variant="ghost"
                 onClick={() => navigate("/auth/login")}
-                className="ml-4"
+                className="text-primary hover:text-primary/90 hover:bg-primary/10"
               >
                 Logg inn
               </Button>
             )}
           </div>
 
-          <div className="sm:hidden">
+          <div className="sm:hidden flex items-center gap-4">
+            {!user && (
+              <Button
+                variant="ghost"
+                onClick={() => navigate("/auth/login")}
+                className="text-primary hover:text-primary/90 hover:bg-primary/10"
+              >
+                Logg inn
+              </Button>
+            )}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-gray-600 hover:text-primary"
@@ -132,18 +141,7 @@ const Navbar = () => {
                   Logg ut
                 </Button>
               </>
-            ) : (
-              <Button
-                variant="default"
-                onClick={() => {
-                  navigate("/auth/login");
-                  setIsMenuOpen(false);
-                }}
-                className="w-full mt-2"
-              >
-                Logg inn
-              </Button>
-            )}
+            ) : null}
           </div>
         </div>
       )}
