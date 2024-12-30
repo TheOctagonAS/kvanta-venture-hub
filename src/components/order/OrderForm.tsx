@@ -50,7 +50,7 @@ export const OrderForm = ({ property }: OrderFormProps) => {
         property.id,
         tokenCount,
         property.price_per_token,
-        paymentMethod
+        paymentMethod // Make sure we pass the payment method here
       );
       toast.success("Ordre opprettet!");
       navigate("/minside");
