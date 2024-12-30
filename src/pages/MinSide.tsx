@@ -52,16 +52,16 @@ const MinSide = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background dark:bg-background-dark flex items-center justify-center transition-colors duration-300">
-        <div className="text-foreground dark:text-foreground-dark">Laster...</div>
+      <div className="min-h-screen bg-[#f8faff] flex items-center justify-center">
+        <div className="text-gray-600">Laster...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background dark:bg-background-dark transition-colors duration-300">
+    <div className="min-h-screen bg-[#f8faff]">
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-center mb-8 text-nordic-charcoal dark:text-nordic-charcoal-dark transition-colors duration-300">
+        <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">
           Portefølje
         </h1>
         
@@ -72,10 +72,10 @@ const MinSide = () => {
           className="max-w-7xl mx-auto space-y-8"
         >
           {!user ? (
-            <div className="text-foreground dark:text-foreground-dark">Please log in</div>
+            <div>Please log in</div>
           ) : (
             <>
-              <div className="bg-white dark:bg-nordic-charcoal rounded-lg shadow-lg p-6 transition-colors duration-300">
+              <div className="bg-white rounded-lg shadow-lg p-6">
                 <UserProfile 
                   isKyc={profile?.is_kyc || false} 
                   onStartKYC={handleStartKYC} 
@@ -83,7 +83,7 @@ const MinSide = () => {
               </div>
               
               {!profile?.is_kyc && (
-                <Alert className="bg-yellow-100 dark:bg-yellow-900 border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-200 transition-colors duration-300">
+                <Alert className="bg-yellow-100 border-yellow-200 text-yellow-700">
                   <AlertDescription>
                     KYC-verifisering kreves for å kjøpe tokens
                   </AlertDescription>

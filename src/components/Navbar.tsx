@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { KvantaLogo } from "./KvantaLogo";
-import { ThemeToggle } from "./ThemeToggle";
 
 const Navbar = () => {
   const location = useLocation();
@@ -16,7 +15,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
   const isActive = (path: string) => {
-    return location.pathname === path ? "text-primary font-semibold" : "text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary";
+    return location.pathname === path ? "text-primary font-semibold" : "text-gray-600 hover:text-primary";
   };
 
   const handleLogout = async () => {
@@ -32,7 +31,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white dark:bg-background-dark shadow-sm sticky top-0 z-50 transition-colors duration-200">
+    <nav className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
@@ -57,7 +56,6 @@ const Navbar = () => {
             <Link to="/minside" className={`${isActive("/minside")} transition-colors duration-200`}>
               Min side
             </Link>
-            <ThemeToggle />
             {user && (
               <Button
                 variant="outline"
@@ -72,7 +70,7 @@ const Navbar = () => {
           <div className="sm:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary"
+              className="text-gray-600 hover:text-primary"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -82,7 +80,7 @@ const Navbar = () => {
 
       {isMenuOpen && (
         <div className="sm:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 bg-white dark:bg-background-dark border-t dark:border-gray-700">
+          <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t">
             <Link
               to="/"
               className={`${isActive("/")} block px-3 py-2 rounded-md text-base transition-colors duration-200`}
@@ -104,9 +102,6 @@ const Navbar = () => {
             >
               Min side
             </Link>
-            <div className="px-3 py-2">
-              <ThemeToggle />
-            </div>
             {user && (
               <Button
                 variant="outline"

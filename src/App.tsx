@@ -4,7 +4,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
-import { ThemeProvider } from "./contexts/ThemeContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Index from "./pages/Index";
@@ -21,30 +20,28 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <ThemeProvider>
-        <AuthProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <div className="min-h-screen flex flex-col dark:bg-background-dark dark:text-foreground-dark transition-colors duration-200">
-              <Navbar />
-              <div className="flex-grow">
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/register" element={<Register />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/eiendommer" element={<Eiendommer />} />
-                  <Route path="/minside" element={<MinSide />} />
-                  <Route path="/les-mer" element={<LesMer />} />
-                  <Route path="/lommebok" element={<Lommebok />} />
-                  <Route path="/kyc" element={<KYC />} />
-                </Routes>
-              </div>
-              <Footer />
+      <AuthProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <div className="min-h-screen flex flex-col">
+            <Navbar />
+            <div className="flex-grow">
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/eiendommer" element={<Eiendommer />} />
+                <Route path="/minside" element={<MinSide />} />
+                <Route path="/les-mer" element={<LesMer />} />
+                <Route path="/lommebok" element={<Lommebok />} />
+                <Route path="/kyc" element={<KYC />} />
+              </Routes>
             </div>
-          </BrowserRouter>
-        </AuthProvider>
-      </ThemeProvider>
+            <Footer />
+          </div>
+        </BrowserRouter>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

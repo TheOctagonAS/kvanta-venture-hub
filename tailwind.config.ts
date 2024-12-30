@@ -22,47 +22,26 @@ export default {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: {
-          DEFAULT: "var(--background)",
-          dark: "var(--background-dark)",
-        },
-        foreground: {
-          DEFAULT: "var(--foreground)",
-          dark: "var(--foreground-dark)",
-        },
+        background: "#f8f9fa",
+        foreground: "#333333",
         primary: {
-          DEFAULT: "var(--primary)",
-          foreground: "var(--primary-foreground)",
-          dark: "var(--primary-dark)",
+          DEFAULT: "#345FF6", // Kvantum blue - for buttons and headings
+          foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "var(--secondary)",
-          foreground: "var(--secondary-foreground)",
-          dark: "var(--secondary-dark)",
+          DEFAULT: "#E9F2FF", // Light blue - for cards and highlights
+          foreground: "#333333",
         },
         accent: {
-          DEFAULT: "var(--accent)",
-          foreground: "var(--accent-foreground)",
-          dark: "var(--accent-dark)",
+          DEFAULT: "#47C757", // Success green - for yields and success states
+          foreground: "#FFFFFF",
         },
         nordic: {
-          blue: "var(--nordic-blue)",
-          charcoal: {
-            DEFAULT: "var(--nordic-charcoal)",
-            dark: "var(--nordic-charcoal-dark)",
-          },
-          gray: {
-            DEFAULT: "var(--nordic-gray)",
-            dark: "var(--nordic-gray-dark)",
-          },
-          lightgray: {
-            DEFAULT: "var(--nordic-lightgray)",
-            dark: "var(--nordic-lightgray-dark)",
-          },
-          softblue: {
-            DEFAULT: "var(--nordic-softblue)",
-            dark: "var(--nordic-softblue-dark)",
-          },
+          blue: "#345FF6",
+          charcoal: "#333333",
+          gray: "#555555",
+          lightgray: "#f8f9fa",
+          softblue: "#E9F2FF",
         },
       },
       borderRadius: {
