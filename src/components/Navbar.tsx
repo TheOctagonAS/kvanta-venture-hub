@@ -56,6 +56,9 @@ const Navbar = () => {
             <Link to="/minside" className={`${isActive("/minside")} transition-colors duration-200`}>
               Min side
             </Link>
+            <Link to="/likviditet" className={`${isActive("/likviditet")} transition-colors duration-200`}>
+              Få likviditet på eiendom
+            </Link>
             {user && (
               <>
                 <Link to="/skatt" className={`${isActive("/skatt")} transition-colors duration-200`}>
@@ -106,6 +109,13 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(false)}
             >
               Min side
+            </Link>
+            <Link
+              to="/likviditet"
+              className={`${isActive("/likviditet")} block px-3 py-2 rounded-md text-base transition-colors duration-200`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Få likviditet på eiendom
             </Link>
             {user && (
               <>

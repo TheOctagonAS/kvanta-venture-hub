@@ -18,6 +18,7 @@ import PropertyDetail from "./pages/PropertyDetail";
 import OrderPage from "./pages/OrderPage";
 import LeieOgAvkastning from "./pages/LeieOgAvkastning";
 import Skatt from "./pages/Skatt";
+import Likviditet from "./pages/Likviditet";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ const App = () => (
                 <Route path="/kyc" element={<KYC />} />
                 <Route path="/leie-og-avkastning" element={<LeieOgAvkastning />} />
                 <Route path="/skatt" element={<Skatt />} />
+                <Route path="/likviditet" element={<Likviditet />} />
               </Routes>
             </div>
             <Footer />
