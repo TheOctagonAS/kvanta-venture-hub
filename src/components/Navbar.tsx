@@ -56,6 +56,9 @@ const Navbar = () => {
             <Link to="/minside" className={`${isActive("/minside")} transition-colors duration-200`}>
               Min side
             </Link>
+            <Link to="/skatt" className={`${isActive("/skatt")} transition-colors duration-200`}>
+              Skatt
+            </Link>
             {user && (
               <Button
                 variant="outline"
@@ -101,6 +104,13 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(false)}
             >
               Min side
+            </Link>
+            <Link
+              to="/skatt"
+              className={`${isActive("/skatt")} block px-3 py-2 rounded-md text-base transition-colors duration-200`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Skatt
             </Link>
             {user && (
               <Button
