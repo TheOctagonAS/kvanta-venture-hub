@@ -1,16 +1,51 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabaseClient";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Card } from "@/components/ui/card";
+import { Receipt, Info } from "lucide-react";
 
 const Skatt = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const currentYear = new Date().getFullYear();
 
   useEffect(() => {
     if (!user) {
       navigate("/login");
     }
   }, [user, navigate]);
+
+  const { data: rentEarnings } = useQuery({
+    queryKey: ['rentEarnings', user?.id, currentYear],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data, error } = await supabase
+        .from('rent_earnings')
+        .select(`
+          *,
+          property:properties(name)
+        `)
+        .eq('user_id', user.id)
+        .eq('year', currentYear);
+
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user,
+  });
+
+  const totalEarnedAmount = rentEarnings?.reduce((sum, earning) => 
+    sum + Number(earning.earned_amount), 0) || 0;
 
   if (!user) {
     return null;
@@ -51,6 +86,66 @@ const Skatt = () => {
                 Exakt rapportering kan variere. Sjekk Skatteetatens retningslinjer eller 
                 kontakt en skatterådgiver.
               </p>
+            </div>
+
+            <div className="mt-12">
+              <Card className="p-6">
+                <div className="flex items-center gap-2 mb-6">
+                  <Receipt className="h-5 w-5 text-primary" />
+                  <h2 className="text-xl font-semibold">
+                    Din Skatteoversikt {currentYear}
+                  </h2>
+                </div>
+
+                <div className="bg-primary/5 p-4 rounded-lg mb-6">
+                  <div className="flex items-start gap-2">
+                    <Info className="h-5 w-5 text-primary mt-1" />
+                    <div>
+                      <p className="font-medium text-lg">
+                        Din skattepliktige leie: {totalEarnedAmount.toLocaleString()} NOK (foreløpig)
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        Dette beløpet er basert på opptjent leie, uavhengig av om du har tatt ut pengene.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Eiendom</TableHead>
+                      <TableHead className="text-right">Årets opptjente leie</TableHead>
+                      <TableHead className="text-right">Uttatt leie</TableHead>
+                      <TableHead className="text-right">Ikke uttatt</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {rentEarnings && rentEarnings.length > 0 ? (
+                      rentEarnings.map((earning) => (
+                        <TableRow key={earning.id}>
+                          <TableCell>{earning.property.name}</TableCell>
+                          <TableCell className="text-right">
+                            {Number(earning.earned_amount).toLocaleString()} NOK
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {Number(earning.withdrawn_amount).toLocaleString()} NOK
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {(Number(earning.earned_amount) - Number(earning.withdrawn_amount)).toLocaleString()} NOK
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={4} className="text-center py-4 text-gray-500">
+                          Ingen leieinntekter registrert for {currentYear}
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </Card>
             </div>
           </div>
         </div>

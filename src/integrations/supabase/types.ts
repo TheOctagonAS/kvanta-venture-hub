@@ -167,6 +167,47 @@ export type Database = {
         }
         Relationships: []
       }
+      rent_earnings: {
+        Row: {
+          created_at: string
+          earned_amount: number
+          id: string
+          property_id: string
+          updated_at: string
+          user_id: string
+          withdrawn_amount: number
+          year: number
+        }
+        Insert: {
+          created_at?: string
+          earned_amount?: number
+          id?: string
+          property_id: string
+          updated_at?: string
+          user_id: string
+          withdrawn_amount?: number
+          year: number
+        }
+        Update: {
+          created_at?: string
+          earned_amount?: number
+          id?: string
+          property_id?: string
+          updated_at?: string
+          user_id?: string
+          withdrawn_amount?: number
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rent_earnings_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       token_price_history: {
         Row: {
           id: string
