@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
 
 interface BalanceModalProps {
   isOpen: boolean;
@@ -17,7 +16,6 @@ interface BalanceModalProps {
 export const BalanceModal = ({ isOpen, onClose, type, onSuccess }: BalanceModalProps) => {
   const [amount, setAmount] = useState<string>("");
   const [method, setMethod] = useState<string>("");
-  const { user } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +35,6 @@ export const BalanceModal = ({ isOpen, onClose, type, onSuccess }: BalanceModalP
       const { data: existingBalance } = await supabase
         .from('user_balance')
         .select('*')
-        .eq('user_id', user?.id)
         .single();
 
       if (!existingBalance) {
@@ -45,10 +42,7 @@ export const BalanceModal = ({ isOpen, onClose, type, onSuccess }: BalanceModalP
         await supabase
           .from('user_balance')
           .insert([
-            { 
-              user_id: user?.id,
-              balance: type === 'deposit' ? numAmount : -numAmount 
-            }
+            { balance: type === 'deposit' ? numAmount : -numAmount }
           ]);
       } else {
         // Update existing balance
