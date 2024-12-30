@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [referralCode, setReferralCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -23,38 +24,67 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      const { data: authData, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-      });
+      // First, verify the referral code if provided
+      if (referralCode) {
+        const { data: referralData, error: referralError } = await supabase
+          .from('referral_codes')
+          .select('user_id')
+          .eq('code', referralCode.toUpperCase())
+          .single();
 
-      if (signUpError) {
-        if (signUpError.message.includes('rate_limit')) {
-          toast.error("Vennligst vent litt før du prøver igjen (ca. 1 minutt)");
+        if (referralError) {
+          toast.error("Ugyldig vervekode");
           return;
         }
-        throw signUpError;
-      }
 
-      if (!authData.user) {
-        throw new Error("No user data returned after signup");
-      }
+        // Store the referrer's ID for later use
+        const referrerId = referralData.user_id;
 
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      
-      if (sessionError) throw sessionError;
-      if (!session) throw new Error("No session after signup");
+        // Register the new user
+        const { data: authData, error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+        });
 
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert([
-          {
-            id: authData.user.id,
-            is_kyc: false
+        if (signUpError) {
+          if (signUpError.message.includes('rate_limit')) {
+            toast.error("Vennligst vent litt før du prøver igjen (ca. 1 minutt)");
+            return;
           }
-        ]);
+          throw signUpError;
+        }
 
-      if (profileError) throw profileError;
+        if (!authData.user) {
+          throw new Error("No user data returned after signup");
+        }
+
+        // Create referral reward
+        const { error: rewardError } = await supabase
+          .from('referral_rewards')
+          .insert([
+            {
+              referrer_id: referrerId,
+              referred_id: authData.user.id,
+              amount: 250,
+              status: 'PENDING'
+            }
+          ]);
+
+        if (rewardError) {
+          console.error("Error creating referral reward:", rewardError);
+        }
+      } else {
+        // Register without referral code
+        const { data: authData, error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+
+        if (signUpError) throw signUpError;
+        if (!authData.user) {
+          throw new Error("No user data returned after signup");
+        }
+      }
 
       toast.success("Registrering vellykket! Sjekk e-posten din for verifisering.");
       navigate("/");
@@ -109,6 +139,19 @@ const Register = () => {
                 placeholder="••••••••"
                 disabled={isLoading}
                 minLength={6}
+              />
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="referralCode" className="text-sm font-medium">
+                Vervekode (valgfritt)
+              </label>
+              <Input
+                id="referralCode"
+                type="text"
+                value={referralCode}
+                onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                placeholder="ABCD1234"
+                disabled={isLoading}
               />
             </div>
             <Button 
