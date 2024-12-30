@@ -8,7 +8,6 @@ const corsHeaders = {
 
 const VALID_PAYMENT_METHODS = ['bank_account', 'card', 'vipps', 'algorand'];
 
-// Helper function to check KYC status with detailed logging
 async function checkKYCStatus(supabaseClient: any, userId: string) {
   console.log('Checking KYC status for user:', userId);
   
@@ -27,33 +26,37 @@ async function checkKYCStatus(supabaseClient: any, userId: string) {
   return profile?.is_kyc || false;
 }
 
-// Helper function to create a new order
 async function createOrder(supabaseClient: any, {
   userId,
   propertyId,
   orderType,
   tokenCount,
   pricePerToken,
-  paymentMethod
+  paymentMethod = 'bank_account'
 }: {
   userId: string;
   propertyId: string;
   orderType: string;
   tokenCount: number;
   pricePerToken: number;
-  paymentMethod: string;
+  paymentMethod?: string;
 }) {
+  const orderData = {
+    user_id: userId,
+    property_id: propertyId,
+    order_type: orderType,
+    token_count: tokenCount,
+    price_per_token: pricePerToken,
+    payment_method: paymentMethod,
+    status: 'OPEN',
+    buyer_id: orderType === 'BUY' ? userId : null
+  };
+
+  console.log('Creating order with data:', orderData);
+
   const { data: order, error } = await supabaseClient
     .from('orders')
-    .insert({
-      user_id: userId,
-      property_id: propertyId,
-      order_type: orderType,
-      token_count: tokenCount,
-      price_per_token: pricePerToken,
-      payment_method: paymentMethod,
-      status: 'OPEN'
-    })
+    .insert(orderData)
     .select()
     .single();
 
@@ -65,7 +68,6 @@ async function createOrder(supabaseClient: any, {
   return order;
 }
 
-// Helper function to update user holdings after successful payment
 async function updateUserHoldings(supabaseClient: any, {
   userId,
   propertyId,
@@ -82,7 +84,7 @@ async function updateUserHoldings(supabaseClient: any, {
     .eq('property_id', propertyId)
     .single();
 
-  if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 is "no rows returned"
+  if (fetchError && fetchError.code !== 'PGRST116') {
     console.error('Error fetching existing holding:', fetchError);
     throw new Error('Failed to check existing holdings');
   }
@@ -132,7 +134,6 @@ serve(async (req) => {
       }
     );
 
-    // Verify authentication
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       return new Response(
@@ -158,7 +159,6 @@ serve(async (req) => {
 
     switch (action) {
       case 'placeOrder': {
-        // For BUY orders, verify KYC status
         if (orderType === 'BUY') {
           const isKycVerified = await checkKYCStatus(supabaseClient, user.id);
           console.log('KYC verification result:', isKycVerified);
@@ -185,18 +185,34 @@ serve(async (req) => {
           }
         }
 
+        let finalPricePerToken = pricePerToken;
+        if (!finalPricePerToken) {
+          const { data: property, error: propertyError } = await supabaseClient
+            .from('properties')
+            .select('price_per_token')
+            .eq('id', propertyId)
+            .single();
+
+          if (propertyError || !property) {
+            return new Response(
+              JSON.stringify({ error: 'Property not found' }),
+              { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          }
+
+          finalPricePerToken = property.price_per_token;
+        }
+
         const order = await createOrder(supabaseClient, {
           userId: user.id,
           propertyId,
           orderType,
           tokenCount,
-          pricePerToken,
-          paymentMethod
+          pricePerToken: finalPricePerToken,
+          paymentMethod: paymentMethod || 'bank_account'
         });
 
-        // Mock payment confirmation for now
         if (orderType === 'BUY') {
-          // Update order status to FILLED
           const { error: updateError } = await supabaseClient
             .from('orders')
             .update({ status: 'FILLED' })
@@ -210,7 +226,6 @@ serve(async (req) => {
             );
           }
 
-          // Update user holdings
           await updateUserHoldings(supabaseClient, {
             userId: user.id,
             propertyId,
@@ -248,7 +263,6 @@ serve(async (req) => {
           );
         }
 
-        // Transfer tokens using RPC function
         const { error: transferError } = await supabaseClient.rpc('transfer_tokens', {
           p_from_user_id: order.user_id,
           p_to_user_id: user.id,
@@ -264,7 +278,6 @@ serve(async (req) => {
           );
         }
 
-        // Update order status
         const { error: updateError } = await supabaseClient
           .from('orders')
           .update({
@@ -307,7 +320,6 @@ serve(async (req) => {
         }
 
         if (order.order_type === 'SELL') {
-          // Release reserved tokens using RPC function
           const { error: releaseError } = await supabaseClient.rpc('release_tokens', {
             p_user_id: order.user_id,
             p_property_id: order.property_id,
