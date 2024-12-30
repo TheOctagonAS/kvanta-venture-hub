@@ -25,6 +25,39 @@ const LoanRegisterProperty = () => {
     ownershipDeclaration: false,
   });
 
+  const createLoanProperty = async (loanRequestId: string) => {
+    const tokenCount = 500; // Fixed number of tokens
+    const pricePerToken = Math.floor(Number(formData.requestedAmount) / tokenCount);
+    
+    const { data: property, error: propertyError } = await supabase
+      .from('properties')
+      .insert({
+        name: `Loan Property ${loanRequestId.slice(0, 8)}`,
+        location: "Norway", // Default location
+        price_per_token: pricePerToken,
+        max_tokens: tokenCount,
+        property_type: "loan",
+        yield: formData.interestRate,
+      })
+      .select()
+      .single();
+
+    if (propertyError) throw propertyError;
+
+    // Create initial user holdings for the property owner
+    const { error: holdingsError } = await supabase
+      .from('user_holdings')
+      .insert({
+        user_id: user?.id,
+        property_id: property.id,
+        token_count: tokenCount,
+      });
+
+    if (holdingsError) throw holdingsError;
+
+    return property;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -52,7 +85,8 @@ const LoanRegisterProperty = () => {
 
     setIsSubmitting(true);
     try {
-      const { error } = await supabase
+      // Create loan request
+      const { data: loanRequest, error } = await supabase
         .from('property_loan_requests')
         .insert({
           user_id: user.id,
@@ -62,11 +96,16 @@ const LoanRegisterProperty = () => {
           repayment_months: parseInt(formData.repaymentMonths),
           interest_rate: formData.interestRate,
           ownership_declaration: formData.ownershipDeclaration,
-        });
+        })
+        .select()
+        .single();
 
       if (error) throw error;
 
-      toast.success("Søknaden din er mottatt!");
+      // Create property and mint tokens
+      await createLoanProperty(loanRequest.id);
+
+      toast.success("Søknaden din er mottatt og tokens er opprettet!");
       navigate("/minside");
     } catch (error: any) {
       console.error("Error submitting loan request:", error);
