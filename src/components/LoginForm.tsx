@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { vippsService } from "@/services/vippsService";
+import VippsLogo from "../assets/vipps-logo.svg";
 
 declare global {
   namespace JSX {
@@ -72,16 +73,10 @@ const LoginForm = () => {
       </div>
 
       <div onClick={handleVippsLogin} className="w-full flex justify-center cursor-pointer">
-        <vipps-mobilepay-button
-          type="button"
-          brand="vipps"
-          language="no"
-          variant="primary"
-          rounded="true"
-          verb="login"
-          stretched="false"
-          branded="true"
-        />
+        <button className="bg-[#FF5B24] hover:bg-[#ff4a0a] text-white font-medium px-6 py-3 rounded-lg transition-all flex items-center justify-center">
+          <img src={VippsLogo} alt="Vipps" className="h-5 w-auto mr-2" />
+          Logg inn med Vipps
+        </button>
       </div>
 
       <div className="text-center mt-6">
