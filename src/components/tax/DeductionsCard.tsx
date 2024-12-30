@@ -12,15 +12,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
+import { Database } from "@/integrations/supabase/types";
 
-interface TaxDeduction {
-  id: string;
-  expense_type: string;
-  amount: number;
-  property_id: string;
+type TaxDeduction = Database["public"]["Tables"]["tax_deductions"]["Row"];
+
+interface DeductionsCardProps {
+  propertyId: string;
 }
 
-export const DeductionsCard = ({ propertyId }: { propertyId: string }) => {
+export const DeductionsCard = ({ propertyId }: DeductionsCardProps) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);

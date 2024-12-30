@@ -208,6 +208,47 @@ export type Database = {
           },
         ]
       }
+      tax_deductions: {
+        Row: {
+          amount: number
+          created_at: string
+          expense_type: string
+          id: string
+          property_id: string
+          updated_at: string
+          user_id: string
+          year: number
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          expense_type: string
+          id?: string
+          property_id: string
+          updated_at?: string
+          user_id: string
+          year: number
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          expense_type?: string
+          id?: string
+          property_id?: string
+          updated_at?: string
+          user_id?: string
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tax_deductions_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       token_price_history: {
         Row: {
           id: string

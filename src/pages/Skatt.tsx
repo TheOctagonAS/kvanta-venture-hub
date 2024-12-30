@@ -10,14 +10,13 @@ import { toast } from "sonner";
 import { TaxableRentCard } from "@/components/tax/TaxableRentCard";
 import { EstimatedTaxCard } from "@/components/tax/EstimatedTaxCard";
 import { DeductionsCard } from "@/components/tax/DeductionsCard";
+import { Database } from "@/integrations/supabase/types";
 
-interface RentEarning {
-  earned_amount: number;
-  property: {
-    name: string;
-    id: string;
-  };
-}
+type RentEarning = Database["public"]["Tables"]["rent_earnings"]["Row"] & {
+  property: Pick<Database["public"]["Tables"]["properties"]["Row"], "name" | "id">;
+};
+
+type TaxDeduction = Database["public"]["Tables"]["tax_deductions"]["Row"];
 
 const Skatt = () => {
   const { user } = useAuth();
@@ -42,7 +41,7 @@ const Skatt = () => {
     enabled: !!user,
   });
 
-  const { data: deductions } = useQuery({
+  const { data: deductions } = useQuery<TaxDeduction[]>({
     queryKey: ["tax-deductions", user?.id, currentYear],
     queryFn: async () => {
       if (!user) return [];
@@ -152,9 +151,7 @@ const Skatt = () => {
               </div>
 
               <div>
-                <DeductionsCard
-                  propertyId={firstProperty?.id || ""}
-                />
+                <DeductionsCard propertyId={firstProperty?.id || ""} />
               </div>
             </div>
 
