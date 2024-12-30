@@ -6,6 +6,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+const VALID_PAYMENT_METHODS = ['bank_account', 'card', 'vipps'];
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -61,37 +63,27 @@ serve(async (req) => {
       );
     }
 
-    const { action } = await req.json();
-    
+    const { action, propertyId, orderType, tokenCount, pricePerToken, paymentMethod } = await req.json();
+
     switch (action) {
       case 'placeOrder': {
-        const { propertyId, orderType, tokenCount, pricePerToken, paymentMethod } = await req.json();
-        
-        if (orderType === 'SELL') {
-          // Reserve tokens when placing a sell order
-          const { error: reserveError } = await supabaseClient.rpc('reserve_tokens', {
-            p_user_id: user.id,
-            p_property_id: propertyId,
-            p_token_count: tokenCount
-          });
-
-          if (reserveError) {
-            console.error('Error reserving tokens:', reserveError);
+        // Validate payment method for buy orders
+        if (orderType === 'BUY') {
+          if (!paymentMethod) {
             return new Response(
-              JSON.stringify({ error: 'Failed to reserve tokens' }),
-              { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+              JSON.stringify({ error: 'Payment method is required for buy orders' }),
+              { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          }
+          if (!VALID_PAYMENT_METHODS.includes(paymentMethod)) {
+            return new Response(
+              JSON.stringify({ error: 'Invalid payment method' }),
+              { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
             );
           }
         }
 
-        // Validate payment method
-        if (orderType === 'BUY' && !paymentMethod) {
-          return new Response(
-            JSON.stringify({ error: 'Payment method is required for buy orders' }),
-            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        }
-
+        // Create the order
         const { data: order, error: orderError } = await supabaseClient
           .from('orders')
           .insert({
@@ -101,6 +93,7 @@ serve(async (req) => {
             token_count: tokenCount,
             price_per_token: pricePerToken,
             payment_method: paymentMethod,
+            status: 'OPEN'
           })
           .select()
           .single();
