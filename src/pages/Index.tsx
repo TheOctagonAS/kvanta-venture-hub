@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import YieldCalculator from "@/components/YieldCalculator";
 import { FlickeringGrid } from "@/components/FlickeringGrid";
 import { Hero } from "@/components/Hero";
+import { Timeline } from "@/components/Timeline";
 
 const Index = () => {
   const features = [
@@ -72,6 +73,53 @@ const Index = () => {
     }
   ];
 
+  const timelineData = [
+    {
+      title: "Registrer deg",
+      content: (
+        <div className="flex items-start gap-4">
+          <Wallet className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
+          <div>
+            <p>Start din reise med Kvanta ved å registrere deg med Vipps. Det tar kun noen få sekunder, og du får umiddelbart tilgang til plattformen vår.</p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "Utforsk eiendommer",
+      content: (
+        <div className="flex items-start gap-4">
+          <Search className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
+          <div>
+            <p>Bla gjennom vårt utvalg av nøye utvalgte eiendommer. Hver eiendom kommer med detaljert informasjon om beliggenhet, avkastning og historisk ytelse.</p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "Legg til betalingsmetode",
+      content: (
+        <div className="flex items-start gap-4">
+          <CreditCard className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
+          <div>
+            <p>Koble til din foretrukne betalingsmetode. Vi støtter flere betalingsalternativer for å gjøre det enkelt å investere.</p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "Motta daglige utbetalinger",
+      content: (
+        <div className="flex items-start gap-4">
+          <CalendarClock className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
+          <div>
+            <p>Begynn å motta din andel av leieinntektene daglig. Følg med på inntektene dine i sanntid og reinvester automatisk for å øke avkastningen.</p>
+          </div>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="relative min-h-screen">
       <div className="absolute inset-0 z-0">
@@ -103,6 +151,16 @@ const Index = () => {
             ))}
           </motion.div>
 
+          {/* Timeline section */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.8 }}
+            className="mb-24"
+          >
+            <Timeline data={timelineData} />
+          </motion.div>
+
           {/* Calculator section */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -113,7 +171,6 @@ const Index = () => {
             <YieldCalculator />
           </motion.div>
 
-          {/* Platform Benefits section */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
