@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PriceHistoryChart } from "@/components/property/PriceHistoryChart";
 import { Separator } from "@/components/ui/separator";
+import { BackToProperties } from "@/components/property/BackToProperties";
 
 const PropertyDetail = () => {
   const { id } = useParams();
@@ -54,7 +55,8 @@ const PropertyDetail = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="grid lg:grid-cols-3 gap-8">
+      <BackToProperties />
+      <div className="grid lg:grid-cols-3 gap-8 mt-6">
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-8">
           <div>
