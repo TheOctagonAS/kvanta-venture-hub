@@ -4,6 +4,7 @@ import WhySection from "@/components/lommebok/WhySection";
 import KeyFeatures from "@/components/lommebok/KeyFeatures";
 import ComparisonSection from "@/components/lommebok/ComparisonSection";
 import CTASection from "@/components/lommebok/CTASection";
+import WalletChat from "@/components/lommebok/WalletChat";
 
 const Lommebok = () => {
   return (
@@ -14,8 +15,9 @@ const Lommebok = () => {
         transition={{ duration: 0.5 }}
         className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8"
       >
-        <div className="text-center space-y-6">
+        <div className="space-y-12">
           <Header />
+          <WalletChat />
           <WhySection />
           <KeyFeatures />
           <ComparisonSection />
