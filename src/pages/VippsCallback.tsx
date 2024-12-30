@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { vippsService } from "@/services/vippsService";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -10,7 +9,7 @@ const VippsCallback = () => {
   const [isProcessing, setIsProcessing] = useState(true);
 
   useEffect(() => {
-    const handleVippsLogin = async () => {
+    const handleVippsCallback = async () => {
       const code = searchParams.get("code");
       if (!code) {
         toast.error("Ingen autorisasjonskode mottatt fra Vipps");
@@ -19,61 +18,20 @@ const VippsCallback = () => {
       }
 
       try {
-        const vippsProfile = await vippsService.handleVippsCallback(code);
-        
-        if (!vippsProfile.email) {
-          toast.error("E-post er påkrevd for å logge inn");
-          navigate("/login");
-          return;
-        }
-
-        // Check if user exists
-        const { data: { user }, error: signInError } = await supabase.auth.signInWithPassword({
-          email: vippsProfile.email,
-          password: crypto.randomUUID(), // This won't be used since we're using Vipps
+        const { data, error } = await supabase.functions.invoke('vipps-callback', {
+          body: { code }
         });
 
-        if (signInError?.message.includes("Invalid login credentials")) {
-          // User doesn't exist, create new account
-          const { data: { user: newUser }, error: signUpError } = await supabase.auth.signUp({
-            email: vippsProfile.email,
-            password: crypto.randomUUID(),
-            options: {
-              data: {
-                phone: vippsProfile.phone_number,
-                name: vippsProfile.name,
-              }
-            }
-          });
+        if (error) throw error;
 
-          if (signUpError) throw signUpError;
-
-          // Create profile for new user
-          if (newUser) {
-            const { error: profileError } = await supabase
-              .from('profiles')
-              .insert([
-                {
-                  id: newUser.id,
-                  is_kyc: false,
-                }
-              ]);
-
-            if (profileError) throw profileError;
-          }
-        } else if (signInError) {
-          throw signInError;
+        if (data.session) {
+          // Set the session
+          const { error: setSessionError } = await supabase.auth.setSession(data.session);
+          if (setSessionError) throw setSessionError;
         }
 
-        // Redirect to KYC page with pre-populated data
-        const kycParams = new URLSearchParams({
-          name: vippsProfile.name || '',
-          phone: vippsProfile.phone_number || '',
-          email: vippsProfile.email || '',
-          address: vippsProfile.address || ''
-        });
-        
-        navigate(`/kyc?${kycParams.toString()}`);
+        // Redirect to KYC page
+        navigate(new URL(data.redirectUrl).pathname + new URL(data.redirectUrl).search);
       } catch (error) {
         console.error("Vipps authentication error:", error);
         toast.error("Det oppstod en feil under innlogging med Vipps");
@@ -83,7 +41,7 @@ const VippsCallback = () => {
       }
     };
 
-    handleVippsLogin();
+    handleVippsCallback();
   }, [searchParams, navigate]);
 
   if (isProcessing) {
