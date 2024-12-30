@@ -6,9 +6,18 @@ import UserHoldings from "@/components/UserHoldings";
 import Statistics from "@/components/Statistics";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const MinSide = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
 
   const { data: profile, refetch: refetchProfile, isLoading } = useQuery({
     queryKey: ['profile', user?.id],
@@ -58,6 +67,10 @@ const MinSide = () => {
     );
   }
 
+  if (!user) {
+    return null; // Return null since useEffect will handle the redirect
+  }
+
   return (
     <div className="min-h-screen bg-[#f8faff]">
       <main className="container mx-auto px-4 py-8">
@@ -71,35 +84,29 @@ const MinSide = () => {
           transition={{ duration: 0.8 }}
           className="max-w-7xl mx-auto space-y-8"
         >
-          {!user ? (
-            <div>Please log in</div>
-          ) : (
-            <>
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <UserProfile 
-                  isKyc={profile?.is_kyc || false} 
-                  onStartKYC={handleStartKYC} 
-                />
-              </div>
-              
-              {!profile?.is_kyc && (
-                <Alert className="bg-yellow-100 border-yellow-200 text-yellow-700">
-                  <AlertDescription>
-                    KYC-verifisering kreves for å kjøpe tokens
-                  </AlertDescription>
-                </Alert>
-              )}
-              
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="space-y-6">
-                  <UserHoldings />
-                </div>
-                <div className="space-y-6">
-                  <Statistics />
-                </div>
-              </div>
-            </>
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <UserProfile 
+              isKyc={profile?.is_kyc || false} 
+              onStartKYC={handleStartKYC} 
+            />
+          </div>
+          
+          {!profile?.is_kyc && (
+            <Alert className="bg-yellow-100 border-yellow-200 text-yellow-700">
+              <AlertDescription>
+                KYC-verifisering kreves for å kjøpe tokens
+              </AlertDescription>
+            </Alert>
           )}
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="space-y-6">
+              <UserHoldings />
+            </div>
+            <div className="space-y-6">
+              <Statistics />
+            </div>
+          </div>
         </motion.div>
       </main>
     </div>
