@@ -28,7 +28,7 @@ const VippsCallback = () => {
         }
 
         // Check if user exists
-        const { data: { user }, error: signInError } = await supabase.auth.signInWithEmail({
+        const { data: { user }, error: signInError } = await supabase.auth.signInWithPassword({
           email: vippsProfile.email,
           password: crypto.randomUUID(), // This won't be used since we're using Vipps
         });
