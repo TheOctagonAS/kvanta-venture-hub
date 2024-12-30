@@ -100,7 +100,7 @@ const Index = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="backdrop-blur-sm bg-white/90 rounded-xl p-8 shadow-lg mb-16"
+            className="backdrop-blur-sm bg-white/90 rounded-xl p-8 shadow-lg mb-24"
           >
             <h2 className="text-2xl sm:text-3xl font-semibold mb-6 text-center text-nordic-charcoal">
               Hvorfor velge Kvanta.ai?
@@ -127,29 +127,29 @@ const Index = () => {
             </div>
           </motion.div>
 
-          {/* Investment Benefits Section */}
+          {/* New Investment Benefits Section */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, duration: 0.8 }}
-            className="bg-white rounded-xl p-8 shadow-lg mb-16"
+            className="bg-white rounded-xl p-8 shadow-lg mb-24"
           >
             <h2 className="text-2xl sm:text-3xl font-semibold mb-8 text-center text-nordic-charcoal">
               Hvorfor investere i eiendom?
             </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {investmentBenefits.map((benefit, index) => (
                 <div 
                   key={index} 
-                  className="text-center p-4 rounded-lg border border-nordic-softblue hover:shadow-md transition-shadow"
+                  className="text-center p-6 rounded-lg border border-nordic-softblue hover:shadow-md transition-shadow"
                 >
                   <div className="flex justify-center">
                     {benefit.icon}
                   </div>
-                  <h3 className="font-semibold mb-2 text-lg text-nordic-charcoal">
+                  <h3 className="font-semibold mb-3 text-lg text-nordic-charcoal">
                     {benefit.title}
                   </h3>
-                  <p className="text-nordic-charcoal/80 text-sm">
+                  <p className="text-nordic-charcoal/80">
                     {benefit.description}
                   </p>
                 </div>
@@ -157,17 +157,17 @@ const Index = () => {
             </div>
           </motion.div>
 
-          {/* Partners section - Made more compact */}
+          {/* Partners section */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, duration: 0.8 }}
-            className="text-center mb-12 bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-lg"
+            className="text-center mb-24"
           >
-            <h2 className="text-2xl font-semibold mb-3 text-nordic-charcoal">
+            <h2 className="text-2xl sm:text-3xl font-semibold mb-4 text-nordic-charcoal">
               Støttet av ledende aktører i Norden
             </h2>
-            <p className="text-nordic-charcoal/80 max-w-2xl mx-auto text-sm">
+            <p className="text-nordic-charcoal/80 max-w-2xl mx-auto">
               Vi samarbeider med etablerte eiendomsaktører og finansinstitusjoner for å sikre en trygg og transparent investeringsplattform.
             </p>
           </motion.div>
