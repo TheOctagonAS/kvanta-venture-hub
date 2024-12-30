@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 interface TradeButtonProps {
   propertyId: string;
@@ -21,6 +22,7 @@ export const TradeButton = ({
 }: TradeButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleTrade = async () => {
     if (!user) {
@@ -40,7 +42,22 @@ export const TradeButton = ({
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Trade error:', error);
+        
+        // Check for KYC-specific error
+        if (error.message?.includes('KYC')) {
+          toast.error("Du må være KYC-verifisert for å handle tokens", {
+            action: {
+              label: "Gå til KYC",
+              onClick: () => navigate("/kyc")
+            }
+          });
+          return;
+        }
+        
+        throw error;
+      }
 
       toast.success(`${orderType === 'BUY' ? 'Kjøps' : 'Salgs'}ordre opprettet`);
       onSuccess?.();

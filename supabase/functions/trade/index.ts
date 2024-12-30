@@ -6,10 +6,12 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const VALID_PAYMENT_METHODS = ['bank_account', 'card', 'vipps'];
+const VALID_PAYMENT_METHODS = ['bank_account', 'card', 'vipps', 'algorand'];
 
-// Helper function to check KYC status
+// Helper function to check KYC status with detailed logging
 async function checkKYCStatus(supabaseClient: any, userId: string) {
+  console.log('Checking KYC status for user:', userId);
+  
   const { data: profile, error } = await supabaseClient
     .from('profiles')
     .select('is_kyc')
@@ -21,6 +23,7 @@ async function checkKYCStatus(supabaseClient: any, userId: string) {
     throw new Error('Could not verify KYC status');
   }
 
+  console.log('KYC status result:', profile);
   return profile?.is_kyc || false;
 }
 
@@ -140,12 +143,16 @@ serve(async (req) => {
 
     const token = authHeader.replace('Bearer ', '');
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser(token);
+    
     if (userError || !user) {
+      console.error('Auth error:', userError);
       return new Response(
         JSON.stringify({ error: 'Invalid token' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+
+    console.log('Authenticated user ID:', user.id);
 
     const { action, propertyId, orderType, tokenCount, pricePerToken, paymentMethod } = await req.json();
 
@@ -154,9 +161,11 @@ serve(async (req) => {
         // For BUY orders, verify KYC status
         if (orderType === 'BUY') {
           const isKycVerified = await checkKYCStatus(supabaseClient, user.id);
+          console.log('KYC verification result:', isKycVerified);
+          
           if (!isKycVerified) {
             return new Response(
-              JSON.stringify({ error: 'KYC verification required to place buy orders' }),
+              JSON.stringify({ error: 'Du må være KYC-verifisert for å kjøpe tokens' }),
               { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
             );
           }
