@@ -56,8 +56,8 @@ export const TradeButton = ({
     <Button 
       onClick={handleTrade} 
       disabled={isLoading}
-      variant={orderType === 'BUY' ? "default" : "secondary"}
-      className="w-full"
+      variant={orderType === 'BUY' ? "default" : "outline"}
+      className={`w-full ${orderType === 'SELL' ? 'border-blue-600 text-blue-600 hover:bg-blue-50' : ''}`}
     >
       {isLoading ? "Behandler..." : orderType === 'BUY' ? "Kjøp tokens" : "Selg tokens"}
     </Button>

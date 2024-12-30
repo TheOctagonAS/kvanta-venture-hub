@@ -118,39 +118,39 @@ const PropertyDetail = () => {
 
         {/* Quick Info Box */}
         <div className="lg:col-span-1">
-          <Card className="sticky top-4 p-6 bg-white dark:bg-gray-800">
+          <Card className="sticky top-4 p-6 bg-white dark:bg-gray-800 shadow-md border border-gray-100">
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg text-gray-600 dark:text-gray-400">
+                <h3 className="text-base text-gray-600 dark:text-gray-400 mb-1">
                   Price per token
                 </h3>
-                <p className="text-3xl font-bold text-nordic-blue">
+                <p className="text-2xl font-bold text-nordic-blue">
                   {property.price_per_token.toLocaleString()} NOK
                 </p>
               </div>
 
               <div className="space-y-4">
                 <div>
-                  <h4 className="text-sm text-gray-600 dark:text-gray-400">
+                  <h4 className="text-sm text-gray-600 dark:text-gray-400 mb-1">
                     Projected Annual Return
                   </h4>
-                  <p className="text-2xl font-semibold text-accent">
+                  <p className="text-base font-semibold text-accent">
                     {property.yield}%
                   </p>
                 </div>
 
                 <div>
-                  <h4 className="text-sm text-gray-600 dark:text-gray-400">
+                  <h4 className="text-sm text-gray-600 dark:text-gray-400 mb-1">
                     Available Tokens
                   </h4>
-                  <p className="text-lg font-medium">
+                  <p className="text-base font-medium">
                     {property.max_tokens - property.tokens_sold} of{" "}
                     {property.max_tokens}
                   </p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <TradeButton
                   propertyId={property.id}
                   tokenCount={1}
