@@ -2,25 +2,23 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } f
 
 interface GrowthChartProps {
   data: Array<{
-    day: number;
+    year: number;
     standard: number;
     compound: number;
   }>;
 }
 
 const GrowthChart = ({ data }: GrowthChartProps) => {
-  const filteredData = data.filter(item => item.day % 5 === 0);
-
   return (
     <div className="bg-white p-2 rounded-lg shadow-sm">
       <h3 className="text-sm font-medium mb-2">Simulert vekst over tid</h3>
-      <div className="h-[200px] w-full mx-auto"> {/* Increased height for better visibility */}
+      <div className="h-[200px] w-full mx-auto">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={filteredData} margin={{ top: 5, right: 5, bottom: 15, left: 5 }}>
+          <LineChart data={data} margin={{ top: 5, right: 5, bottom: 15, left: 5 }}>
             <XAxis 
-              dataKey="day" 
+              dataKey="year" 
               tick={{ fontSize: 10 }}
-              ticks={[0, 5, 10, 15, 20, 25, 30]}
+              tickFormatter={(value) => `${value} år`}
             />
             <YAxis 
               tickFormatter={(value) => 
@@ -42,6 +40,7 @@ const GrowthChart = ({ data }: GrowthChartProps) => {
                   maximumFractionDigits: 0
                 }).format(value)
               }
+              labelFormatter={(value) => `${value} år`}
               contentStyle={{ fontSize: '12px' }}
             />
             <Legend 

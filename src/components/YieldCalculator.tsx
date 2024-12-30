@@ -22,7 +22,7 @@ const YieldCalculator = () => {
     compoundedYearly: 0,
   });
   const [growthData, setGrowthData] = useState<Array<{
-    day: number;
+    year: number;
     standard: number;
     compound: number;
   }>>([]);
@@ -36,7 +36,7 @@ const YieldCalculator = () => {
     const rentalRate = APY / 100;
     const appreciationRate = PROPERTY_APPRECIATION / 100;
     
-    // Daily rates
+    // Daily rates for yield calculations
     const dailyRentalRate = rentalRate / 365;
     const dailyAppreciationRate = appreciationRate / 365;
     const totalDailyRate = (dailyRentalRate + dailyAppreciationRate) * REINVESTMENT_BOOST;
@@ -58,17 +58,17 @@ const YieldCalculator = () => {
 
     // Generate growth data for the chart with enhanced compound effect
     const data = [];
-    for (let day = 0; day <= 30; day++) {
+    for (let year = 0; year <= 5; year++) { // Changed to 5 years
       // Standard growth includes both rental income and property appreciation
-      const standardRentalGrowth = investment + (dailyYield * day);
-      const standardAppreciationGrowth = investment * (1 + (dailyAppreciationRate * day));
+      const standardRentalGrowth = investment + (yearlyYield * year);
+      const standardAppreciationGrowth = investment * Math.pow(1 + appreciationRate, year);
       const standardTotal = standardRentalGrowth + (standardAppreciationGrowth - investment);
 
       // Enhanced compound growth with reinvestment boost
-      const compoundGrowth = investment * Math.pow(1 + totalDailyRate, day * REINVESTMENT_BOOST);
+      const compoundGrowth = investment * Math.pow(1 + (rentalRate + appreciationRate) * REINVESTMENT_BOOST, year);
       
       data.push({
-        day,
+        year,
         standard: standardTotal,
         compound: compoundGrowth,
       });
