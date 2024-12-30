@@ -4,9 +4,12 @@ import { supabase } from "@/lib/supabaseClient";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { InfoIcon, FileDown, DollarSign } from "lucide-react";
+import { InfoIcon, FileDown } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
+import { TaxableRentCard } from "@/components/tax/TaxableRentCard";
+import { EstimatedTaxCard } from "@/components/tax/EstimatedTaxCard";
+import { DeductionsCard } from "@/components/tax/DeductionsCard";
 
 interface RentEarning {
   earned_amount: number;
@@ -15,7 +18,6 @@ interface RentEarning {
   };
 }
 
-// Define the exact shape of what Supabase returns
 interface SupabaseRentEarningResponse {
   earned_amount: number;
   property: {
@@ -28,47 +30,49 @@ const Skatt = () => {
   const currentYear = new Date().getFullYear();
 
   const { data: rentEarnings } = useQuery<RentEarning[]>({
-    queryKey: ['rent-earnings', user?.id, currentYear],
+    queryKey: ["rent-earnings", user?.id, currentYear],
     queryFn: async () => {
       if (!user) return [];
       const { data, error } = await supabase
-        .from('rent_earnings')
+        .from("rent_earnings")
         .select(`
           earned_amount,
           property:properties(name)
         `)
-        .eq('user_id', user.id)
-        .eq('year', currentYear);
+        .eq("user_id", user.id)
+        .eq("year", currentYear);
 
       if (error) throw error;
-      
+
       return (data as SupabaseRentEarningResponse[] || []).map((item) => ({
         earned_amount: item.earned_amount,
         property: {
-          name: item.property.name
-        }
+          name: item.property.name,
+        },
       }));
     },
     enabled: !!user,
   });
 
-  const totalEarnings = (rentEarnings || []).reduce((sum, earning) => 
-    sum + Number(earning.earned_amount), 0);
-
-  const estimatedTax = totalEarnings * 0.22;
+  const totalEarnings = (rentEarnings || []).reduce(
+    (sum, earning) => sum + Number(earning.earned_amount),
+    0
+  );
 
   const handleExportCSV = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke('generate-tax-report', {
-        body: { user_id: user?.id, year: currentYear }
-      });
+      const { data, error } = await supabase.functions.invoke(
+        "generate-tax-report",
+        {
+          body: { user_id: user?.id, year: currentYear },
+        }
+      );
 
       if (error) throw error;
 
-      // Create blob from the CSV data
-      const blob = new Blob([data], { type: 'text/csv' });
+      const blob = new Blob([data], { type: "text/csv" });
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
       a.download = `kvanta_skatteoversikt_${currentYear}.csv`;
       document.body.appendChild(a);
@@ -76,10 +80,10 @@ const Skatt = () => {
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
 
-      toast.success('CSV-fil lastet ned');
+      toast.success("CSV-fil lastet ned");
     } catch (error) {
-      console.error('Error exporting CSV:', error);
-      toast.error('Kunne ikke laste ned CSV-fil');
+      console.error("Error exporting CSV:", error);
+      toast.error("Kunne ikke laste ned CSV-fil");
     }
   };
 
@@ -93,8 +97,7 @@ const Skatt = () => {
             <h1 className="text-3xl font-bold text-gray-900 mb-4">
               Skatteoversikt
             </h1>
-            
-            {/* Progress Section */}
+
             <div className="bg-blue-100 rounded-lg p-4 mb-4">
               <h3 className="text-lg font-medium text-gray-900 mb-2">
                 Skattesesong {currentYear}
@@ -102,7 +105,9 @@ const Skatt = () => {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm text-gray-600 mb-1">
                   <span>Nåværende status</span>
-                  <span>{totalEarnings.toLocaleString()} NOK inntekt registrert</span>
+                  <span>
+                    {totalEarnings.toLocaleString()} NOK inntekt registrert
+                  </span>
                 </div>
                 <Progress value={25} className="h-2" />
                 <p className="text-sm text-gray-500">
@@ -111,92 +116,43 @@ const Skatt = () => {
               </div>
             </div>
 
-            {/* Disclaimer */}
             <p className="text-sm text-gray-500 mb-6">
-              Vi hjelper deg å samle nøkkeltall, men du er selv ansvarlig for skattemeldingen.
+              Vi hjelper deg å samle nøkkeltall, men du er selv ansvarlig for
+              skattemeldingen.
             </p>
 
             <Alert className="mb-6">
               <InfoIcon className="h-4 w-4" />
               <AlertDescription>
-                Dette er kun en veiledende oversikt. For nøyaktig skatteberegning, 
+                Dette er kun en veiledende oversikt. For nøyaktig skatteberegning,
                 kontakt en autorisert regnskapsfører eller skatterådgiver.
               </AlertDescription>
             </Alert>
           </div>
 
           <Card className="p-6">
-            <div className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-6">
+                <TaxableRentCard rentEarnings={rentEarnings || []} />
+                <EstimatedTaxCard totalEarnings={totalEarnings} />
+              </div>
+
               <div>
-                <h2 className="text-xl font-semibold mb-4">
-                  Leieinntekter {currentYear}
-                </h2>
-                
-                {rentEarnings && rentEarnings.length > 0 ? (
-                  <div className="space-y-4">
-                    {rentEarnings.map((earning, index) => (
-                      <div key={index} className="flex justify-between items-center border-b pb-2">
-                        <span>{earning.property.name}</span>
-                        <span className="font-medium">
-                          {Number(earning.earned_amount).toLocaleString()} NOK
-                        </span>
-                      </div>
-                    ))}
-                    
-                    <div className="flex justify-between items-center pt-2 font-semibold">
-                      <span>Total leieinntekt</span>
-                      <span>{totalEarnings.toLocaleString()} NOK</span>
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-gray-500">
-                    Ingen leieinntekter registrert for {currentYear}
-                  </p>
-                )}
+                <DeductionsCard />
               </div>
+            </div>
 
-              <div className="space-y-4">
-                <div className="bg-primary/10 p-4 rounded-lg">
-                  <div className="flex items-start gap-2">
-                    <DollarSign className="h-5 w-5 text-primary mt-1" />
-                    <div>
-                      <p className="font-medium text-lg">Estimert skatt (22%)</p>
-                      <p className="font-semibold text-2xl text-primary">
-                        {estimatedTax.toLocaleString()} NOK
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        Dette er et omtrentlig beløp. Faktisk skatt kan variere pga fradrag m.m.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-secondary/10 p-4 rounded-lg mb-6">
-                  <div className="flex items-start gap-2">
-                    <DollarSign className="h-5 w-5 text-primary mt-1" />
-                    <div>
-                      <p className="font-medium text-lg">Fradragsoversikt</p>
-                      <p className="text-sm text-gray-600">
-                        Her vil du kunne registrere fradragsberettigede utgifter som vedlikehold, 
-                        forsikring og andre relevante kostnader. (Kommer snart)
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="border-t pt-6">
-                <Button
-                  onClick={handleExportCSV}
-                  className="w-full flex items-center justify-center gap-2"
-                >
-                  <FileDown className="h-4 w-4" />
-                  Last ned skattedata (CSV)
-                </Button>
-                <p className="text-sm text-gray-500 mt-2 text-center">
-                  Last ned en CSV-fil med detaljert oversikt over leieinntekter
-                </p>
-              </div>
+            <div className="border-t mt-6 pt-6">
+              <Button
+                onClick={handleExportCSV}
+                className="w-full flex items-center justify-center gap-2"
+              >
+                <FileDown className="h-4 w-4" />
+                Last ned skattedata (CSV)
+              </Button>
+              <p className="text-sm text-gray-500 mt-2 text-center">
+                Last ned en CSV-fil med detaljert oversikt over leieinntekter
+              </p>
             </div>
           </Card>
         </div>
