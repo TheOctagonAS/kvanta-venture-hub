@@ -2,14 +2,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { InfoIcon, FileDown } from "lucide-react";
+import { InfoIcon } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import { toast } from "sonner";
 import { TaxableRentCard } from "@/components/tax/TaxableRentCard";
 import { EstimatedTaxCard } from "@/components/tax/EstimatedTaxCard";
 import { DeductionsCard } from "@/components/tax/DeductionsCard";
+import { TaxReportModal } from "@/components/tax/TaxReportModal";
 import { Database } from "@/integrations/supabase/types";
 
 type RentEarning = Database["public"]["Tables"]["rent_earnings"]["Row"] & {
@@ -36,7 +35,7 @@ const Skatt = () => {
         .eq("year", currentYear);
 
       if (error) throw error;
-      return data as RentEarning[];
+      return data;
     },
     enabled: !!user,
   });
@@ -67,33 +66,8 @@ const Skatt = () => {
     0
   );
 
-  const handleExportCSV = async () => {
-    try {
-      const { data, error } = await supabase.functions.invoke(
-        "generate-tax-report",
-        {
-          body: { user_id: user?.id, year: currentYear },
-        }
-      );
-
-      if (error) throw error;
-
-      const blob = new Blob([data], { type: "text/csv" });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `kvanta_skatteoversikt_${currentYear}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-
-      toast.success("CSV-fil lastet ned");
-    } catch (error) {
-      console.error("Error exporting CSV:", error);
-      toast.error("Kunne ikke laste ned CSV-fil");
-    }
-  };
+  const taxableIncome = Math.max(0, totalEarnings - totalDeductions);
+  const estimatedTax = taxableIncome * 0.22;
 
   if (!user) return null;
 
@@ -156,15 +130,13 @@ const Skatt = () => {
             </div>
 
             <div className="border-t mt-6 pt-6">
-              <Button
-                onClick={handleExportCSV}
-                className="w-full flex items-center justify-center gap-2"
-              >
-                <FileDown className="h-4 w-4" />
-                Last ned skattedata (CSV)
-              </Button>
+              <TaxReportModal
+                rentEarnings={rentEarnings}
+                deductions={deductions}
+                estimatedTax={estimatedTax}
+              />
               <p className="text-sm text-gray-500 mt-2 text-center">
-                Last ned en CSV-fil med detaljert oversikt over leieinntekter
+                Last ned en detaljert oversikt over leieinntekter og fradrag
               </p>
             </div>
           </Card>
