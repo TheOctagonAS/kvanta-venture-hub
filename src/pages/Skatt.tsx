@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { InfoIcon, FileDown, DollarSign } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 
 interface RentEarning {
@@ -92,6 +93,29 @@ const Skatt = () => {
             <h1 className="text-3xl font-bold text-gray-900 mb-4">
               Skatteoversikt
             </h1>
+            
+            {/* Progress Section */}
+            <div className="bg-blue-100 rounded-lg p-4 mb-4">
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Skattesesong {currentYear}
+              </h3>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm text-gray-600 mb-1">
+                  <span>Nåværende status</span>
+                  <span>{totalEarnings.toLocaleString()} NOK inntekt registrert</span>
+                </div>
+                <Progress value={25} className="h-2" />
+                <p className="text-sm text-gray-500">
+                  Ferdig utfylt: 25% (Kommer snart: Registrering av fradrag)
+                </p>
+              </div>
+            </div>
+
+            {/* Disclaimer */}
+            <p className="text-sm text-gray-500 mb-6">
+              Vi hjelper deg å samle nøkkeltall, men du er selv ansvarlig for skattemeldingen.
+            </p>
+
             <Alert className="mb-6">
               <InfoIcon className="h-4 w-4" />
               <AlertDescription>
