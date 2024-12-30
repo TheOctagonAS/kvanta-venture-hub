@@ -60,13 +60,6 @@ const PropertyDetail = () => {
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-8">
           <div>
-            <Button
-              variant="ghost"
-              onClick={() => navigate('/eiendommer')}
-              className="mb-4"
-            >
-              ← Back to Properties
-            </Button>
             <h1 className="text-4xl font-bold text-nordic-charcoal mb-2">
               {property.name}
             </h1>
