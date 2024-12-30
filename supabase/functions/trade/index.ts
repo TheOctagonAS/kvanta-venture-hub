@@ -8,6 +8,110 @@ const corsHeaders = {
 
 const VALID_PAYMENT_METHODS = ['bank_account', 'card', 'vipps'];
 
+// Helper function to check KYC status
+async function checkKYCStatus(supabaseClient: any, userId: string) {
+  const { data: profile, error } = await supabaseClient
+    .from('profiles')
+    .select('is_kyc')
+    .eq('id', userId)
+    .single();
+
+  if (error) {
+    console.error('Error checking KYC status:', error);
+    throw new Error('Could not verify KYC status');
+  }
+
+  return profile?.is_kyc || false;
+}
+
+// Helper function to create a new order
+async function createOrder(supabaseClient: any, {
+  userId,
+  propertyId,
+  orderType,
+  tokenCount,
+  pricePerToken,
+  paymentMethod
+}: {
+  userId: string;
+  propertyId: string;
+  orderType: string;
+  tokenCount: number;
+  pricePerToken: number;
+  paymentMethod: string;
+}) {
+  const { data: order, error } = await supabaseClient
+    .from('orders')
+    .insert({
+      user_id: userId,
+      property_id: propertyId,
+      order_type: orderType,
+      token_count: tokenCount,
+      price_per_token: pricePerToken,
+      payment_method: paymentMethod,
+      status: 'OPEN'
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error creating order:', error);
+    throw new Error('Failed to create order');
+  }
+
+  return order;
+}
+
+// Helper function to update user holdings after successful payment
+async function updateUserHoldings(supabaseClient: any, {
+  userId,
+  propertyId,
+  tokenCount
+}: {
+  userId: string;
+  propertyId: string;
+  tokenCount: number;
+}) {
+  const { data: existingHolding, error: fetchError } = await supabaseClient
+    .from('user_holdings')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('property_id', propertyId)
+    .single();
+
+  if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 is "no rows returned"
+    console.error('Error fetching existing holding:', fetchError);
+    throw new Error('Failed to check existing holdings');
+  }
+
+  if (existingHolding) {
+    const { error: updateError } = await supabaseClient
+      .from('user_holdings')
+      .update({
+        token_count: existingHolding.token_count + tokenCount
+      })
+      .eq('id', existingHolding.id);
+
+    if (updateError) {
+      console.error('Error updating holdings:', updateError);
+      throw new Error('Failed to update holdings');
+    }
+  } else {
+    const { error: insertError } = await supabaseClient
+      .from('user_holdings')
+      .insert({
+        user_id: userId,
+        property_id: propertyId,
+        token_count: tokenCount
+      });
+
+    if (insertError) {
+      console.error('Error creating holdings:', insertError);
+      throw new Error('Failed to create holdings');
+    }
+  }
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -25,6 +129,7 @@ serve(async (req) => {
       }
     );
 
+    // Verify authentication
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       return new Response(
@@ -42,39 +147,27 @@ serve(async (req) => {
       );
     }
 
-    // Check KYC status
-    const { data: profile, error: profileError } = await supabaseClient
-      .from('profiles')
-      .select('is_kyc')
-      .eq('id', user.id)
-      .single();
-
-    if (profileError || !profile) {
-      return new Response(
-        JSON.stringify({ error: 'Could not verify KYC status' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    if (!profile.is_kyc) {
-      return new Response(
-        JSON.stringify({ error: 'KYC verification required to trade' }),
-        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
     const { action, propertyId, orderType, tokenCount, pricePerToken, paymentMethod } = await req.json();
 
     switch (action) {
       case 'placeOrder': {
-        // Validate payment method for buy orders
+        // For BUY orders, verify KYC status
         if (orderType === 'BUY') {
+          const isKycVerified = await checkKYCStatus(supabaseClient, user.id);
+          if (!isKycVerified) {
+            return new Response(
+              JSON.stringify({ error: 'KYC verification required to place buy orders' }),
+              { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          }
+
           if (!paymentMethod) {
             return new Response(
               JSON.stringify({ error: 'Payment method is required for buy orders' }),
               { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
             );
           }
+
           if (!VALID_PAYMENT_METHODS.includes(paymentMethod)) {
             return new Response(
               JSON.stringify({ error: 'Invalid payment method' }),
@@ -83,27 +176,37 @@ serve(async (req) => {
           }
         }
 
-        // Create the order
-        const { data: order, error: orderError } = await supabaseClient
-          .from('orders')
-          .insert({
-            user_id: user.id,
-            property_id: propertyId,
-            order_type: orderType,
-            token_count: tokenCount,
-            price_per_token: pricePerToken,
-            payment_method: paymentMethod,
-            status: 'OPEN'
-          })
-          .select()
-          .single();
+        const order = await createOrder(supabaseClient, {
+          userId: user.id,
+          propertyId,
+          orderType,
+          tokenCount,
+          pricePerToken,
+          paymentMethod
+        });
 
-        if (orderError) {
-          console.error('Error creating order:', orderError);
-          return new Response(
-            JSON.stringify({ error: 'Failed to create order' }),
-            { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
+        // Mock payment confirmation for now
+        if (orderType === 'BUY') {
+          // Update order status to FILLED
+          const { error: updateError } = await supabaseClient
+            .from('orders')
+            .update({ status: 'FILLED' })
+            .eq('id', order.id);
+
+          if (updateError) {
+            console.error('Error updating order status:', updateError);
+            return new Response(
+              JSON.stringify({ error: 'Failed to update order status' }),
+              { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          }
+
+          // Update user holdings
+          await updateUserHoldings(supabaseClient, {
+            userId: user.id,
+            propertyId,
+            tokenCount
+          });
         }
 
         return new Response(
