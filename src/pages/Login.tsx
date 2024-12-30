@@ -12,7 +12,7 @@ const Login = () => {
       >
         <div className="bg-[#25262B] p-8 rounded-lg shadow-xl">
           <h1 className="text-2xl font-bold text-center mb-6 text-white">
-            Registrer deg med Vipps
+            Logg inn med Vipps
           </h1>
           <LoginForm />
         </div>

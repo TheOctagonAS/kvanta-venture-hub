@@ -1,11 +1,8 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
-import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
 import { vippsService } from "@/services/vippsService";
 
 declare global {
@@ -27,12 +24,8 @@ declare global {
 }
 
 const LoginForm = () => {
-  const [referralCode, setReferralCode] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
-  const { login } = useAuth();
-  const navigate = useNavigate();
 
   const handleVippsLogin = () => {
     if (!acceptedTerms || !acceptedPrivacy) {
@@ -44,21 +37,6 @@ const LoginForm = () => {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-2">
-        <label htmlFor="referralCode" className="text-sm font-medium text-gray-200">
-          Vervekode (valgfritt)
-        </label>
-        <Input
-          id="referralCode"
-          type="text"
-          value={referralCode}
-          onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
-          placeholder="ABCD1234"
-          disabled={isLoading}
-          className="bg-[#2C2E33] border-gray-600 text-white placeholder:text-gray-400"
-        />
-      </div>
-
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
           <Checkbox
@@ -108,9 +86,9 @@ const LoginForm = () => {
 
       <div className="text-center mt-6">
         <p className="text-gray-300">
-          Har du allerede en bruker?{" "}
-          <Link to="/login" className="text-blue-400 hover:underline">
-            Logg inn!
+          Har du ikke bruker?{" "}
+          <Link to="/register" className="text-blue-400 hover:underline">
+            Registrer deg her
           </Link>
         </p>
       </div>
