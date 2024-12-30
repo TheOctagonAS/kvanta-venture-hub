@@ -41,23 +41,6 @@ const LoginForm = () => {
     console.log("Attempting login with:", { email: email.trim() });
 
     try {
-      // First check if the user exists
-      const { data: { users }, error: getUserError } = await supabase.auth.admin.listUsers();
-      
-      if (getUserError) {
-        console.error("Error checking user existence:", getUserError);
-        toast.error("Kunne ikke verifisere bruker. Prøv igjen senere.");
-        return;
-      }
-
-      const userExists = users?.some(user => user.email === email.trim());
-      
-      if (!userExists) {
-        toast.error("Ingen bruker funnet med denne e-postadressen.");
-        return;
-      }
-
-      // Attempt login
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password: password.trim(),
