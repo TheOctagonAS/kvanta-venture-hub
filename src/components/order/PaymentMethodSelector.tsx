@@ -9,6 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { Bank, CreditCard, Smartphone } from "lucide-react";
 
 type PaymentMethod = "bank_account" | "card" | "vipps" | null;
 
@@ -29,6 +30,19 @@ export const PaymentMethodSelector = ({
     toast.info("Dette er en test-versjon. Ekte betalinger kommer snart.");
   };
 
+  const getMethodIcon = (method: PaymentMethod) => {
+    switch (method) {
+      case "bank_account":
+        return <Bank className="h-4 w-4" />;
+      case "card":
+        return <CreditCard className="h-4 w-4" />;
+      case "vipps":
+        return <Smartphone className="h-4 w-4" />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -37,8 +51,9 @@ export const PaymentMethodSelector = ({
           className="w-full justify-start text-left font-normal"
         >
           {selectedMethod ? (
-            <span className="flex items-center">
-              {selectedMethod === "bank_account" && "Bankkonto (placeholder)"}
+            <span className="flex items-center gap-2">
+              {getMethodIcon(selectedMethod)}
+              {selectedMethod === "bank_account" && "Bankkonto"}
               {selectedMethod === "card" && "Kort (kommer snart)"}
               {selectedMethod === "vipps" && "Vipps (kommer snart)"}
             </span>
@@ -59,25 +74,28 @@ export const PaymentMethodSelector = ({
         <div className="flex flex-col gap-3 pt-4">
           <Button
             variant="outline"
-            className="justify-start"
+            className="justify-start gap-2"
             onClick={() => handleSelect("bank_account")}
           >
+            <Bank className="h-4 w-4" />
             Bankkonto
           </Button>
           <Button
             variant="outline"
-            className="justify-start"
+            className="justify-start gap-2"
             disabled
             onClick={() => handleSelect("card")}
           >
+            <CreditCard className="h-4 w-4" />
             Kort (Visa/Mastercard)
           </Button>
           <Button
             variant="outline"
-            className="justify-start"
+            className="justify-start gap-2"
             disabled
             onClick={() => handleSelect("vipps")}
           >
+            <Smartphone className="h-4 w-4" />
             Vipps
           </Button>
         </div>

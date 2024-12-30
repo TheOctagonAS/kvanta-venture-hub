@@ -1,5 +1,4 @@
 import { Property } from "@/types/property";
-import { PropertyImage } from "../property/PropertyImage";
 import { Building2, MapPin } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
@@ -9,8 +8,14 @@ interface PropertyPreviewProps {
 
 export const PropertyPreview = ({ property }: PropertyPreviewProps) => {
   return (
-    <Card className="overflow-hidden">
-      <PropertyImage imageUrl={property.image_url} name={property.name} />
+    <Card className="overflow-hidden bg-white shadow-sm">
+      <div className="relative aspect-video w-full">
+        <img
+          src={property.image_url || '/placeholder.svg'}
+          alt={property.name}
+          className="object-cover w-full h-full"
+        />
+      </div>
       <div className="p-6 space-y-4">
         <div className="space-y-2">
           <div className="flex items-center text-gray-600">

@@ -10,6 +10,13 @@ import { tokenService } from "@/services/tokenService";
 import { toast } from "sonner";
 import { PaymentMethodSelector } from "./PaymentMethodSelector";
 import { Separator } from "@/components/ui/separator";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface OrderFormProps {
   property: Property;
@@ -21,7 +28,7 @@ export const OrderForm = ({ property }: OrderFormProps) => {
   const [tokenCount, setTokenCount] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<"bank_account" | "card" | "vipps" | null>(null);
-  const [showPreview, setShowPreview] = useState(false);
+  const [showPreviewDialog, setShowPreviewDialog] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -67,15 +74,8 @@ export const OrderForm = ({ property }: OrderFormProps) => {
 
   const totalAmount = tokenCount * property.price_per_token;
 
-  const handlePreviewOrder = () => {
-    setShowPreview(true);
-    toast.info("Dette er en forhåndsvisning av din ordre", {
-      description: `${tokenCount} tokens til ${property.price_per_token} NOK per token`
-    });
-  };
-
   return (
-    <Card className="p-6">
+    <Card className="p-6 bg-white shadow-sm rounded-lg">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-4">
           <Label>Velg antall tokens</Label>
@@ -109,7 +109,7 @@ export const OrderForm = ({ property }: OrderFormProps) => {
 
         <div className="space-y-2">
           <Label>Pris per token</Label>
-          <div className="text-lg font-semibold">
+          <div className="text-lg font-semibold bg-[#f8f9fa] p-4 rounded-lg">
             {property.price_per_token.toLocaleString()} NOK
           </div>
         </div>
@@ -125,7 +125,7 @@ export const OrderForm = ({ property }: OrderFormProps) => {
         <Separator className="my-6" />
 
         <div className="space-y-4">
-          <div className="bg-gray-50 p-4 rounded-lg">
+          <div className="bg-[#f8f9fa] p-4 rounded-lg shadow-sm">
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Antall tokens:</span>
               <span className="font-medium">{tokenCount}</span>
@@ -145,14 +145,14 @@ export const OrderForm = ({ property }: OrderFormProps) => {
             <Button
               type="button"
               variant="outline"
-              onClick={handlePreviewOrder}
+              onClick={() => setShowPreviewDialog(true)}
               className="w-full"
             >
               Forhåndsvis Ordre
             </Button>
             <Button
               type="submit"
-              className="w-full"
+              className="w-full bg-[#345FF6] text-white hover:bg-blue-700 transition-colors"
               disabled={isLoading || tokenCount < 1 || !paymentMethod}
             >
               {isLoading ? "Behandler..." : "Bekreft Ordre"}
@@ -160,6 +160,43 @@ export const OrderForm = ({ property }: OrderFormProps) => {
           </div>
         </div>
       </form>
+
+      <Dialog open={showPreviewDialog} onOpenChange={setShowPreviewDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Ordresammendrag</DialogTitle>
+            <DialogDescription>
+              Vennligst bekreft ordreinformasjonen under
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 pt-4">
+            <div className="bg-[#f8f9fa] p-4 rounded-lg">
+              <p>Du er i ferd med å kjøpe:</p>
+              <ul className="list-none space-y-2 mt-2">
+                <li className="flex justify-between">
+                  <span>Antall tokens:</span>
+                  <span className="font-medium">{tokenCount}</span>
+                </li>
+                <li className="flex justify-between">
+                  <span>Pris per token:</span>
+                  <span className="font-medium">{property.price_per_token.toLocaleString()} NOK</span>
+                </li>
+                <Separator className="my-2" />
+                <li className="flex justify-between font-bold">
+                  <span>Total sum:</span>
+                  <span>{totalAmount.toLocaleString()} NOK</span>
+                </li>
+                <li className="flex justify-between mt-2">
+                  <span>Betalingsmetode:</span>
+                  <span className="font-medium capitalize">
+                    {paymentMethod?.replace('_', ' ') || 'Ikke valgt'}
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };
