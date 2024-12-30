@@ -7,6 +7,25 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { vippsService } from "@/services/vippsService";
 
+// Declare the custom element for TypeScript
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'vipps-mobilepay-button': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+        type?: string;
+        brand?: string;
+        language?: string;
+        variant?: string;
+        rounded?: string;
+        verb?: string;
+        stretched?: string;
+        branded?: string;
+        loading?: string;
+      };
+    }
+  }
+}
+
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -129,13 +148,18 @@ const LoginForm = () => {
         </div>
       </div>
 
-      <Button 
-        type="button"
-        onClick={handleVippsLogin}
-        className="w-full bg-[#ff5b24] hover:bg-[#ff5b24]/90 text-white font-medium"
-      >
-        Logg inn med Vipps
-      </Button>
+      <div onClick={handleVippsLogin} className="w-full flex justify-center cursor-pointer">
+        <vipps-mobilepay-button
+          type="button"
+          brand="vipps"
+          language="no"
+          variant="primary"
+          rounded="true"
+          verb="login"
+          stretched="false"
+          branded="true"
+        />
+      </div>
 
       <div className="text-center mt-6">
         <Link 
