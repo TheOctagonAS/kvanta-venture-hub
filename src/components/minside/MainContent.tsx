@@ -1,73 +1,62 @@
-import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import { Plus } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabaseClient";
 import { Button } from "@/components/ui/button";
-import PropertyOverview from "../PropertyOverview";
-import UserProfile from "../UserProfile";
-import UserHoldings from "../UserHoldings";
-import Statistics from "../Statistics";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import UserHoldings from "@/components/UserHoldings";
+import StatisticsRow from "@/components/property-overview/StatisticsRow";
+import { usePropertyData } from "@/components/property-overview/usePropertyData";
 
-interface MainContentProps {
-  isKyc: boolean;
-  onStartKYC: () => Promise<void>;
-}
-
-const MainContent = ({ isKyc, onStartKYC }: MainContentProps) => {
+const MainContent = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
+  const { 
+    calculateTotalValue,
+    calculateAverageYield,
+    calculateTotalRent,
+    holdings 
+  } = usePropertyData();
+
+  const { data: profile } = useQuery({
+    queryKey: ['profile', user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user,
+  });
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-      className="max-w-7xl mx-auto space-y-8"
-    >
+    <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <PropertyOverview />
-        {isKyc ? (
-          <Button
-            onClick={() => navigate("/liste-eiendom")}
-            className="bg-blue-600 hover:bg-blue-700"
+        <h1 className="text-2xl font-bold text-nordic-charcoal">Min portefølje</h1>
+        {profile?.is_kyc && (
+          <Button 
+            onClick={() => navigate('/liste-eiendom')}
+            className="flex items-center gap-2"
           >
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus className="h-4 w-4" />
             Liste Eiendom
-          </Button>
-        ) : (
-          <Button
-            onClick={() => navigate("/kyc")}
-            variant="outline"
-            className="text-blue-600 border-blue-600 hover:bg-blue-50"
-          >
-            Fullfør KYC for å liste eiendom
           </Button>
         )}
       </div>
-      
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <UserProfile 
-          isKyc={isKyc} 
-          onStartKYC={onStartKYC} 
-        />
-      </div>
-      
-      {!isKyc && (
-        <Alert className="bg-yellow-100 border-yellow-200 text-yellow-700">
-          <AlertDescription>
-            KYC-verifisering kreves for å kjøpe tokens
-          </AlertDescription>
-        </Alert>
-      )}
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="space-y-6">
-          <UserHoldings />
-        </div>
-        <div className="space-y-6">
-          <Statistics />
-        </div>
-      </div>
-    </motion.div>
+
+      <StatisticsRow
+        totalValue={calculateTotalValue()}
+        averageYield={calculateAverageYield()}
+        totalBalance={calculateTotalRent()}
+      />
+
+      <UserHoldings />
+    </div>
   );
 };
 

@@ -133,6 +133,7 @@ export type Database = {
           max_tokens: number
           monthly_rent: number | null
           name: string
+          owner_id: string | null
           price_per_token: number
           property_description: string | null
           property_token_asa_id: number | null
@@ -159,6 +160,7 @@ export type Database = {
           max_tokens?: number
           monthly_rent?: number | null
           name: string
+          owner_id?: string | null
           price_per_token: number
           property_description?: string | null
           property_token_asa_id?: number | null
@@ -185,6 +187,7 @@ export type Database = {
           max_tokens?: number
           monthly_rent?: number | null
           name?: string
+          owner_id?: string | null
           price_per_token?: number
           property_description?: string | null
           property_token_asa_id?: number | null
