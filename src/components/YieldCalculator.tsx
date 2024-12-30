@@ -112,10 +112,12 @@ const YieldCalculator = () => {
                 </div>
                 <TooltipProvider>
                   <Tooltip>
-                    <TooltipTrigger>
-                      <Info className="w-4 h-4 text-gray-400 hover:text-gray-600 transition-colors" />
+                    <TooltipTrigger asChild>
+                      <button className="hover:bg-gray-100 p-1 rounded-full transition-colors">
+                        <Info className="w-4 h-4 text-gray-400 hover:text-gray-600 transition-colors" />
+                      </button>
                     </TooltipTrigger>
-                    <TooltipContent className="max-w-xs">
+                    <TooltipContent side="top" className="max-w-xs bg-white p-2 shadow-lg rounded-lg border">
                       <p className="text-sm">
                         Basert på {APY}% årlig leieavkastning og {PROPERTY_APPRECIATION}% årlig verdiøkning på eiendommen, med reinvestering av utbytte
                       </p>
