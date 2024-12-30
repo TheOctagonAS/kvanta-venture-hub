@@ -6,7 +6,7 @@ import {
   motion,
 } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
-import { Wallet2, Search, CreditCard, CalendarClock } from "lucide-react";
+import { Search, CreditCard, CalendarClock, Wallet2 } from "lucide-react";
 
 interface TimelineEntry {
   title: string;
