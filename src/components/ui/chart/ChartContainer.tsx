@@ -1,78 +1,68 @@
-import * as React from "react"
-import * as RechartsPrimitive from "recharts"
-import { cn } from "@/lib/utils"
-import { ChartConfig, ChartContext, ChartContextProps } from "./ChartTypes"
-import { ChartStyle } from "./ChartStyle"
+import React, { createContext, useContext, ReactNode } from 'react';
+import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { ChartTooltip } from './ChartTooltip';
 
-const ChartContainer = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentProps<"div"> & {
-    config: ChartConfig
-    children: React.ComponentProps<
-      typeof RechartsPrimitive.ResponsiveContainer
-    >["children"]
-  }
->(({ id, className, children, config, ...props }, ref) => {
-  const uniqueId = React.useId()
-  const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`
-
-  return (
-    <ChartContext.Provider value={{ config }}>
-      <div
-        data-chart={chartId}
-        ref={ref}
-        className={cn(
-          "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border
-
-I'll implement a price history chart component for the property detail page. Since the chart.tsx component is quite large, I'll also refactor it into smaller, more manageable components.
-
-<lov-code>
-First, let's refactor the chart component into smaller pieces:
-
-<lov-write file_path="src/components/ui/chart/ChartContainer.tsx">
-import * as React from "react"
-import * as RechartsPrimitive from "recharts"
-import { cn } from "@/lib/utils"
-import { ChartStyle } from "./ChartStyle"
-import { ChartConfig } from "./types"
-
-export const ChartContext = React.createContext<{ config: ChartConfig } | null>(null)
-
-export function useChart() {
-  const context = React.useContext(ChartContext)
-  if (!context) {
-    throw new Error("useChart must be used within a <ChartContainer />")
-  }
-  return context
+interface ChartContextType {
+  data: any[];
+  timeframe: string;
+  setTimeframe: (timeframe: string) => void;
 }
 
-export const ChartContainer = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentProps<"div"> & {
-    config: ChartConfig
-    children: React.ComponentProps<typeof RechartsPrimitive.ResponsiveContainer>["children"]
-  }
->(({ id, className, children, config, ...props }, ref) => {
-  const uniqueId = React.useId()
-  const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`
+const ChartContext = createContext<ChartContextType | undefined>(undefined);
 
+export const useChartContext = () => {
+  const context = useContext(ChartContext);
+  if (!context) {
+    throw new Error('useChartContext must be used within a ChartProvider');
+  }
+  return context;
+};
+
+interface ChartContainerProps {
+  children: ReactNode;
+  data: any[];
+  timeframe: string;
+  setTimeframe: (timeframe: string) => void;
+}
+
+export const ChartContainer = ({ children, data, timeframe, setTimeframe }: ChartContainerProps) => {
   return (
-    <ChartContext.Provider value={{ config }}>
-      <div
-        data-chart={chartId}
-        ref={ref}
-        className={cn(
-          "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
-          className
-        )}
-        {...props}
-      >
-        <ChartStyle id={chartId} config={config} />
-        <RechartsPrimitive.ResponsiveContainer>
-          {children}
-        </RechartsPrimitive.ResponsiveContainer>
+    <ChartContext.Provider value={{ data, timeframe, setTimeframe }}>
+      <div className="w-full h-[400px] bg-white p-4 rounded-lg shadow-sm">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+            <defs>
+              <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#0088FE" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#0088FE" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <XAxis 
+              dataKey="timestamp" 
+              stroke="#888888"
+              fontSize={12}
+              tickLine={false}
+              axisLine={false}
+            />
+            <YAxis
+              stroke="#888888"
+              fontSize={12}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(value) => `${value} NOK`}
+            />
+            <Tooltip content={<ChartTooltip />} />
+            <Area
+              type="monotone"
+              dataKey="price"
+              stroke="#0088FE"
+              fillOpacity={1}
+              fill="url(#colorPrice)"
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+        {children}
       </div>
     </ChartContext.Provider>
-  )
-})
-ChartContainer.displayName = "Chart"
+  );
+};
