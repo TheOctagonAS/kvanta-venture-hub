@@ -14,7 +14,7 @@ const GrowthChart = ({ data }: GrowthChartProps) => {
   return (
     <div className="bg-white p-2 rounded-lg shadow-sm">
       <h3 className="text-sm font-medium mb-2">Simulert vekst over tid</h3>
-      <div className="h-[160px] w-full mx-auto">
+      <div className="h-[200px] w-full mx-auto"> {/* Increased height for better visibility */}
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={filteredData} margin={{ top: 5, right: 5, bottom: 15, left: 5 }}>
             <XAxis 
@@ -32,6 +32,7 @@ const GrowthChart = ({ data }: GrowthChartProps) => {
                 }).format(value)
               }
               tick={{ fontSize: 10 }}
+              domain={['auto', 'auto']}
             />
             <Tooltip 
               formatter={(value: number) => 

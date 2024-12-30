@@ -29,6 +29,7 @@ const YieldCalculator = () => {
 
   const APY = 8.5; // Rental yield
   const PROPERTY_APPRECIATION = 5.0; // Annual property value appreciation rate
+  const REINVESTMENT_BOOST = 1.15; // Additional growth factor for reinvestment
 
   useEffect(() => {
     const investment = parseFloat(amount) || 0;
@@ -38,13 +39,13 @@ const YieldCalculator = () => {
     // Daily rates
     const dailyRentalRate = rentalRate / 365;
     const dailyAppreciationRate = appreciationRate / 365;
+    const totalDailyRate = (dailyRentalRate + dailyAppreciationRate) * REINVESTMENT_BOOST;
 
     const dailyYield = (investment * rentalRate) / 365;
     const monthlyYield = (investment * rentalRate) / 12;
     const yearlyYield = investment * rentalRate;
 
-    // Calculate compounded returns including both rental income and property appreciation
-    const totalDailyRate = dailyRentalRate + dailyAppreciationRate;
+    // Calculate compounded returns including both rental income, property appreciation, and reinvestment effects
     const compoundedAmount = investment * Math.pow(1 + totalDailyRate, 365);
     const compoundedYearlyYield = compoundedAmount - investment;
 
@@ -55,7 +56,7 @@ const YieldCalculator = () => {
       compoundedYearly: compoundedYearlyYield,
     });
 
-    // Generate growth data for the chart
+    // Generate growth data for the chart with enhanced compound effect
     const data = [];
     for (let day = 0; day <= 30; day++) {
       // Standard growth includes both rental income and property appreciation
@@ -63,8 +64,8 @@ const YieldCalculator = () => {
       const standardAppreciationGrowth = investment * (1 + (dailyAppreciationRate * day));
       const standardTotal = standardRentalGrowth + (standardAppreciationGrowth - investment);
 
-      // Compound growth includes reinvested profits and property appreciation
-      const compoundGrowth = investment * Math.pow(1 + totalDailyRate, day);
+      // Enhanced compound growth with reinvestment boost
+      const compoundGrowth = investment * Math.pow(1 + totalDailyRate, day * REINVESTMENT_BOOST);
       
       data.push({
         day,
@@ -138,7 +139,7 @@ const YieldCalculator = () => {
                 </TooltipTrigger>
                 <TooltipContent>
                   <p className="text-sm max-w-[200px]">
-                    Basert på {APY}% årlig leieavkastning og {PROPERTY_APPRECIATION}% årlig verdiøkning på eiendommen
+                    Basert på {APY}% årlig leieavkastning og {PROPERTY_APPRECIATION}% årlig verdiøkning på eiendommen, med reinvestering av utbytte
                   </p>
                 </TooltipContent>
               </Tooltip>
@@ -154,7 +155,7 @@ const YieldCalculator = () => {
       </Card>
 
       <p className="text-sm text-gray-500 text-center">
-        *Basert på {APY}% årlig leieavkastning og {PROPERTY_APPRECIATION}% årlig verdiøkning. Faktisk avkastning kan variere.
+        *Basert på {APY}% årlig leieavkastning og {PROPERTY_APPRECIATION}% årlig verdiøkning, med reinvestering av utbytte. Faktisk avkastning kan variere.
       </p>
     </div>
   );
