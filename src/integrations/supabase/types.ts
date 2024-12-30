@@ -149,6 +149,27 @@ export type Database = {
         }
         Relationships: []
       }
+      token_price_history: {
+        Row: {
+          id: string
+          price: number
+          property_id: string
+          timestamp: string
+        }
+        Insert: {
+          id?: string
+          price: number
+          property_id: string
+          timestamp?: string
+        }
+        Update: {
+          id?: string
+          price?: number
+          property_id?: string
+          timestamp?: string
+        }
+        Relationships: []
+      }
       user_holdings: {
         Row: {
           accumulated_rent: number

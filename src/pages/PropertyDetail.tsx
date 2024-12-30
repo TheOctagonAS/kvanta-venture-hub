@@ -7,6 +7,7 @@ import { TradeButton } from "@/components/trade/TradeButton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PriceHistoryChart } from "@/components/property/PriceHistoryChart";
 
 const PropertyDetail = () => {
   const { id } = useParams();
@@ -75,6 +76,8 @@ const PropertyDetail = () => {
           <div className="aspect-[16/9] relative rounded-lg overflow-hidden">
             <PropertyImage imageUrl={property.image_url} name={property.name} />
           </div>
+
+          <PriceHistoryChart propertyId={id!} />
 
           <div className="space-y-6">
             <div>
