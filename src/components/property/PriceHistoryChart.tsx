@@ -11,6 +11,9 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useState } from "react";
+import { TimeRangeSelector } from "./TimeRangeSelector";
+import { PriceTooltip } from "./PriceTooltip";
 
 interface PriceHistoryChartProps {
   propertyId: string;
@@ -21,22 +24,6 @@ interface PriceData {
   price: number;
 }
 
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-white p-4 border rounded shadow">
-        <p className="text-sm text-gray-600">
-          {new Date(label).toLocaleDateString()}
-        </p>
-        <p className="text-sm font-bold text-nordic-blue">
-          {payload[0].value.toLocaleString()} NOK
-        </p>
-      </div>
-    );
-  }
-  return null;
-};
-
 const ChartSkeleton = () => (
   <div className="space-y-3">
     <Skeleton className="h-[20px] w-[200px]" />
@@ -44,14 +31,33 @@ const ChartSkeleton = () => (
   </div>
 );
 
+const getTimeRangeFilter = (range: string) => {
+  const now = new Date();
+  switch (range) {
+    case "1D":
+      return new Date(now.setDate(now.getDate() - 1));
+    case "7D":
+      return new Date(now.setDate(now.getDate() - 7));
+    case "30D":
+      return new Date(now.setDate(now.getDate() - 30));
+    default:
+      return new Date(now.setDate(now.getDate() - 30));
+  }
+};
+
 export const PriceHistoryChart = ({ propertyId }: PriceHistoryChartProps) => {
+  const [timeRange, setTimeRange] = useState("30D");
+
   const { data: priceHistory, isLoading } = useQuery({
-    queryKey: ['priceHistory', propertyId],
+    queryKey: ['priceHistory', propertyId, timeRange],
     queryFn: async () => {
+      const startDate = getTimeRangeFilter(timeRange);
+      
       const { data, error } = await supabase
         .from('token_price_history')
         .select('price, timestamp')
         .eq('property_id', propertyId)
+        .gte('timestamp', startDate.toISOString())
         .order('timestamp', { ascending: true });
 
       if (error) throw error;
@@ -79,7 +85,13 @@ export const PriceHistoryChart = ({ propertyId }: PriceHistoryChartProps) => {
 
   return (
     <Card className="p-6">
-      <h3 className="text-lg font-semibold mb-4">Token Price History</h3>
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-lg font-semibold">Token Price History</h3>
+        <TimeRangeSelector
+          selectedRange={timeRange}
+          onRangeChange={setTimeRange}
+        />
+      </div>
       <div className="h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
@@ -95,10 +107,15 @@ export const PriceHistoryChart = ({ propertyId }: PriceHistoryChartProps) => {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="timestamp"
-              tickFormatter={(timestamp) => new Date(timestamp).toLocaleDateString()}
+              tickFormatter={(timestamp) => {
+                const date = new Date(timestamp);
+                return timeRange === "1D" 
+                  ? date.toLocaleTimeString('nb-NO', { hour: '2-digit', minute: '2-digit' })
+                  : date.toLocaleDateString('nb-NO', { day: 'numeric', month: 'short' });
+              }}
             />
             <YAxis />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<PriceTooltip />} />
             <Area
               type="monotone"
               dataKey="price"
