@@ -26,35 +26,27 @@ const KYC = () => {
   };
 
   const handleBankIDClick = async () => {
-    const confirmBankID = window.confirm(
-      "BankID-prosess vil i fremtiden linke til faktisk BankID API. For nå, klikk 'Ok' for å mock signering."
-    );
+    setIsSubmitting(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Ingen bruker funnet");
 
-    if (confirmBankID) {
-      setIsSubmitting(true);
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) throw new Error("Ingen bruker funnet");
+      const { data, error } = await supabase.functions.invoke('bankid-verify', {
+        body: { userId: user.id }
+      });
 
-        // Update profiles table to set is_kyc to true
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .update({ is_kyc: true })
-          .eq('id', user.id);
+      if (error) throw error;
 
-        if (profileError) throw profileError;
+      // Invalidate and refetch profile data
+      await queryClient.invalidateQueries({ queryKey: ['profile'] });
 
-        // Invalidate and refetch profile data
-        await queryClient.invalidateQueries({ queryKey: ['profile'] });
-
-        toast.success("KYC-verifisering fullført!");
-        navigate("/minside");
-      } catch (error: any) {
-        console.error("KYC verification failed:", error);
-        toast.error("Kunne ikke fullføre KYC-verifisering");
-      } finally {
-        setIsSubmitting(false);
-      }
+      toast.success("KYC-verifisering fullført!");
+      navigate("/minside");
+    } catch (error: any) {
+      console.error("KYC verification failed:", error);
+      toast.error("Kunne ikke fullføre KYC-verifisering");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
