@@ -19,6 +19,7 @@ const Index = () => {
           <Hero />
           <FeaturesSection />
           <TimelineSection />
+          <PlatformBenefitsSection />
           
           {/* Calculator section */}
           <motion.div
@@ -30,7 +31,6 @@ const Index = () => {
             <YieldCalculator />
           </motion.div>
 
-          <PlatformBenefitsSection />
           <InvestmentBenefitsSection />
           <PartnersSection />
         </div>
