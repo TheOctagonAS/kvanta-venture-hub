@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Clock, Banknote, ArrowUpRight, Wallet, Home, TrendingUp, Shield, PiggyBank } from "lucide-react";
+import { Clock, Banknote, ArrowUpRight, Wallet, Home, TrendingUp, Shield, PiggyBank, Gift, RefreshCw, LineChart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import YieldCalculator from "@/components/YieldCalculator";
@@ -28,6 +28,24 @@ const Index = () => {
       icon: <Wallet className="w-10 h-10 text-primary" />,
       title: "Enkel Likviditet",
       description: "Selg tokens når du vil, ingen bindingstid eller låste perioder"
+    }
+  ];
+
+  const platformBenefits = [
+    {
+      icon: <Gift className="w-9 h-9 text-[#345FF6]" />,
+      title: "Daglige Utbetalinger",
+      description: "Få din del av leieinntektene utbetalt hver dag, ikke vent på månedlige eller årlige utbetalinger"
+    },
+    {
+      icon: <RefreshCw className="w-9 h-9 text-[#345FF6]" />,
+      title: "Automatisk Reinvestering",
+      description: "La pengene jobbe for deg med automatisk reinvestering av daglige utbetalinger"
+    },
+    {
+      icon: <LineChart className="w-9 h-9 text-[#345FF6]" />,
+      title: "Full Åpenhet",
+      description: "Se alle transaksjoner og eiendomsdetaljer i sanntid på plattformen"
     }
   ];
 
@@ -95,39 +113,37 @@ const Index = () => {
             <YieldCalculator />
           </motion.div>
 
-          {/* Why choose section */}
+          {/* Platform Benefits section */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="backdrop-blur-sm bg-white/90 rounded-xl p-8 shadow-lg mb-24"
+            className="mt-12 mb-24"
           >
-            <h2 className="text-2xl sm:text-3xl font-semibold mb-6 text-center text-nordic-charcoal">
-              Hvorfor velge Kvanta.ai?
+            <h2 className="text-2xl sm:text-3xl font-semibold mb-8 text-center text-nordic-charcoal">
+              Fordeler med vår plattform
             </h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center p-4">
-                <h3 className="font-semibold mb-2 text-lg text-nordic-charcoal">Daglige Utbetalinger</h3>
-                <p className="text-nordic-charcoal/80">
-                  Få din del av leieinntektene utbetalt hver dag, ikke vent på månedlige eller årlige utbetalinger
-                </p>
-              </div>
-              <div className="text-center p-4">
-                <h3 className="font-semibold mb-2 text-lg text-nordic-charcoal">Automatisk Reinvestering</h3>
-                <p className="text-nordic-charcoal/80">
-                  La pengene jobbe for deg med automatisk reinvestering av daglige utbetalinger
-                </p>
-              </div>
-              <div className="text-center p-4">
-                <h3 className="font-semibold mb-2 text-lg text-nordic-charcoal">Full Åpenhet</h3>
-                <p className="text-nordic-charcoal/80">
-                  Se alle transaksjoner og eiendomsdetaljer i sanntid på plattformen
-                </p>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {platformBenefits.map((benefit, index) => (
+                <div 
+                  key={index}
+                  className="bg-white shadow-sm rounded-lg p-6 flex flex-col items-center text-center"
+                >
+                  <div className="mb-4">
+                    {benefit.icon}
+                  </div>
+                  <h3 className="text-base font-semibold text-nordic-charcoal mb-2">
+                    {benefit.title}
+                  </h3>
+                  <p className="text-sm text-nordic-charcoal/80">
+                    {benefit.description}
+                  </p>
+                </div>
+              ))}
             </div>
           </motion.div>
 
-          {/* New Investment Benefits Section */}
+          {/* Investment Benefits Section */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
