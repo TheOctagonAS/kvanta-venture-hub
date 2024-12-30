@@ -11,6 +11,7 @@ export interface Property {
   status: "Active" | "Coming Soon" | "Sold Out";
   is_featured: boolean;
   property_type: string;
+  property_token_asa_id: number | null;
 }
 
 // Type guard to check if a string is a valid PropertyStatus
