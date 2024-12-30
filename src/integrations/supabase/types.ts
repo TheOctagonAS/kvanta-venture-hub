@@ -39,6 +39,56 @@ export type Database = {
         }
         Relationships: []
       }
+      orders: {
+        Row: {
+          buyer_id: string | null
+          cancelled_at: string | null
+          created_at: string | null
+          executed_at: string | null
+          id: string
+          order_type: string
+          price_per_token: number
+          property_id: string
+          status: string
+          token_count: number
+          user_id: string
+        }
+        Insert: {
+          buyer_id?: string | null
+          cancelled_at?: string | null
+          created_at?: string | null
+          executed_at?: string | null
+          id?: string
+          order_type: string
+          price_per_token: number
+          property_id: string
+          status?: string
+          token_count: number
+          user_id: string
+        }
+        Update: {
+          buyer_id?: string | null
+          cancelled_at?: string | null
+          created_at?: string | null
+          executed_at?: string | null
+          id?: string
+          order_type?: string
+          price_per_token?: number
+          property_id?: string
+          status?: string
+          token_count?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
