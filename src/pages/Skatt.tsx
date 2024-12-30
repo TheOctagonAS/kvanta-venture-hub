@@ -12,7 +12,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
-import { Receipt, Info, Percent, DollarSign } from "lucide-react";
+import { Receipt, Info, Percent, DollarSign, Download } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const Skatt = () => {
   const { user } = useAuth();
@@ -49,6 +51,32 @@ const Skatt = () => {
     sum + Number(earning.earned_amount), 0) || 0;
   
   const estimatedTax = totalEarnedAmount * TAX_RATE;
+
+  const handleDownloadReport = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-tax-report', {
+        body: { user_id: user?.id, year: currentYear }
+      });
+
+      if (error) throw error;
+
+      // Create a blob from the CSV data
+      const blob = new Blob([data], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `kvanta_skatteoversikt_${currentYear}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      toast.success('Skatterapport lastet ned');
+    } catch (error) {
+      console.error('Error downloading report:', error);
+      toast.error('Kunne ikke laste ned skatterapport');
+    }
+  };
 
   if (!user) {
     return null;
@@ -93,11 +121,21 @@ const Skatt = () => {
 
             <div className="mt-12">
               <Card className="p-6">
-                <div className="flex items-center gap-2 mb-6">
-                  <Receipt className="h-5 w-5 text-primary" />
-                  <h2 className="text-xl font-semibold">
-                    Din Skatteoversikt {currentYear}
-                  </h2>
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-2">
+                    <Receipt className="h-5 w-5 text-primary" />
+                    <h2 className="text-xl font-semibold">
+                      Din Skatteoversikt {currentYear}
+                    </h2>
+                  </div>
+                  <Button
+                    variant="outline"
+                    className="flex items-center gap-2"
+                    onClick={handleDownloadReport}
+                  >
+                    <Download className="h-4 w-4" />
+                    Last ned skatterapport
+                  </Button>
                 </div>
 
                 <div className="bg-primary/5 p-4 rounded-lg mb-6">
@@ -175,6 +213,10 @@ const Skatt = () => {
                     )}
                   </TableBody>
                 </Table>
+
+                <p className="mt-4 text-sm text-gray-500 italic">
+                  Merk: Denne rapporten er kun veiledende. Sjekk tallene nøye før innsending i skattemeldingen.
+                </p>
               </Card>
             </div>
           </div>
