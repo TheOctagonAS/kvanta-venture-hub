@@ -7,6 +7,13 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { doPepCheck } from "@/utils/pepCheck";
 
+interface PrePopulatedData {
+  name: string;
+  phone: string;
+  email: string;
+  address: string;
+}
+
 interface FormData {
   personalNumber: string;
   firstName: string;
@@ -18,18 +25,32 @@ interface FormData {
 
 interface KYCFormProps {
   onComplete: () => void;
+  prePopulatedData?: PrePopulatedData;
 }
 
-const KYCForm = ({ onComplete }: KYCFormProps) => {
+const KYCForm = ({ onComplete, prePopulatedData }: KYCFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPep, setIsPep] = useState(false);
+  
+  // Split pre-populated name into first and last name
+  const nameParts = prePopulatedData?.name ? prePopulatedData.name.split(' ') : ['', ''];
+  const [firstName, ...lastNameParts] = nameParts;
+  const lastName = lastNameParts.join(' ');
+
+  // Split pre-populated address
+  const addressParts = prePopulatedData?.address ? prePopulatedData.address.split(',') : [''];
+  const streetAddress = addressParts[0] || '';
+  const postalInfo = addressParts[1]?.trim().split(' ') || ['', ''];
+  const postalCode = postalInfo[0] || '';
+  const city = postalInfo.slice(1).join(' ') || '';
+
   const [formData, setFormData] = useState<FormData>({
     personalNumber: "",
-    firstName: "",
-    lastName: "",
-    address: "",
-    postalCode: "",
-    city: "",
+    firstName: firstName || "",
+    lastName: lastName || "",
+    address: streetAddress || "",
+    postalCode: postalCode || "",
+    city: city || "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {

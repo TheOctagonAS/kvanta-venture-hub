@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,9 +8,18 @@ import { useQueryClient } from "@tanstack/react-query";
 
 const KYC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [showBankID, setShowBankID] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const queryClient = useQueryClient();
+
+  // Get pre-populated data from URL params
+  const prePopulatedData = {
+    name: searchParams.get('name') || '',
+    phone: searchParams.get('phone') || '',
+    email: searchParams.get('email') || '',
+    address: searchParams.get('address') || '',
+  };
 
   const handleKYCComplete = () => {
     setShowBankID(true);
@@ -58,7 +67,7 @@ const KYC = () => {
           </h1>
 
           {!showBankID ? (
-            <KYCForm onComplete={handleKYCComplete} />
+            <KYCForm onComplete={handleKYCComplete} prePopulatedData={prePopulatedData} />
           ) : (
             <div className="space-y-6">
               <p className="text-gray-600 mb-6">

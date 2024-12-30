@@ -61,14 +61,19 @@ const VippsCallback = () => {
 
             if (profileError) throw profileError;
           }
-
-          toast.success("Konto opprettet med Vipps");
         } else if (signInError) {
           throw signInError;
         }
 
-        toast.success("Innlogging vellykket");
-        navigate("/minside");
+        // Redirect to KYC page with pre-populated data
+        const kycParams = new URLSearchParams({
+          name: vippsProfile.name || '',
+          phone: vippsProfile.phone_number || '',
+          email: vippsProfile.email || '',
+          address: vippsProfile.address || ''
+        });
+        
+        navigate(`/kyc?${kycParams.toString()}`);
       } catch (error) {
         console.error("Vipps authentication error:", error);
         toast.error("Det oppstod en feil under innlogging med Vipps");
