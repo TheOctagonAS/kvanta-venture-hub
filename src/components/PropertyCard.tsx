@@ -123,13 +123,13 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
         <PropertyBadges yield={property.yield} isSoldOut={isSoldOut} />
         <PropertyImage imageUrl={property.image_url} propertyName={property.name} />
         
-        <CardHeader className="pb-2">
+        <CardHeader className="pb-2 p-3 sm:p-6">
           <CardTitle className="text-xl font-bold text-nordic-charcoal dark:text-[#eee]">
             {property.name}
           </CardTitle>
         </CardHeader>
         
-        <CardContent className="flex-grow">
+        <CardContent className="flex-grow p-3 sm:p-6 pt-0">
           <PropertyDetails 
             location={property.location}
             pricePerToken={property.price_per_token}
@@ -138,7 +138,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
           />
         </CardContent>
         
-        <CardFooter className="flex flex-col gap-2 pt-4">
+        <CardFooter className="flex flex-col gap-2 p-3 sm:p-6 pt-4">
           {isLive ? (
             <Button
               className={`w-full ${
