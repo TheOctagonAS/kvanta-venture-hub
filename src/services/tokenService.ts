@@ -1,100 +1,45 @@
 import { supabase } from "@/integrations/supabase/client";
 
-interface TokenOperationResult {
-  success: boolean;
-  error?: string;
-}
+export const tokenService = {
+  async buyTokens(propertyId: string, tokenCount: number, pricePerToken: number) {
+    const { data, error } = await supabase.functions.invoke('trade', {
+      body: {
+        action: 'placeOrder',
+        propertyId,
+        orderType: 'BUY',
+        tokenCount,
+        pricePerToken
+      }
+    });
 
-interface TokenRPCParams {
-  p_user_id: string;
-  p_property_id: string;
-  p_token_count: number;
-}
+    if (error) throw error;
+    return data;
+  },
 
-interface TransferTokensParams extends TokenRPCParams {
-  p_from_user_id: string;
-  p_to_user_id: string;
-}
+  async sellTokens(propertyId: string, tokenCount: number, pricePerToken: number) {
+    const { data, error } = await supabase.functions.invoke('trade', {
+      body: {
+        action: 'placeOrder',
+        propertyId,
+        orderType: 'SELL',
+        tokenCount,
+        pricePerToken
+      }
+    });
 
-export class TokenService {
-  static async reserveTokens(
-    userId: string,
-    propertyId: string,
-    quantity: number
-  ): Promise<TokenOperationResult> {
-    try {
-      const { error } = await supabase.rpc('reserve_tokens', {
-        p_user_id: userId,
-        p_property_id: propertyId,
-        p_token_count: quantity
-      } as TokenRPCParams);
+    if (error) throw error;
+    return data;
+  },
 
-      if (error) throw error;
-      return { success: true };
-    } catch (error: any) {
-      console.error('Error reserving tokens:', error);
-      return { 
-        success: false, 
-        error: error.message || 'Failed to reserve tokens' 
-      };
-    }
+  async executeOrder(orderId: string) {
+    const { data, error } = await supabase.functions.invoke('trade', {
+      body: {
+        action: 'executeOrder',
+        orderId
+      }
+    });
+
+    if (error) throw error;
+    return data;
   }
-
-  static async releaseTokens(
-    userId: string,
-    propertyId: string,
-    quantity: number
-  ): Promise<TokenOperationResult> {
-    try {
-      const { error } = await supabase.rpc('release_tokens', {
-        p_user_id: userId,
-        p_property_id: propertyId,
-        p_token_count: quantity
-      } as TokenRPCParams);
-
-      if (error) throw error;
-      return { success: true };
-    } catch (error: any) {
-      console.error('Error releasing tokens:', error);
-      return { 
-        success: false, 
-        error: error.message || 'Failed to release tokens' 
-      };
-    }
-  }
-
-  static async transferTokens(
-    fromUserId: string,
-    toUserId: string,
-    propertyId: string,
-    quantity: number
-  ): Promise<TokenOperationResult> {
-    try {
-      const { error } = await supabase.rpc('transfer_tokens', {
-        p_from_user_id: fromUserId,
-        p_to_user_id: toUserId,
-        p_property_id: propertyId,
-        p_token_count: quantity
-      } as TransferTokensParams);
-
-      if (error) throw error;
-      return { success: true };
-    } catch (error: any) {
-      console.error('Error transferring tokens:', error);
-      return { 
-        success: false, 
-        error: error.message || 'Failed to transfer tokens' 
-      };
-    }
-  }
-
-  // TODO: Future blockchain integration
-  private static async onChainTransfer(
-    fromAddress: string,
-    toAddress: string,
-    tokenId: string,
-    quantity: number
-  ): Promise<TokenOperationResult> {
-    throw new Error('Smart contract integration not implemented yet');
-  }
-}
+};

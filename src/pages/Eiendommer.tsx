@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { PropertyCard } from "@/components/PropertyCard";
+import { Property } from "@/types/property";
 
 type Property = {
   id: string;
@@ -18,6 +19,9 @@ type Property = {
   max_tokens: number;
   tokens_sold: number;
   launch_date: string | null;
+  status: 'Active' | 'Coming Soon' | 'Sold Out';
+  is_featured: boolean;
+  property_type: string;
 };
 
 const fetchProperties = async () => {
