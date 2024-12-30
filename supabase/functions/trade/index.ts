@@ -61,10 +61,9 @@ serve(async (req) => {
       );
     }
 
-    const url = new URL(req.url);
-    const path = url.pathname.split('/').pop();
-
-    switch (path) {
+    const { action } = await req.json();
+    
+    switch (action) {
       case 'placeOrder': {
         const { propertyId, orderType, tokenCount, pricePerToken } = await req.json();
         
@@ -234,8 +233,8 @@ serve(async (req) => {
 
       default:
         return new Response(
-          JSON.stringify({ error: 'Not found' }),
-          { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          JSON.stringify({ error: 'Invalid action' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
     }
   } catch (error) {
