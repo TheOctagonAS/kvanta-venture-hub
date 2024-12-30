@@ -26,7 +26,7 @@ const PRESET_QUANTITIES = [1, 10, 25, 50, 100];
 export const OrderForm = ({ property }: OrderFormProps) => {
   const [tokenCount, setTokenCount] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(null);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("bank_account"); // Set default payment method
   const [showPreviewDialog, setShowPreviewDialog] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -97,6 +97,19 @@ export const OrderForm = ({ property }: OrderFormProps) => {
         console.log("Mock Algorand transaction completed:", txResult);
       }
 
+      // Create order with all required fields and sensible defaults
+      const orderData = {
+        property_id: property.id,
+        token_count: tokenCount,
+        order_type: "BUY",
+        price_per_token: property.price_per_token,
+        payment_method: paymentMethod,
+        status: "OPEN",
+        on_chain_tx_id: onChainTxId
+      };
+
+      console.log("Creating order with data:", orderData);
+      
       await tokenService.buyTokens(
         property.id,
         tokenCount,
