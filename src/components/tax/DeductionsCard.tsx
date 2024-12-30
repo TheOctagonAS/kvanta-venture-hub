@@ -12,7 +12,7 @@ import { Database } from "@/integrations/supabase/types";
 type TaxDeduction = Database["public"]["Tables"]["tax_deductions"]["Row"];
 
 interface DeductionsCardProps {
-  propertyId: string;
+  propertyId?: string;
 }
 
 export const DeductionsCard = ({ propertyId }: DeductionsCardProps) => {
@@ -26,11 +26,17 @@ export const DeductionsCard = ({ propertyId }: DeductionsCardProps) => {
     queryKey: ["tax-deductions", user?.id, currentYear],
     queryFn: async () => {
       if (!user) return [];
-      const { data, error } = await supabase
+      const query = supabase
         .from("tax_deductions")
         .select("*")
         .eq("user_id", user.id)
         .eq("year", currentYear);
+
+      if (propertyId) {
+        query.eq("property_id", propertyId);
+      }
+
+      const { data, error } = await query;
 
       if (error) throw error;
       return data;
@@ -52,7 +58,7 @@ export const DeductionsCard = ({ propertyId }: DeductionsCardProps) => {
     try {
       const { error } = await supabase.from("tax_deductions").insert({
         user_id: user.id,
-        property_id: propertyId,
+        property_id: propertyId || null,
         year: currentYear,
         expense_type: newExpenseType,
         amount: Number(newAmount),

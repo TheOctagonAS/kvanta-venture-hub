@@ -167,6 +167,54 @@ export type Database = {
         }
         Relationships: []
       }
+      property_loan_requests: {
+        Row: {
+          created_at: string
+          estimated_value: number
+          id: string
+          interest_rate: number
+          monthly_payment: number | null
+          ownership_declaration: boolean
+          property_type: string
+          repayment_months: number
+          requested_amount: number
+          status: string
+          total_payback: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          estimated_value: number
+          id?: string
+          interest_rate: number
+          monthly_payment?: number | null
+          ownership_declaration?: boolean
+          property_type: string
+          repayment_months: number
+          requested_amount: number
+          status?: string
+          total_payback?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          estimated_value?: number
+          id?: string
+          interest_rate?: number
+          monthly_payment?: number | null
+          ownership_declaration?: boolean
+          property_type?: string
+          repayment_months?: number
+          requested_amount?: number
+          status?: string
+          total_payback?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       rent_earnings: {
         Row: {
           created_at: string
@@ -337,7 +385,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      calculate_monthly_payment: {
+        Args: {
+          loan_amount: number
+          interest_rate: number
+          months: number
+        }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never
