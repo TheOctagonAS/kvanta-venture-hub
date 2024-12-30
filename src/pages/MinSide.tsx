@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import UserProfile from "@/components/UserProfile";
 import UserHoldings from "@/components/UserHoldings";
 import Statistics from "@/components/Statistics";
-import PropertyOverview from "@/components/PropertyOverview";
+import { PropertyOverview } from "@/components/PropertyOverview";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
