@@ -15,7 +15,6 @@ const MinSide = () => {
     queryFn: async () => {
       if (!user) return null;
       
-      // Get both profile and KYC data
       const [profileResponse, kycResponse] = await Promise.all([
         supabase
           .from('profiles')
@@ -33,7 +32,6 @@ const MinSide = () => {
         throw profileResponse.error;
       }
 
-      // Don't throw error if KYC data doesn't exist
       if (kycResponse.error && kycResponse.error.code !== 'PGRST116') {
         throw kycResponse.error;
       }
@@ -52,19 +50,15 @@ const MinSide = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#f8faff] flex items-center justify-center">
-        <div className="text-gray-600">Laster...</div>
+      <div className="min-h-screen bg-background dark:bg-background-dark flex items-center justify-center">
+        <div className="text-foreground dark:text-foreground-dark">Laster...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#f8faff]">
+    <div className="min-h-screen bg-background dark:bg-background-dark">
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">
-          Portefølje
-        </h1>
-        
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -72,10 +66,10 @@ const MinSide = () => {
           className="max-w-7xl mx-auto space-y-8"
         >
           {!user ? (
-            <div>Please log in</div>
+            <div className="text-foreground dark:text-foreground-dark">Vennligst logg inn</div>
           ) : (
             <>
-              <div className="bg-white rounded-lg shadow-lg p-6">
+              <div className="bg-overlay dark:bg-overlay-dark rounded-lg shadow-sm border border-gray-200 dark:border-[#333] p-6">
                 <UserProfile 
                   isKyc={profile?.is_kyc || false} 
                   onStartKYC={handleStartKYC} 
@@ -83,7 +77,7 @@ const MinSide = () => {
               </div>
               
               {!profile?.is_kyc && (
-                <Alert className="bg-yellow-100 border-yellow-200 text-yellow-700">
+                <Alert className="bg-yellow-100/90 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-900/50 text-yellow-800 dark:text-yellow-200">
                   <AlertDescription>
                     KYC-verifisering kreves for å kjøpe tokens
                   </AlertDescription>
