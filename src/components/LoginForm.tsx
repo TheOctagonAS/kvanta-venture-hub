@@ -13,65 +13,39 @@ const LoginForm = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const validateForm = () => {
-    if (!email || !password) {
-      toast.error("Vennligst fyll ut både e-post og passord");
-      return false;
-    }
-    if (!email.includes("@")) {
-      toast.error("Vennligst skriv inn en gyldig e-postadresse");
-      return false;
-    }
-    if (password.length < 6) {
-      toast.error("Passordet må være minst 6 tegn");
-      return false;
-    }
-    return true;
-  };
-
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!validateForm()) return;
-    
     setIsLoading(true);
-    console.log("Starting login attempt with email:", email);
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password: password.trim(),
+        email,
+        password,
       });
 
-      console.log("Login response:", { data, error });
-
       if (error) {
-        console.error("Login error details:", error);
-        
         if (error.message.includes("Invalid login credentials")) {
-          toast.error("Feil e-post eller passord. Sjekk at du har skrevet riktig.");
+          toast.error("Feil e-post eller passord.");
         } else if (error.message.includes("Email not confirmed")) {
           toast.error("E-posten din er ikke bekreftet ennå. Sjekk innboksen din.");
         } else if (error.message.includes("rate_limit")) {
           toast.error("For mange forsøk. Vennligst vent litt før du prøver igjen.");
         } else {
+          console.error("Login error:", error);
           toast.error("En feil oppstod under innlogging. Prøv igjen senere.");
         }
+        setIsLoading(false);
         return;
       }
 
       if (data.user) {
-        console.log("Login successful for user:", data.user.email);
-        await login(data.user.email || "", password);
+        login(data.user.email || "", password);
         toast.success("Innlogging vellykket!");
         navigate("/minside");
-      } else {
-        console.error("No user data returned after successful login");
-        toast.error("Kunne ikke hente brukerdata. Prøv igjen.");
       }
-    } catch (error: any) {
-      console.error("Unexpected login error:", error);
-      toast.error("En uventet feil oppstod. Prøv igjen senere.");
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("En feil oppstod under innlogging. Prøv igjen senere.");
     } finally {
       setIsLoading(false);
     }
@@ -80,7 +54,7 @@ const LoginForm = () => {
   return (
     <form onSubmit={handleLogin} className="space-y-4">
       <div className="space-y-2">
-        <label htmlFor="email" className="text-sm font-medium text-nordic-charcoal dark:text-white">
+        <label htmlFor="email" className="text-sm font-medium text-nordic-charcoal">
           E-post
         </label>
         <Input
@@ -91,11 +65,11 @@ const LoginForm = () => {
           required
           placeholder="din@epost.no"
           disabled={isLoading}
-          className="w-full bg-white dark:bg-[#2a2a2a] border-nordic-softblue dark:border-[#333] focus:border-nordic-blue dark:focus:border-nordic-blue transition-colors"
+          className="w-full bg-white border-nordic-softblue focus:border-nordic-blue transition-colors"
         />
       </div>
       <div className="space-y-2">
-        <label htmlFor="password" className="text-sm font-medium text-nordic-charcoal dark:text-white">
+        <label htmlFor="password" className="text-sm font-medium text-nordic-charcoal">
           Passord
         </label>
         <Input
@@ -106,7 +80,7 @@ const LoginForm = () => {
           required
           placeholder="••••••••"
           disabled={isLoading}
-          className="w-full bg-white dark:bg-[#2a2a2a] border-nordic-softblue dark:border-[#333] focus:border-nordic-blue dark:focus:border-nordic-blue transition-colors"
+          className="w-full bg-white border-nordic-softblue focus:border-nordic-blue transition-colors"
         />
       </div>
       <Button 

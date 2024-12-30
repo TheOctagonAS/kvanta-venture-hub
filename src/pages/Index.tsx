@@ -71,15 +71,15 @@ const Index = () => {
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-24"
           >
             {features.map((feature, index) => (
-              <Card key={index} className="border-none shadow-lg hover:shadow-xl transition-shadow backdrop-blur-sm bg-white/90 dark:bg-[#1f1f1f] dark:text-white p-3 sm:p-6">
+              <Card key={index} className="border-none shadow-lg hover:shadow-xl transition-shadow backdrop-blur-sm bg-white/90">
                 <CardHeader className="text-center">
                   <div className="mx-auto mb-4">
                     {feature.icon}
                   </div>
-                  <CardTitle className="text-xl mb-2 text-nordic-charcoal dark:text-white">{feature.title}</CardTitle>
+                  <CardTitle className="text-xl mb-2 text-nordic-charcoal">{feature.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-nordic-charcoal/80 dark:text-[#ddd]">{feature.description}</p>
+                  <p className="text-nordic-charcoal/80 text-center">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -90,7 +90,7 @@ const Index = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="max-w-4xl mx-auto mb-24 bg-white/90 dark:bg-[#1f1f1f] backdrop-blur-sm rounded-xl shadow-lg p-3 sm:p-6"
+            className="max-w-4xl mx-auto mb-24 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-8"
           >
             <YieldCalculator />
           </motion.div>
@@ -100,27 +100,27 @@ const Index = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="backdrop-blur-sm bg-white/90 dark:bg-[#1f1f1f] rounded-xl p-3 sm:p-6 shadow-lg mb-16"
+            className="backdrop-blur-sm bg-white/90 rounded-xl p-8 shadow-lg mb-16"
           >
-            <h2 className="text-2xl sm:text-3xl font-semibold mb-6 text-center text-nordic-charcoal dark:text-white">
+            <h2 className="text-2xl sm:text-3xl font-semibold mb-6 text-center text-nordic-charcoal">
               Hvorfor velge Kvanta.ai?
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center p-4">
-                <h3 className="font-semibold mb-2 text-lg text-nordic-charcoal dark:text-white">Daglige Utbetalinger</h3>
-                <p className="text-nordic-charcoal/80 dark:text-[#ddd]">
+                <h3 className="font-semibold mb-2 text-lg text-nordic-charcoal">Daglige Utbetalinger</h3>
+                <p className="text-nordic-charcoal/80">
                   Få din del av leieinntektene utbetalt hver dag, ikke vent på månedlige eller årlige utbetalinger
                 </p>
               </div>
               <div className="text-center p-4">
-                <h3 className="font-semibold mb-2 text-lg text-nordic-charcoal dark:text-white">Automatisk Reinvestering</h3>
-                <p className="text-nordic-charcoal/80 dark:text-[#ddd]">
+                <h3 className="font-semibold mb-2 text-lg text-nordic-charcoal">Automatisk Reinvestering</h3>
+                <p className="text-nordic-charcoal/80">
                   La pengene jobbe for deg med automatisk reinvestering av daglige utbetalinger
                 </p>
               </div>
               <div className="text-center p-4">
-                <h3 className="font-semibold mb-2 text-lg text-nordic-charcoal dark:text-white">Full Åpenhet</h3>
-                <p className="text-nordic-charcoal/80 dark:text-[#ddd]">
+                <h3 className="font-semibold mb-2 text-lg text-nordic-charcoal">Full Åpenhet</h3>
+                <p className="text-nordic-charcoal/80">
                   Se alle transaksjoner og eiendomsdetaljer i sanntid på plattformen
                 </p>
               </div>
@@ -132,24 +132,24 @@ const Index = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, duration: 0.8 }}
-            className="bg-white dark:bg-[#1f1f1f] rounded-xl p-3 sm:p-6 shadow-lg mb-16"
+            className="bg-white rounded-xl p-8 shadow-lg mb-16"
           >
-            <h2 className="text-2xl sm:text-3xl font-semibold mb-8 text-center text-nordic-charcoal dark:text-white">
+            <h2 className="text-2xl sm:text-3xl font-semibold mb-8 text-center text-nordic-charcoal">
               Hvorfor investere i eiendom?
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {investmentBenefits.map((benefit, index) => (
                 <div 
                   key={index} 
-                  className="text-center p-4 rounded-lg border border-nordic-softblue dark:border-[#333] hover:shadow-md transition-shadow dark:bg-[#2a2a2a]"
+                  className="text-center p-4 rounded-lg border border-nordic-softblue hover:shadow-md transition-shadow"
                 >
                   <div className="flex justify-center">
                     {benefit.icon}
                   </div>
-                  <h3 className="font-semibold mb-2 text-lg text-nordic-charcoal dark:text-white">
+                  <h3 className="font-semibold mb-2 text-lg text-nordic-charcoal">
                     {benefit.title}
                   </h3>
-                  <p className="text-nordic-charcoal/80 dark:text-[#ddd] text-sm">
+                  <p className="text-nordic-charcoal/80 text-sm">
                     {benefit.description}
                   </p>
                 </div>
@@ -157,17 +157,17 @@ const Index = () => {
             </div>
           </motion.div>
 
-          {/* Partners section */}
+          {/* Partners section - Made more compact */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, duration: 0.8 }}
-            className="text-center mb-12 bg-white/90 dark:bg-[#1f1f1f] backdrop-blur-sm rounded-xl p-3 sm:p-6 shadow-lg"
+            className="text-center mb-12 bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-lg"
           >
-            <h2 className="text-2xl font-semibold mb-3 text-nordic-charcoal dark:text-white">
+            <h2 className="text-2xl font-semibold mb-3 text-nordic-charcoal">
               Støttet av ledende aktører i Norden
             </h2>
-            <p className="text-nordic-charcoal/80 dark:text-[#ddd] max-w-2xl mx-auto text-sm">
+            <p className="text-nordic-charcoal/80 max-w-2xl mx-auto text-sm">
               Vi samarbeider med etablerte eiendomsaktører og finansinstitusjoner for å sikre en trygg og transparent investeringsplattform.
             </p>
           </motion.div>

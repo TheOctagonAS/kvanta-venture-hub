@@ -48,11 +48,13 @@ const Eiendommer = () => {
     if (!user || !selectedProperty) return;
 
     try {
+      // Check if purchase would exceed max tokens
       if (selectedProperty.tokens_sold + tokenCount > selectedProperty.max_tokens) {
         toast.error("Ikke nok tilgjengelige tokens for dette kjøpet");
         return;
       }
 
+      // Get existing holdings
       const { data: existingHoldings } = await supabase
         .from('user_holdings')
         .select('*')
@@ -60,7 +62,9 @@ const Eiendommer = () => {
         .eq('property_id', selectedProperty.id)
         .maybeSingle();
 
+      // Start a transaction by using multiple updates
       if (existingHoldings) {
+        // Update existing holdings
         const { error: updateError } = await supabase
           .from('user_holdings')
           .update({ 
@@ -70,6 +74,7 @@ const Eiendommer = () => {
 
         if (updateError) throw updateError;
       } else {
+        // Create new holdings
         const { error: insertError } = await supabase
           .from('user_holdings')
           .insert({
@@ -81,6 +86,7 @@ const Eiendommer = () => {
         if (insertError) throw insertError;
       }
 
+      // Update tokens_sold in properties table
       const { error: propertyUpdateError } = await supabase
         .from('properties')
         .update({ 
@@ -90,6 +96,7 @@ const Eiendommer = () => {
 
       if (propertyUpdateError) throw propertyUpdateError;
 
+      // Invalidate queries to refresh the data
       await queryClient.invalidateQueries({ queryKey: ['properties'] });
       await queryClient.invalidateQueries({ queryKey: ['holdings'] });
 
@@ -103,26 +110,22 @@ const Eiendommer = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background dark:bg-background-dark flex items-center justify-center">
-        <div className="text-foreground dark:text-foreground-dark animate-pulse">
-          Laster eiendommer...
-        </div>
+      <div className="min-h-screen bg-nordic-lightgray flex items-center justify-center">
+        <div className="text-nordic-gray animate-pulse">Laster eiendommer...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-background dark:bg-background-dark flex items-center justify-center">
-        <div className="text-red-600 dark:text-red-400">
-          Kunne ikke laste eiendommer
-        </div>
+      <div className="min-h-screen bg-nordic-lightgray flex items-center justify-center">
+        <div className="text-red-600">Kunne ikke laste eiendommer</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background dark:bg-background-dark">
+    <div className="min-h-screen bg-nordic-lightgray">
       <main className="container mx-auto px-4 py-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -130,10 +133,10 @@ const Eiendommer = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <h1 className="text-4xl font-bold text-nordic-charcoal dark:text-foreground-dark tracking-heading mb-6">
+          <h1 className="text-4xl font-bold text-nordic-charcoal tracking-heading mb-6">
             Tilgjengelige Eiendommer
           </h1>
-          <p className="text-xl text-nordic-gray dark:text-[#ddd] max-w-2xl mx-auto">
+          <p className="text-xl text-nordic-gray max-w-2xl mx-auto">
             Utforsk våre nøye utvalgte eiendommer i Norden. Invester trygt og enkelt med tokenisert eiendom.
           </p>
         </motion.div>

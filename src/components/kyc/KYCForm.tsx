@@ -86,7 +86,7 @@ const KYCForm = ({ onComplete }: KYCFormProps) => {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid gap-4">
         <div className="grid gap-2">
-          <Label htmlFor="personalNumber" className="text-[#333] dark:text-[#eee]">Personnummer *</Label>
+          <Label htmlFor="personalNumber">Personnummer *</Label>
           <Input
             id="personalNumber"
             placeholder="11 siffer"
@@ -94,65 +94,59 @@ const KYCForm = ({ onComplete }: KYCFormProps) => {
             onChange={(e) =>
               setFormData({ ...formData, personalNumber: e.target.value })
             }
-            className="border-gray-300 dark:border-gray-600 dark:bg-[#2a2a2a] dark:text-[#eee]"
           />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="firstName" className="text-[#333] dark:text-[#eee]">Fornavn *</Label>
+            <Label htmlFor="firstName">Fornavn *</Label>
             <Input
               id="firstName"
               value={formData.firstName}
               onChange={(e) =>
                 setFormData({ ...formData, firstName: e.target.value })
               }
-              className="border-gray-300 dark:border-gray-600 dark:bg-[#2a2a2a] dark:text-[#eee]"
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="lastName" className="text-[#333] dark:text-[#eee]">Etternavn *</Label>
+            <Label htmlFor="lastName">Etternavn *</Label>
             <Input
               id="lastName"
               value={formData.lastName}
               onChange={(e) =>
                 setFormData({ ...formData, lastName: e.target.value })
               }
-              className="border-gray-300 dark:border-gray-600 dark:bg-[#2a2a2a] dark:text-[#eee]"
             />
           </div>
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="address" className="text-[#333] dark:text-[#eee]">Adresse</Label>
+          <Label htmlFor="address">Adresse</Label>
           <Input
             id="address"
             value={formData.address}
             onChange={(e) =>
               setFormData({ ...formData, address: e.target.value })
             }
-            className="border-gray-300 dark:border-gray-600 dark:bg-[#2a2a2a] dark:text-[#eee]"
           />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="postalCode" className="text-[#333] dark:text-[#eee]">Postnummer</Label>
+            <Label htmlFor="postalCode">Postnummer</Label>
             <Input
               id="postalCode"
               value={formData.postalCode}
               onChange={(e) =>
                 setFormData({ ...formData, postalCode: e.target.value })
               }
-              className="border-gray-300 dark:border-gray-600 dark:bg-[#2a2a2a] dark:text-[#eee]"
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="city" className="text-[#333] dark:text-[#eee]">Sted</Label>
+            <Label htmlFor="city">Sted</Label>
             <Input
               id="city"
               value={formData.city}
               onChange={(e) =>
                 setFormData({ ...formData, city: e.target.value })
               }
-              className="border-gray-300 dark:border-gray-600 dark:bg-[#2a2a2a] dark:text-[#eee]"
             />
           </div>
         </div>
@@ -161,18 +155,13 @@ const KYCForm = ({ onComplete }: KYCFormProps) => {
             id="pep"
             checked={isPep}
             onCheckedChange={(checked) => setIsPep(checked as boolean)}
-            className="border-gray-300 dark:border-gray-600"
           />
-          <Label htmlFor="pep" className="text-sm text-gray-600 dark:text-gray-400">
+          <Label htmlFor="pep" className="text-sm text-gray-600">
             Er du en politisk eksponert person (PEP)?
           </Label>
         </div>
       </div>
-      <Button 
-        type="submit" 
-        disabled={isSubmitting} 
-        className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
-      >
+      <Button type="submit" disabled={isSubmitting} className="w-full">
         {isSubmitting ? "Sender..." : "Neste"}
       </Button>
     </form>

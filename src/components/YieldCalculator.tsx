@@ -66,11 +66,11 @@ const YieldCalculator = () => {
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto bg-[#f8fbff] dark:bg-[#101010]/50 p-2 rounded-lg">
-      <Card className="bg-white dark:bg-[#1a1a1a] shadow-sm">
-        <CardHeader className="space-y-1 border-b border-gray-100 dark:border-gray-800 p-3">
+    <div className="w-full max-w-lg mx-auto bg-[#f8fbff] p-2 rounded-lg">
+      <Card className="bg-white shadow-sm">
+        <CardHeader className="space-y-1 border-b border-gray-100 p-3">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <CardTitle className="text-base font-bold flex items-center gap-2 text-[#333] dark:text-[#eee]">
+            <CardTitle className="text-base font-bold flex items-center gap-2">
               <Calculator className="w-4 h-4 text-nordic-blue" />
               Kalkulator
             </CardTitle>
@@ -78,9 +78,9 @@ const YieldCalculator = () => {
               <Tooltip>
                 <TooltipTrigger>
                   <div className="flex items-center gap-1 text-sm">
-                    <span className="font-medium text-[#333] dark:text-[#eee]">Årlig avkastning:</span>
+                    <span className="font-medium text-nordic-charcoal">Årlig avkastning:</span>
                     <span className="font-bold text-nordic-blue">{APY}%</span>
-                    <Info className="w-3 h-3 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400" />
+                    <Info className="w-3 h-3 text-gray-400 hover:text-gray-600" />
                   </div>
                 </TooltipTrigger>
                 <TooltipContent className="max-w-[200px]">
@@ -94,17 +94,17 @@ const YieldCalculator = () => {
         </CardHeader>
         <CardContent className="grid gap-2 p-3">
           <div className="grid gap-2">
-            <div className="bg-white dark:bg-[#1a1a1a] rounded-lg">
+            <div className="bg-white rounded-lg">
               <div className="flex flex-col gap-2">
                 <div className="flex-1">
-                  <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-1 block text-[#333] dark:text-[#eee]">
+                  <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-1 block">
                     Investeringsbeløp (NOK)
                   </label>
                   <Input
                     type="number"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    className="text-base font-medium dark:bg-[#2a2a2a] dark:text-[#eee] dark:border-gray-600"
+                    className="text-base font-medium"
                   />
                 </div>
                 <div className="flex-1">
@@ -114,7 +114,7 @@ const YieldCalculator = () => {
                     step={1000}
                     value={[parseFloat(amount) || 0]}
                     onValueChange={handleSliderChange}
-                    className="[&>.relative>.absolute]:bg-nordic-blue [&>.relative]:bg-nordic-softblue dark:[&>.relative]:bg-[#2a2a2a] [&>.block]:border-nordic-blue [&>.block]:bg-white dark:[&>.block]:bg-[#eee]"
+                    className="[&>.relative>.absolute]:bg-nordic-blue [&>.relative]:bg-nordic-softblue [&>.block]:border-nordic-blue [&>.block]:bg-white"
                   />
                 </div>
               </div>

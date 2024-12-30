@@ -2,10 +2,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabaseClient";
 import { toast } from "sonner";
 import { differenceInDays } from "date-fns";
-import { Loader2 } from "lucide-react";
 
 type Property = {
   price_per_token: number;
@@ -21,11 +20,10 @@ type HoldingWithProperty = {
 const RentClaim = () => {
   const { user } = useAuth();
 
-  const { data: holding, refetch, isLoading } = useQuery({
+  const { data: holding } = useQuery<HoldingWithProperty | null>({
     queryKey: ['holdings-for-claim', user?.id],
     queryFn: async () => {
-      if (!user?.id) throw new Error('No user ID');
-      
+      if (!user) return null;
       const { data, error } = await supabase
         .from('user_holdings')
         .select(`
@@ -39,36 +37,30 @@ const RentClaim = () => {
         .eq('user_id', user.id)
         .maybeSingle();
       
-      if (error) {
-        toast.error("Kunne ikke hente holdings data");
-        throw error;
-      }
+      if (error) throw error;
+      if (!data) return null;
       
-      return data;
+      return {
+        token_count: data.token_count,
+        last_claim_at: data.last_claim_at,
+        property: data.property[0]
+      } as HoldingWithProperty;
     },
-    enabled: !!user?.id,
-    retry: 1,
+    enabled: !!user,
   });
 
   const handleClaim = async () => {
-    if (!user?.id || !holding) return;
+    if (!user || !holding) return;
 
     try {
-      const dailyYield = holding.token_count * (holding.property.price_per_token * (holding.property.yield / 100) / 365);
-      
       const { error } = await supabase
         .from('user_holdings')
-        .update({ 
-          last_claim_at: new Date().toISOString(),
-          accumulated_rent: dailyYield
-        })
+        .update({ last_claim_at: new Date().toISOString() })
         .eq('user_id', user.id);
 
       if (error) throw error;
-      
-      await refetch();
       toast.success("Utbetaling er krevd!");
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error claiming rent:', error);
       toast.error("Kunne ikke kreve utbetaling");
     }
@@ -83,28 +75,18 @@ const RentClaim = () => {
     return daysSinceLastClaim >= 1;
   };
 
-  if (isLoading) {
-    return (
-      <Card className="bg-white dark:bg-[#1f1f1f] shadow-lg">
-        <CardContent className="flex justify-center items-center py-6">
-          <Loader2 className="h-6 w-6 animate-spin text-primary dark:text-primary-dark" />
-        </CardContent>
-      </Card>
-    );
-  }
-
   if (!user || !holding) return null;
 
   return (
-    <Card className="bg-white dark:bg-[#1f1f1f] shadow-lg">
+    <Card className="bg-white shadow-lg">
       <CardHeader>
-        <CardTitle className="text-nordic-charcoal dark:text-white">Claim Utbetaling</CardTitle>
+        <CardTitle>Claim Utbetaling</CardTitle>
       </CardHeader>
       <CardContent>
         <Button
           onClick={handleClaim}
           disabled={!canClaim()}
-          className="w-full bg-nordic-blue hover:bg-nordic-blue/90 text-white"
+          className="w-full"
         >
           {canClaim() ? "Claim daglig utbetaling" : "Allerede claimet i dag"}
         </Button>

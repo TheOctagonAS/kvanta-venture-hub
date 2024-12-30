@@ -1,9 +1,8 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -13,11 +12,10 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const { theme, toggleTheme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
   const isActive = (path: string) => {
-    return location.pathname === path ? "text-primary font-semibold" : "text-gray-400 hover:text-white dark:text-[#ccc] dark:hover:text-white transition-colors duration-200";
+    return location.pathname === path ? "text-primary font-semibold" : "text-gray-600 hover:text-primary";
   };
 
   const handleLogout = async () => {
@@ -33,12 +31,12 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white dark:bg-[#1a1a1a] shadow-sm border-b border-gray-200 dark:border-[#2a2a2a] sticky top-0 z-50 transition-colors duration-200 h-14 sm:h-16">
+    <nav className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14 sm:h-16">
+        <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center gap-2 py-2 px-4 group">
-              <KvantaLogo className="text-primary dark:text-white h-8 sm:h-12" />
+              <KvantaLogo />
               <Badge 
                 variant="secondary" 
                 className="ml-2 text-xs bg-gradient-to-r from-rose-500 to-rose-600 text-white font-medium shadow-sm"
@@ -58,24 +56,11 @@ const Navbar = () => {
             <Link to="/minside" className={`${isActive("/minside")} transition-colors duration-200`}>
               Min side
             </Link>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className="mr-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
-              title={theme === 'dark' ? 'Bytt til lys modus' : 'Bytt til mørk modus'}
-            >
-              {theme === 'dark' ? (
-                <Sun className="h-4 w-4 text-white" />
-              ) : (
-                <Moon className="h-4 w-4 text-[#bbb]" />
-              )}
-            </Button>
             {user && (
               <Button
                 variant="outline"
                 onClick={handleLogout}
-                className="ml-4 dark:text-white dark:border-[#2a2a2a] dark:hover:bg-gray-800"
+                className="ml-4"
               >
                 Logg ut
               </Button>
@@ -85,9 +70,9 @@ const Navbar = () => {
           <div className="sm:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-600 dark:text-[#ccc] hover:text-primary dark:hover:text-white"
+              className="text-gray-600 hover:text-primary"
             >
-              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
@@ -95,7 +80,7 @@ const Navbar = () => {
 
       {isMenuOpen && (
         <div className="sm:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 bg-white dark:bg-[#1a1a1a] border-t dark:border-[#2a2a2a]">
+          <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t">
             <Link
               to="/"
               className={`${isActive("/")} block px-3 py-2 rounded-md text-base transition-colors duration-200`}
@@ -117,31 +102,11 @@ const Navbar = () => {
             >
               Min side
             </Link>
-            <div className="px-3 py-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={toggleTheme}
-                className="w-full justify-start gap-2 hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-[#ccc] transition-colors duration-200"
-              >
-                {theme === 'dark' ? (
-                  <>
-                    <Sun className="h-4 w-4 text-white" />
-                    <span>Lys modus</span>
-                  </>
-                ) : (
-                  <>
-                    <Moon className="h-4 w-4 text-[#bbb]" />
-                    <span>Mørk modus</span>
-                  </>
-                )}
-              </Button>
-            </div>
             {user && (
               <Button
                 variant="outline"
                 onClick={handleLogout}
-                className="w-full mt-2 dark:text-white dark:border-[#2a2a2a] dark:hover:bg-gray-800"
+                className="w-full mt-2"
               >
                 Logg ut
               </Button>

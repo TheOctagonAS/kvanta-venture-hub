@@ -9,11 +9,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabaseClient";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import RentClaim from "./RentClaim";
 import { Wallet } from "lucide-react";
-import { toast } from "sonner";
 
 type Property = {
   id: string;
@@ -25,7 +24,6 @@ type HoldingWithProperty = {
   id: string;
   token_count: number;
   property: Property;
-  accumulated_rent: number;
 };
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
@@ -33,7 +31,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 const UserHoldings = () => {
   const { user } = useAuth();
 
-  const { data: holdings } = useQuery({
+  const { data: holdings } = useQuery<HoldingWithProperty[]>({
     queryKey: ['holdings', user?.id],
     queryFn: async () => {
       if (!user) return [];
@@ -42,7 +40,6 @@ const UserHoldings = () => {
         .select(`
           id,
           token_count,
-          accumulated_rent,
           property:properties(
             id,
             name,
@@ -51,12 +48,12 @@ const UserHoldings = () => {
         `)
         .eq('user_id', user.id);
       
-      if (error) {
-        toast.error("Kunne ikke hente holdings data");
-        throw error;
-      }
-      
-      return data || [];
+      if (error) throw error;
+      return (data || []).map(holding => ({
+        id: holding.id,
+        token_count: holding.token_count,
+        property: holding.property[0]
+      })) as HoldingWithProperty[];
     },
     enabled: !!user,
   });
@@ -78,7 +75,6 @@ const UserHoldings = () => {
   };
 
   const portfolioData = calculatePortfolioData();
-  const totalAccumulatedRent = holdings?.reduce((sum, holding) => sum + Number(holding.accumulated_rent), 0) || 0;
 
   if (!user) return null;
 
@@ -86,52 +82,43 @@ const UserHoldings = () => {
     <div className="space-y-6">
       <RentClaim />
       
-      <Card className="bg-white dark:bg-[#1f1f1f] shadow-lg">
+      <Card className="bg-white shadow-lg">
         <CardHeader>
           <div className="flex items-center gap-2">
             <Wallet className="h-6 w-6 text-nordic-blue" />
-            <CardTitle className="text-xl font-semibold text-nordic-charcoal dark:text-white">
+            <CardTitle className="text-xl font-semibold">
               Din DeFi Portefølje
             </CardTitle>
           </div>
         </CardHeader>
         <CardContent>
           {holdings && holdings.length > 0 ? (
-            <>
-              <div className="mb-6">
-                <p className="text-sm text-nordic-gray dark:text-gray-400">Total akkumulert leie</p>
-                <p className="text-2xl font-semibold text-nordic-charcoal dark:text-white">
-                  {totalAccumulatedRent.toLocaleString()} NOK
-                </p>
-              </div>
-              
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-nordic-charcoal dark:text-gray-400">Eiendom</TableHead>
-                    <TableHead className="text-right text-nordic-charcoal dark:text-gray-400">Antall tokens</TableHead>
-                    <TableHead className="text-right text-nordic-charcoal dark:text-gray-400">Verdi (NOK)</TableHead>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Eiendom</TableHead>
+                  <TableHead className="text-right">Antall tokens</TableHead>
+                  <TableHead className="text-right">Verdi (NOK)</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {holdings.map((holding) => (
+                  <TableRow key={holding.id}>
+                    <TableCell className="font-medium">
+                      {holding.property.name}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {holding.token_count}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {(holding.token_count * holding.property.price_per_token).toLocaleString()} NOK
+                    </TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {holdings.map((holding) => (
-                    <TableRow key={holding.id}>
-                      <TableCell className="font-medium text-nordic-charcoal dark:text-white">
-                        {holding.property.name}
-                      </TableCell>
-                      <TableCell className="text-right text-nordic-charcoal dark:text-white">
-                        {holding.token_count}
-                      </TableCell>
-                      <TableCell className="text-right text-nordic-charcoal dark:text-white">
-                        {(holding.token_count * holding.property.price_per_token).toLocaleString()} NOK
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </>
+                ))}
+              </TableBody>
+            </Table>
           ) : (
-            <p className="text-center text-nordic-gray dark:text-gray-400 py-8">
+            <p className="text-center text-gray-500 py-8">
               Du har ingen tokens i porteføljen ennå
             </p>
           )}
@@ -139,9 +126,9 @@ const UserHoldings = () => {
       </Card>
 
       {holdings && holdings.length > 0 && (
-        <Card className="bg-white dark:bg-[#1f1f1f] shadow-lg">
+        <Card className="bg-white shadow-lg">
           <CardHeader>
-            <CardTitle className="text-nordic-charcoal dark:text-white">Porteføljefordeling</CardTitle>
+            <CardTitle>Porteføljefordeling</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-[300px] w-full">

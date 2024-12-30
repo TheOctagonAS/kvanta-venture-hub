@@ -22,52 +22,26 @@ export default {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: {
-          DEFAULT: "#f8f9fa",
-          dark: "#1a1a1a",
-        },
-        foreground: {
-          DEFAULT: "#333333",
-          dark: "#f1f1f1",
-        },
+        background: "#f8f9fa",
+        foreground: "#333333",
         primary: {
-          DEFAULT: "#345FF6",
+          DEFAULT: "#345FF6", // Kvantum blue - for buttons and headings
           foreground: "#FFFFFF",
-          dark: "#5a7dfc",
         },
         secondary: {
-          DEFAULT: "#E9F2FF",
+          DEFAULT: "#E9F2FF", // Light blue - for cards and highlights
           foreground: "#333333",
-          dark: "#1f1f1f",
         },
         accent: {
-          DEFAULT: "#47C757",
+          DEFAULT: "#47C757", // Success green - for yields and success states
           foreground: "#FFFFFF",
-          dark: "#50D161",
-        },
-        overlay: {
-          DEFAULT: "#FFFFFF",
-          dark: "#1f1f1f",
-          highlight: "#2a2a2a",
         },
         nordic: {
           blue: "#345FF6",
-          charcoal: {
-            DEFAULT: "#333333",
-            dark: "#f1f1f1",
-          },
-          gray: {
-            DEFAULT: "#555555",
-            dark: "#ddd",
-          },
-          lightgray: {
-            DEFAULT: "#f8f9fa",
-            dark: "#1a1a1a",
-          },
-          softblue: {
-            DEFAULT: "#E9F2FF",
-            dark: "#1f1f1f",
-          },
+          charcoal: "#333333",
+          gray: "#555555",
+          lightgray: "#f8f9fa",
+          softblue: "#E9F2FF",
         },
       },
       borderRadius: {

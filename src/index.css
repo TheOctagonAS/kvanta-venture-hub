@@ -44,36 +44,6 @@
 
     --radius: 0.5rem;
   }
-
-  .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-  }
 }
 
 @layer base {
@@ -82,53 +52,41 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans leading-relaxed transition-colors duration-200;
-  }
-
-  .dark body {
-    @apply bg-background-dark text-foreground-dark;
+    @apply bg-background text-foreground font-sans leading-relaxed;
   }
 
   h1, .h1 {
-    @apply text-4xl font-bold text-nordic-charcoal dark:text-white tracking-heading mb-6;
+    @apply text-4xl font-bold text-nordic-charcoal tracking-heading mb-6;
   }
 
   h2, .h2 {
-    @apply text-3xl font-semibold text-nordic-charcoal dark:text-white tracking-heading mb-4;
+    @apply text-3xl font-semibold text-nordic-charcoal tracking-heading mb-4;
   }
 
   h3, .h3 {
-    @apply text-2xl font-medium text-nordic-charcoal dark:text-white tracking-heading mb-3;
+    @apply text-2xl font-medium text-nordic-charcoal tracking-heading mb-3;
   }
 
   p {
-    @apply text-nordic-gray dark:text-[#ddd] mb-4;
-  }
-
-  a {
-    @apply text-primary hover:text-primary/90 dark:text-primary-dark dark:hover:text-primary-dark/90 transition-colors;
+    @apply text-nordic-gray mb-4;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-blue-600 hover:bg-blue-700 dark:bg-primary-dark dark:hover:bg-primary-dark/90 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 hover:shadow-lg w-full sm:w-auto;
+    @apply bg-primary hover:bg-primary/90 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 hover:shadow-lg;
   }
 
   .btn-secondary {
-    @apply bg-secondary hover:bg-secondary/90 text-nordic-charcoal dark:text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 hover:shadow-lg dark:bg-secondary-dark w-full sm:w-auto;
+    @apply bg-secondary hover:bg-secondary/90 text-nordic-charcoal font-medium px-6 py-3 rounded-lg transition-all duration-200 hover:shadow-lg;
   }
 
   .card {
-    @apply bg-white dark:bg-[#1f1f1f] rounded-lg shadow-sm p-3 sm:p-6 transition-all duration-200 hover:shadow-lg border border-transparent dark:border-[#333];
-  }
-
-  .navbar {
-    @apply bg-white dark:bg-[#1a1a1a] text-[#333] dark:text-[#ddd] border-b border-gray-200 dark:border-gray-800 transition-colors duration-200;
+    @apply bg-white rounded-lg shadow-md p-6 transition-all duration-200 hover:shadow-lg;
   }
 
   .section {
-    @apply p-3 sm:p-6 mt-6;
+    @apply p-6 mt-6;
   }
 
   .grid-layout {
@@ -136,19 +94,11 @@
   }
 
   .success-text {
-    @apply text-accent dark:text-accent-dark;
+    @apply text-accent;
   }
 
   .nav-link {
-    @apply text-[#333]/90 dark:text-[#ddd]/90 hover:text-[#333] dark:hover:text-white transition-colors duration-200;
-  }
-
-  .overlay-box {
-    @apply bg-white dark:bg-[#1f1f1f] text-nordic-charcoal dark:text-[#ddd] shadow-sm hover:shadow-md transition-all duration-200 border border-transparent dark:border-[#333] p-3 sm:p-6;
-  }
-
-  .highlight-box {
-    @apply bg-white dark:bg-[#2a2a2a] text-nordic-charcoal dark:text-[#ddd] shadow-sm hover:shadow-md transition-all duration-200 border border-transparent dark:border-[#333] p-3 sm:p-6;
+    @apply text-white/90 hover:text-white transition-colors duration-200;
   }
 }
 

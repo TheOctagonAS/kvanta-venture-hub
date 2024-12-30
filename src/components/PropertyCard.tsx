@@ -89,23 +89,23 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="h-full flex flex-col bg-white dark:bg-[#1f1f1f] hover:shadow-lg transition-all duration-300 hover:scale-105 relative overflow-hidden border border-transparent dark:border-[#333]">
+      <Card className="h-full flex flex-col bg-white hover:shadow-lg transition-all duration-300 hover:scale-105 relative overflow-hidden">
         {!isLive && (
-          <div className="absolute inset-0 z-20 bg-white/80 dark:bg-[#2a2a2a]/80 backdrop-blur-sm flex flex-col items-center justify-center px-4">
+          <div className="absolute inset-0 z-20 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center px-4">
             <div className="w-[80%] md:w-full flex flex-col items-center">
                 <Lock className="h-8 w-8 md:h-12 md:w-12 text-nordic-blue mb-2" />
                 <div className="text-center">
                   <span className="text-sm md:text-base text-nordic-blue font-medium block">
                     Kommer snart!
                   </span>
-                  <div className="mt-2 bg-white dark:bg-[#1f1f1f] rounded-lg px-3 py-1 shadow-sm">
+                  <div className="mt-2 bg-white rounded-lg px-3 py-1 shadow-sm">
                     <span className="text-xs md:text-sm text-nordic-blue">
                       Går live om: {countdown}
                     </span>
                   </div>
                 </div>
                 <motion.p 
-                  className="text-xs md:text-sm text-nordic-charcoal dark:text-[#eee] text-center max-w-[80%] mt-4"
+                  className="text-xs md:text-sm text-nordic-charcoal text-center max-w-[80%] mt-4"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ 
@@ -123,13 +123,13 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
         <PropertyBadges yield={property.yield} isSoldOut={isSoldOut} />
         <PropertyImage imageUrl={property.image_url} propertyName={property.name} />
         
-        <CardHeader className="pb-2 p-3 sm:p-6">
-          <CardTitle className="text-xl font-bold text-nordic-charcoal dark:text-[#eee]">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-xl font-bold text-nordic-charcoal">
             {property.name}
           </CardTitle>
         </CardHeader>
         
-        <CardContent className="flex-grow p-3 sm:p-6 pt-0">
+        <CardContent className="flex-grow">
           <PropertyDetails 
             location={property.location}
             pricePerToken={property.price_per_token}
@@ -138,7 +138,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
           />
         </CardContent>
         
-        <CardFooter className="flex flex-col gap-2 p-3 sm:p-6 pt-4">
+        <CardFooter className="flex flex-col gap-2 pt-4">
           {isLive ? (
             <Button
               className={`w-full ${
@@ -186,7 +186,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
               {isNotifying ? "Registrerer..." : "Påminn meg"}
             </Button>
           )}
-          <p className="text-xs text-nordic-gray dark:text-[#ccc] italic text-center">
+          <p className="text-xs text-nordic-gray italic text-center">
             *APY er estimert årlig avkastning, ikke garantert.
           </p>
         </CardFooter>

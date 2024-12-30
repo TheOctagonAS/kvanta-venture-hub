@@ -1,10 +1,6 @@
-import React, { SVGProps } from 'react';
+import React from 'react';
 
-interface KvantaLogoProps extends SVGProps<SVGSVGElement> {
-  className?: string;
-}
-
-export const KvantaLogo: React.FC<KvantaLogoProps> = ({ className, ...props }) => {
+export const KvantaLogo = () => {
   return (
     <svg
       width="400"
@@ -12,8 +8,7 @@ export const KvantaLogo: React.FC<KvantaLogoProps> = ({ className, ...props }) =
       viewBox="0 0 400 100"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={`w-auto h-12 transform transition-transform duration-300 group-hover:scale-[1.02] ${className || ''}`}
-      {...props}
+      className="w-auto h-12 transform transition-transform duration-300 group-hover:scale-[1.02]"
     >
       <defs>
         <linearGradient id="kvantaGradient" x1="0" y1="0" x2="1" y2="0">

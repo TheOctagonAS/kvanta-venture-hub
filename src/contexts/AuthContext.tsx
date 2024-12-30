@@ -54,41 +54,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const handleSession = async (session: Session) => {
-    try {
-      const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', session.user.id)
-        .single();
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', session.user.id)
+      .single();
 
-      if (error) throw error;
-
-      setUser({
-        id: session.user.id,
-        email: session.user.email || '',
-        isKYC: profile?.is_kyc || false,
-        ownedProperties: [],
-        accumulatedRent: 0
-      });
-    } catch (error) {
-      console.error('Error fetching user profile:', error);
-      toast.error('Kunne ikke hente brukerprofil');
-    }
+    setUser({
+      id: session.user.id,
+      email: session.user.email || '',
+      isKYC: profile?.is_kyc || false,
+      ownedProperties: [],
+      accumulatedRent: 0
+    });
   };
 
   const login = async (email: string, password: string) => {
     try {
-      const { data: { user: authUser }, error } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password: password.trim(),
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
 
       if (error) throw error;
-      if (!authUser) throw new Error('No user returned after login');
-
-      // Profile will be handled by the session listener
     } catch (error: any) {
-      console.error('Login error:', error);
+      toast.error(error.message);
       throw error;
     }
   };
@@ -99,7 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (error) throw error;
       setUser(null);
     } catch (error: any) {
-      console.error('Logout error:', error);
+      toast.error(error.message);
       throw error;
     }
   };
