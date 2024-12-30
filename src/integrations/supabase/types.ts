@@ -48,7 +48,7 @@ export type Database = {
           id: string
           on_chain_tx_id: string | null
           order_type: string
-          price_per_token: number  // Changed from integer to number to match NUMERIC type
+          price_per_token: number
           property_id: string
           status: string
           token_count: number
@@ -173,9 +173,9 @@ export type Database = {
           created_at?: string
           id?: string
           last_claim_at?: string | null
-          property_id: string
+          property_id?: string
           token_count?: number
-          user_id: string
+          user_id?: string
         }
         Relationships: [
           {
@@ -224,10 +224,10 @@ export type Tables<
         PublicSchema["Views"])
     ? (PublicSchema["Tables"] &
         PublicSchema["Views"])[PublicTableNameOrOptions] extends {
-      Row: infer R
-    }
-    ? R
-    : never
+        Row: infer R
+      }
+      ? R
+      : never
     : never
 
 export type TablesInsert<
@@ -245,10 +245,10 @@ export type TablesInsert<
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
     ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-      Insert: infer I
-    }
-    ? I
-    : never
+        Insert: infer I
+      }
+      ? I
+      : never
     : never
 
 export type TablesUpdate<
@@ -266,10 +266,10 @@ export type TablesUpdate<
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
     ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-      Update: infer U
-    }
-    ? U
-    : never
+        Update: infer U
+      }
+      ? U
+      : never
     : never
 
 export type Enums<
