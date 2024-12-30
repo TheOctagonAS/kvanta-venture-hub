@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { tokenService } from "@/services/tokenService";
 import { toast } from "sonner";
 import { PaymentMethodSelector } from "./PaymentMethodSelector";
+import { Separator } from "@/components/ui/separator";
 
 interface OrderFormProps {
   property: Property;
@@ -20,6 +21,7 @@ export const OrderForm = ({ property }: OrderFormProps) => {
   const [tokenCount, setTokenCount] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<"bank_account" | "card" | "vipps" | null>(null);
+  const [showPreview, setShowPreview] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -64,6 +66,13 @@ export const OrderForm = ({ property }: OrderFormProps) => {
   };
 
   const totalAmount = tokenCount * property.price_per_token;
+
+  const handlePreviewOrder = () => {
+    setShowPreview(true);
+    toast.info("Dette er en forhåndsvisning av din ordre", {
+      description: `${tokenCount} tokens til ${property.price_per_token} NOK per token`
+    });
+  };
 
   return (
     <Card className="p-6">
@@ -113,21 +122,42 @@ export const OrderForm = ({ property }: OrderFormProps) => {
           />
         </div>
 
-        <div className="pt-4 border-t">
-          <div className="flex justify-between items-center mb-4">
-            <span className="text-lg">Totalt beløp</span>
-            <span className="text-xl font-bold text-nordic-blue">
-              {totalAmount.toLocaleString()} NOK
-            </span>
+        <Separator className="my-6" />
+
+        <div className="space-y-4">
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Antall tokens:</span>
+              <span className="font-medium">{tokenCount}</span>
+            </div>
+            <div className="flex justify-between items-center mt-2">
+              <span className="text-gray-600">Pris per token:</span>
+              <span className="font-medium">{property.price_per_token.toLocaleString()} NOK</span>
+            </div>
+            <Separator className="my-3" />
+            <div className="flex justify-between items-center text-lg font-bold">
+              <span>Total:</span>
+              <span className="text-nordic-blue">{totalAmount.toLocaleString()} NOK</span>
+            </div>
           </div>
 
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={isLoading || tokenCount < 1 || !paymentMethod}
-          >
-            {isLoading ? "Behandler..." : "Bekreft kjøp"}
-          </Button>
+          <div className="flex flex-col gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handlePreviewOrder}
+              className="w-full"
+            >
+              Forhåndsvis Ordre
+            </Button>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isLoading || tokenCount < 1 || !paymentMethod}
+            >
+              {isLoading ? "Behandler..." : "Bekreft Ordre"}
+            </Button>
+          </div>
         </div>
       </form>
     </Card>
