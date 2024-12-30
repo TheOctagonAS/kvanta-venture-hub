@@ -1,11 +1,6 @@
 import { useState } from "react";
 import { DollarSign, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,7 +18,6 @@ interface DeductionsCardProps {
 export const DeductionsCard = ({ propertyId }: DeductionsCardProps) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const [isOpen, setIsOpen] = useState(false);
   const [newExpenseType, setNewExpenseType] = useState("");
   const [newAmount, setNewAmount] = useState("");
   const currentYear = new Date().getFullYear();
@@ -95,84 +89,78 @@ export const DeductionsCard = ({ propertyId }: DeductionsCardProps) => {
 
   return (
     <div className="bg-secondary/10 p-4 rounded-lg">
-      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-        <div className="flex items-start gap-2">
-          <DollarSign className="h-5 w-5 text-primary mt-1" />
-          <div>
-            <CollapsibleTrigger className="flex items-center gap-2">
-              <div>
-                <p className="font-medium text-lg">Fradragsoversikt</p>
-                <p className="text-sm text-gray-600">
-                  Registrer fradragsberettigede utgifter som vedlikehold,
-                  forsikring og andre relevante kostnader.
-                </p>
+      <div className="flex items-start gap-2">
+        <DollarSign className="h-5 w-5 text-primary mt-1" />
+        <div>
+          <p className="font-medium text-lg">Fradragsoversikt</p>
+          <p className="text-sm text-gray-600">
+            Registrer fradragsberettigede utgifter som vedlikehold,
+            forsikring og andre relevante kostnader.
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-4 space-y-4">
+        <div className="space-y-4">
+          {deductions.map((deduction) => (
+            <div
+              key={deduction.id}
+              className="flex items-center justify-between bg-white p-2 rounded"
+            >
+              <span>{deduction.expense_type}</span>
+              <div className="flex items-center gap-2">
+                <span>{Number(deduction.amount).toLocaleString()} NOK</span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleDeleteDeduction(deduction.id)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </div>
-            </CollapsibleTrigger>
+            </div>
+          ))}
+
+          <div className="pt-2 border-t">
+            <div className="flex justify-between font-medium">
+              <span>Totale fradrag</span>
+              <span>{totalDeductions.toLocaleString()} NOK</span>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <Label htmlFor="expenseType">Type utgift</Label>
+                <Input
+                  id="expenseType"
+                  value={newExpenseType}
+                  onChange={(e) => setNewExpenseType(e.target.value)}
+                  placeholder="F.eks. vedlikehold"
+                />
+              </div>
+              <div>
+                <Label htmlFor="amount">Beløp (NOK)</Label>
+                <Input
+                  id="amount"
+                  type="number"
+                  value={newAmount}
+                  onChange={(e) => setNewAmount(e.target.value)}
+                  placeholder="0"
+                />
+              </div>
+            </div>
+            <Button
+              onClick={handleAddDeduction}
+              className="w-full"
+              disabled={!newExpenseType || !newAmount}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Legg til fradrag
+            </Button>
           </div>
         </div>
-
-        <CollapsibleContent className="mt-4 space-y-4">
-          <div className="space-y-4">
-            {deductions.map((deduction) => (
-              <div
-                key={deduction.id}
-                className="flex items-center justify-between bg-white p-2 rounded"
-              >
-                <span>{deduction.expense_type}</span>
-                <div className="flex items-center gap-2">
-                  <span>{Number(deduction.amount).toLocaleString()} NOK</span>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleDeleteDeduction(deduction.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            ))}
-
-            <div className="pt-2 border-t">
-              <div className="flex justify-between font-medium">
-                <span>Totale fradrag</span>
-                <span>{totalDeductions.toLocaleString()} NOK</span>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <Label htmlFor="expenseType">Type utgift</Label>
-                  <Input
-                    id="expenseType"
-                    value={newExpenseType}
-                    onChange={(e) => setNewExpenseType(e.target.value)}
-                    placeholder="F.eks. vedlikehold"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="amount">Beløp (NOK)</Label>
-                  <Input
-                    id="amount"
-                    type="number"
-                    value={newAmount}
-                    onChange={(e) => setNewAmount(e.target.value)}
-                    placeholder="0"
-                  />
-                </div>
-              </div>
-              <Button
-                onClick={handleAddDeduction}
-                className="w-full"
-                disabled={!newExpenseType || !newAmount}
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Legg til fradrag
-              </Button>
-            </div>
-          </div>
-        </CollapsibleContent>
-      </Collapsible>
+      </div>
     </div>
   );
 };
