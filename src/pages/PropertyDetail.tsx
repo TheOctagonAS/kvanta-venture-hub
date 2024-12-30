@@ -10,42 +10,57 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PriceHistoryChart } from "@/components/property/PriceHistoryChart";
 import { Separator } from "@/components/ui/separator";
 import { BackToProperties } from "@/components/property/BackToProperties";
+import { toast } from "sonner";
 
 const PropertyDetail = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { data: property, isLoading } = useQuery({
+  const { data: property, isLoading, error } = useQuery({
     queryKey: ['property', id],
     queryFn: async () => {
+      if (!id) {
+        throw new Error("No property ID provided");
+      }
+
       const { data, error } = await supabase
         .from('properties')
         .select('*')
         .eq('id', id)
-        .single();
+        .maybeSingle();
       
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching property:", error);
+        throw error;
+      }
+      
+      if (!data) {
+        throw new Error("Property not found");
+      }
+
       return data;
     },
+    enabled: !!id,
   });
 
-  if (isLoading) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <Skeleton className="h-96 w-full" />
-      </div>
-    );
-  }
-
-  if (!property) {
+  if (error) {
+    toast.error("Could not load property details");
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Property not found</h1>
+          <h1 className="text-2xl font-bold mb-4">Error loading property</h1>
           <Button onClick={() => navigate('/eiendommer')}>
             Back to Properties
           </Button>
         </div>
+      </div>
+    );
+  }
+
+  if (isLoading || !property) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <Skeleton className="h-96 w-full" />
       </div>
     );
   }
@@ -73,7 +88,7 @@ const PropertyDetail = () => {
             <PropertyImage imageUrl={property.image_url} name={property.name} />
           </div>
 
-          <PriceHistoryChart propertyId={id!} />
+          <PriceHistoryChart propertyId={id} />
 
           {/* Property Details Grid */}
           <div className="grid md:grid-cols-2 gap-8">
