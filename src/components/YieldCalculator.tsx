@@ -1,9 +1,17 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Home, Gift, Info } from "lucide-react";
+import { Slider } from "@/components/ui/slider";
+import YieldCards from "./calculator/YieldCards";
 import GrowthChart from "./calculator/GrowthChart";
 import CalculatorCTA from "./calculator/CalculatorCTA";
-import CalculatorHeader from "./calculator/CalculatorHeader";
-import YieldSummary from "./calculator/YieldSummary";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const YieldCalculator = () => {
   const [amount, setAmount] = useState<string>("100000");
@@ -78,19 +86,113 @@ const YieldCalculator = () => {
         Hvor langt kan investeringen* din gå?
       </h2>
       
-      <Card className="bg-white/95 shadow-lg border-0 backdrop-blur-sm">
-        <CardContent className="p-8">
-          <CalculatorHeader 
-            amount={amount}
-            onAmountChange={setAmount}
-            onSliderChange={handleSliderChange}
+      <Card className="bg-white shadow-sm border-0">
+        <CardContent className="p-6">
+          <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
+            <div className="p-2 rounded-full bg-nordic-softblue">
+              <Home className="w-6 h-6 text-nordic-blue" />
+            </div>
+            <div className="flex-1">
+              <p className="text-lg text-nordic-charcoal">
+                Når du investerer for
+              </p>
+              <div className="flex items-center gap-2">
+                <Input
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="text-2xl font-bold border-none shadow-none p-0 h-auto w-48"
+                />
+                <span className="text-2xl font-bold text-nordic-charcoal">NOK</span>
+              </div>
+            </div>
+          </div>
+
+          <Slider
+            defaultValue={[100000]}
+            max={5000000}
+            step={1000}
+            value={[parseFloat(amount) || 0]}
+            onValueChange={handleSliderChange}
+            className="mb-8 [&>.relative>.absolute]:bg-nordic-blue [&>.relative]:bg-nordic-softblue [&>.block]:border-nordic-blue [&>.block]:bg-white"
           />
 
-          <YieldSummary 
-            yields={yields}
-            APY={APY}
-            PROPERTY_APPRECIATION={PROPERTY_APPRECIATION}
-          />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div className="col-span-1 md:col-span-4 bg-white shadow-sm rounded-lg p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 rounded-full bg-[#47C757]/10">
+                    <Gift className="w-6 h-6 text-[#47C757]" />
+                  </div>
+                  <div>
+                    <p className="text-lg text-nordic-charcoal">Total årlig avkastning*</p>
+                    <p className="text-3xl font-bold text-[#47C757]">
+                      {yields.compoundedYearly.toLocaleString('nb-NO', {
+                        style: 'currency',
+                        currency: 'NOK',
+                        maximumFractionDigits: 0
+                      })}
+                      <span className="text-base font-normal text-gray-500 ml-2">per år</span>
+                    </p>
+                  </div>
+                </div>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Info className="w-5 h-5 text-gray-400" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="text-sm max-w-[200px]">
+                        Basert på {APY}% årlig leieavkastning og {PROPERTY_APPRECIATION}% årlig verdiøkning på eiendommen, med reinvestering av utbytte
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </div>
+
+            <div className="bg-white shadow-sm rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Gift className="w-5 h-5 text-[#47C757]" />
+                <p className="text-sm font-medium text-nordic-charcoal">Daglig</p>
+              </div>
+              <p className="text-3xl font-bold text-[#47C757]">
+                {yields.daily.toLocaleString('nb-NO', {
+                  style: 'currency',
+                  currency: 'NOK',
+                  maximumFractionDigits: 0
+                })}
+              </p>
+            </div>
+
+            <div className="bg-white shadow-sm rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Gift className="w-5 h-5 text-[#47C757]" />
+                <p className="text-sm font-medium text-nordic-charcoal">Månedlig</p>
+              </div>
+              <p className="text-3xl font-bold text-[#47C757]">
+                {yields.monthly.toLocaleString('nb-NO', {
+                  style: 'currency',
+                  currency: 'NOK',
+                  maximumFractionDigits: 0
+                })}
+              </p>
+            </div>
+
+            <div className="bg-white shadow-sm rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Gift className="w-5 h-5 text-[#47C757]" />
+                <p className="text-sm font-medium text-nordic-charcoal">Årlig</p>
+              </div>
+              <p className="text-3xl font-bold text-[#47C757]">
+                {yields.yearly.toLocaleString('nb-NO', {
+                  style: 'currency',
+                  currency: 'NOK',
+                  maximumFractionDigits: 0
+                })}
+              </p>
+            </div>
+          </div>
 
           <div className="space-y-6">
             <GrowthChart data={growthData} />
