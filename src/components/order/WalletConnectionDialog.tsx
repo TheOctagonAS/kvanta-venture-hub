@@ -2,6 +2,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { algorandService } from "@/services/AlgorandService";
 import {
   Dialog,
   DialogContent,
@@ -24,12 +25,10 @@ export const WalletConnectionDialog = ({
   onClose,
   onSuccess,
 }: WalletConnectionDialogProps) => {
-  const [address, setAddress] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleConnect = async () => {
     if (!user) {
       toast.error("Du må være logget inn");
       return;
@@ -37,6 +36,8 @@ export const WalletConnectionDialog = ({
 
     setIsLoading(true);
     try {
+      const address = await algorandService.connectWallet();
+      
       const { error } = await supabase
         .from("profiles")
         .update({ algo_address: address })
@@ -65,26 +66,20 @@ export const WalletConnectionDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 pt-4">
-          <div className="space-y-2">
-            <Label htmlFor="address">Algorand-adresse</Label>
-            <Input
-              id="address"
-              placeholder="Oppgi din Algorand-adresse"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              required
-            />
-          </div>
+        <div className="space-y-4 pt-4">
+          <Button 
+            onClick={handleConnect} 
+            disabled={isLoading}
+            className="w-full"
+          >
+            {isLoading ? "Kobler til..." : "Koble til Algorand Wallet"}
+          </Button>
           <div className="flex justify-end gap-3">
             <Button type="button" variant="outline" onClick={onClose}>
               Avbryt
             </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Kobler til..." : "Koble til"}
-            </Button>
           </div>
-        </form>
+        </div>
       </DialogContent>
     </Dialog>
   );
