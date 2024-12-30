@@ -24,7 +24,7 @@ export default {
         ring: "hsl(var(--ring))",
         background: {
           DEFAULT: "#f8f9fa",
-          dark: "#1a1a1a", // Updated from #101010 to #1a1a1a
+          dark: "#101010",
         },
         foreground: {
           DEFAULT: "#333333",
@@ -38,7 +38,7 @@ export default {
         secondary: {
           DEFAULT: "#E9F2FF",
           foreground: "#333333",
-          dark: "#2a2a2a", // Updated to a lighter shade for better contrast
+          dark: "#1a1a1a",
         },
         accent: {
           DEFAULT: "#47C757",
@@ -57,11 +57,11 @@ export default {
           },
           lightgray: {
             DEFAULT: "#f8f9fa",
-            dark: "#1a1a1a", // Updated to match the new dark background
+            dark: "#101010",
           },
           softblue: {
             DEFAULT: "#E9F2FF",
-            dark: "#2a2a2a", // Updated to match the new secondary dark color
+            dark: "#1a1a1a",
           },
         },
       },
