@@ -35,13 +35,15 @@ const LoginForm = () => {
     if (!validateForm()) return;
     
     setIsLoading(true);
-    console.log("Attempting login with email:", email);
+    console.log("Starting login attempt with email:", email);
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password: password.trim(),
       });
+
+      console.log("Login response:", { data, error });
 
       if (error) {
         console.error("Login error details:", error);
@@ -59,10 +61,13 @@ const LoginForm = () => {
       }
 
       if (data.user) {
-        console.log("Login successful, user:", data.user.email);
-        login(data.user.email || "", password);
+        console.log("Login successful for user:", data.user.email);
+        await login(data.user.email || "", password);
         toast.success("Innlogging vellykket!");
         navigate("/minside");
+      } else {
+        console.error("No user data returned after successful login");
+        toast.error("Kunne ikke hente brukerdata. Prøv igjen.");
       }
     } catch (error: any) {
       console.error("Unexpected login error:", error);
