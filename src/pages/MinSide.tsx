@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import UserProfile from "@/components/UserProfile";
 import UserHoldings from "@/components/UserHoldings";
 import Statistics from "@/components/Statistics";
+import PropertyOverview from "@/components/PropertyOverview";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
@@ -24,7 +25,6 @@ const MinSide = () => {
     queryFn: async () => {
       if (!user) return null;
       
-      // Get both profile and KYC data
       const [profileResponse, kycResponse] = await Promise.all([
         supabase
           .from('profiles')
@@ -42,7 +42,6 @@ const MinSide = () => {
         throw profileResponse.error;
       }
 
-      // Don't throw error if KYC data doesn't exist
       if (kycResponse.error && kycResponse.error.code !== 'PGRST116') {
         throw kycResponse.error;
       }
@@ -68,7 +67,7 @@ const MinSide = () => {
   }
 
   if (!user) {
-    return null; // Return null since useEffect will handle the redirect
+    return null;
   }
 
   return (
@@ -84,6 +83,8 @@ const MinSide = () => {
           transition={{ duration: 0.8 }}
           className="max-w-7xl mx-auto space-y-8"
         >
+          <PropertyOverview />
+          
           <div className="bg-white rounded-lg shadow-lg p-6">
             <UserProfile 
               isKyc={profile?.is_kyc || false} 
