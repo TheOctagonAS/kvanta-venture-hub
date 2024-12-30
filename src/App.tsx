@@ -14,6 +14,7 @@ import MinSide from "./pages/MinSide";
 import LesMer from "./pages/LesMer";
 import Lommebok from "./pages/Lommebok";
 import KYC from "./pages/KYC";
+import PropertyDetail from "./pages/PropertyDetail";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App = () => (
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/eiendommer" element={<Eiendommer />} />
+                <Route path="/property/:id" element={<PropertyDetail />} />
                 <Route path="/minside" element={<MinSide />} />
                 <Route path="/les-mer" element={<LesMer />} />
                 <Route path="/lommebok" element={<Lommebok />} />

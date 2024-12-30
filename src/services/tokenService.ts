@@ -23,7 +23,7 @@ export class TokenService {
     quantity: number
   ): Promise<TokenOperationResult> {
     try {
-      const { error } = await supabase.rpc<void, TokenRPCParams>('reserve_tokens', {
+      const { error } = await supabase.rpc<any, TokenRPCParams>('reserve_tokens', {
         p_user_id: userId,
         p_property_id: propertyId,
         p_token_count: quantity
@@ -46,7 +46,7 @@ export class TokenService {
     quantity: number
   ): Promise<TokenOperationResult> {
     try {
-      const { error } = await supabase.rpc<void, TokenRPCParams>('release_tokens', {
+      const { error } = await supabase.rpc<any, TokenRPCParams>('release_tokens', {
         p_user_id: userId,
         p_property_id: propertyId,
         p_token_count: quantity
@@ -70,7 +70,7 @@ export class TokenService {
     quantity: number
   ): Promise<TokenOperationResult> {
     try {
-      const { error } = await supabase.rpc<void, TransferTokensParams>('transfer_tokens', {
+      const { error } = await supabase.rpc<any, TransferTokensParams>('transfer_tokens', {
         p_from_user_id: fromUserId,
         p_to_user_id: toUserId,
         p_property_id: propertyId,
