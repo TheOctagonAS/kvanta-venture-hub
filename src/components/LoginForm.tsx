@@ -13,17 +13,42 @@ const LoginForm = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  const validateInputs = () => {
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+
+    if (!trimmedEmail || !trimmedPassword) {
+      toast.error("Vennligst fyll ut både e-post og passord.");
+      return false;
+    }
+
+    if (!trimmedEmail.includes("@")) {
+      toast.error("Vennligst skriv inn en gyldig e-postadresse.");
+      return false;
+    }
+
+    return true;
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateInputs()) {
+      return;
+    }
+
     setIsLoading(true);
+    console.log("Attempting login with email:", email);
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+        email: email.trim(),
+        password: password.trim(),
       });
 
       if (error) {
+        console.error("Login error details:", error);
+        
         if (error.message.includes("Invalid login credentials")) {
           toast.error("Feil e-post eller passord.");
         } else if (error.message.includes("Email not confirmed")) {
@@ -31,21 +56,20 @@ const LoginForm = () => {
         } else if (error.message.includes("rate_limit")) {
           toast.error("For mange forsøk. Vennligst vent litt før du prøver igjen.");
         } else {
-          console.error("Login error:", error);
           toast.error("En feil oppstod under innlogging. Prøv igjen senere.");
         }
-        setIsLoading(false);
         return;
       }
 
       if (data.user) {
+        console.log("Login successful for user:", data.user.email);
         login(data.user.email || "", password);
         toast.success("Innlogging vellykket!");
         navigate("/minside");
       }
     } catch (error) {
-      console.error("Login error:", error);
-      toast.error("En feil oppstod under innlogging. Prøv igjen senere.");
+      console.error("Unexpected login error:", error);
+      toast.error("En uventet feil oppstod. Prøv igjen senere.");
     } finally {
       setIsLoading(false);
     }
