@@ -33,12 +33,12 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white dark:bg-[#1a1a1a] shadow-sm border-b border-gray-200 dark:border-[#2a2a2a] sticky top-0 z-50 transition-colors duration-200">
+    <nav className="bg-white dark:bg-[#1a1a1a] shadow-sm border-b border-gray-200 dark:border-[#2a2a2a] sticky top-0 z-50 transition-colors duration-200 h-14 sm:h-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-14 sm:h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center gap-2 py-2 px-4 group">
-              <KvantaLogo className="text-primary dark:text-white" />
+              <KvantaLogo className="text-primary dark:text-white h-8 sm:h-12" />
               <Badge 
                 variant="secondary" 
                 className="ml-2 text-xs bg-gradient-to-r from-rose-500 to-rose-600 text-white font-medium shadow-sm"
@@ -66,9 +66,9 @@ const Navbar = () => {
               title={theme === 'dark' ? 'Bytt til lys modus' : 'Bytt til mørk modus'}
             >
               {theme === 'dark' ? (
-                <Sun className="h-5 w-5 text-white" />
+                <Sun className="h-4 w-4 text-white" />
               ) : (
-                <Moon className="h-5 w-5 text-[#bbb]" />
+                <Moon className="h-4 w-4 text-[#bbb]" />
               )}
             </Button>
             {user && (
@@ -87,7 +87,7 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-gray-600 dark:text-[#ccc] hover:text-primary dark:hover:text-white"
             >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>
