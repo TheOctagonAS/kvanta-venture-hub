@@ -97,16 +97,19 @@ export type Database = {
       }
       profiles: {
         Row: {
+          algo_address: string | null
           created_at: string
           id: string
           is_kyc: boolean
         }
         Insert: {
+          algo_address?: string | null
           created_at?: string
           id: string
           is_kyc?: boolean
         }
         Update: {
+          algo_address?: string | null
           created_at?: string
           id?: string
           is_kyc?: boolean
