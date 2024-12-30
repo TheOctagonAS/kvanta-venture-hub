@@ -63,9 +63,10 @@ const LoginForm = () => {
 
       if (data.user) {
         console.log("Login successful for user:", data.user.email);
-        login(data.user.email || "", password);
+        await login(data.user.email || "", password);
         toast.success("Innlogging vellykket!");
-        navigate("/minside");
+        // Ensure immediate navigation after successful login
+        navigate("/minside", { replace: true });
       }
     } catch (error) {
       console.error("Unexpected login error:", error);
