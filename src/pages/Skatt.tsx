@@ -1,41 +1,24 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
-import { Receipt, Info, Percent, DollarSign, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { InfoIcon, FileDown, DollarSign } from "lucide-react";
 import { toast } from "sonner";
 
 const Skatt = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
-  const TAX_RATE = 0.22; // 22% skattesats
-
-  useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    }
-  }, [user, navigate]);
 
   const { data: rentEarnings } = useQuery({
-    queryKey: ['rentEarnings', user?.id, currentYear],
+    queryKey: ['rent-earnings', user?.id, currentYear],
     queryFn: async () => {
-      if (!user) return [];
+      if (!user) return null;
       const { data, error } = await supabase
         .from('rent_earnings')
         .select(`
-          *,
+          earned_amount,
           property:properties(name)
         `)
         .eq('user_id', user.id)
@@ -47,12 +30,12 @@ const Skatt = () => {
     enabled: !!user,
   });
 
-  const totalEarnedAmount = rentEarnings?.reduce((sum, earning) => 
+  const totalEarnings = rentEarnings?.reduce((sum, earning) => 
     sum + Number(earning.earned_amount), 0) || 0;
-  
-  const estimatedTax = totalEarnedAmount * TAX_RATE;
 
-  const handleDownloadReport = async () => {
+  const estimatedTax = totalEarnings * 0.22;
+
+  const handleExportCSV = async () => {
     try {
       const { data, error } = await supabase.functions.invoke('generate-tax-report', {
         body: { user_id: user?.id, year: currentYear }
@@ -60,7 +43,7 @@ const Skatt = () => {
 
       if (error) throw error;
 
-      // Create a blob from the CSV data
+      // Create blob from the CSV data
       const blob = new Blob([data], { type: 'text/csv' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -68,96 +51,73 @@ const Skatt = () => {
       a.download = `kvanta_skatteoversikt_${currentYear}.csv`;
       document.body.appendChild(a);
       a.click();
-      window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
 
-      toast.success('Skatterapport lastet ned');
+      toast.success('CSV-fil lastet ned');
     } catch (error) {
-      console.error('Error downloading report:', error);
-      toast.error('Kunne ikke laste ned skatterapport');
+      console.error('Error exporting CSV:', error);
+      toast.error('Kunne ikke laste ned CSV-fil');
     }
   };
 
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-[#f8faff]">
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">
-              Skatt på Tokenisert Eiendom (Norsk Regelverk)
+    <div className="min-h-screen bg-[#f8faff] py-12">
+      <div className="container mx-auto px-4">
+        <div className="max-w-4xl mx-auto space-y-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">
+              Skatteoversikt
             </h1>
-            <p className="text-sm text-gray-600 mb-6">
-              Denne informasjonen er kun veiledende, og erstatter ikke profesjonell skatterådgivning. 
-              Du er selv ansvarlig for korrekt rapportering til Skatteetaten.
-            </p>
+            <Alert className="mb-6">
+              <InfoIcon className="h-4 w-4" />
+              <AlertDescription>
+                Dette er kun en veiledende oversikt. For nøyaktig skatteberegning, 
+                kontakt en autorisert regnskapsfører eller skatterådgiver.
+              </AlertDescription>
+            </Alert>
+          </div>
 
-            <div className="mt-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                Hvordan beskattes leieinntekter?
-              </h2>
-              <ul className="list-disc pl-6 space-y-3 text-gray-700">
-                <li>
-                  I Norge beskattes utleieinntekter som alminnelig inntekt (pt. 22%) i det år 
-                  de er "opptjent" (periodisering).
-                </li>
-                <li>
-                  Det vil si at selv om du ikke "claimer" (tar ut) leien, regnes den som 
-                  skattepliktig inntekt når den er opptjent eller tilgjengelig for deg.
-                </li>
-                <li>
-                  Du må rapportere brutto leie, evt. fradrag for kostnader, i skattemeldingen.
-                </li>
-              </ul>
-              
-              <p className="mt-6 text-sm text-gray-600 italic">
-                Exakt rapportering kan variere. Sjekk Skatteetatens retningslinjer eller 
-                kontakt en skatterådgiver.
-              </p>
-            </div>
-
-            <div className="mt-12">
-              <Card className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-2">
-                    <Receipt className="h-5 w-5 text-primary" />
-                    <h2 className="text-xl font-semibold">
-                      Din Skatteoversikt {currentYear}
-                    </h2>
-                  </div>
-                  <Button
-                    variant="outline"
-                    className="flex items-center gap-2"
-                    onClick={handleDownloadReport}
-                  >
-                    <Download className="h-4 w-4" />
-                    Last ned skatterapport
-                  </Button>
-                </div>
-
-                <div className="bg-primary/5 p-4 rounded-lg mb-6">
-                  <div className="flex items-start gap-2">
-                    <Info className="h-5 w-5 text-primary mt-1" />
-                    <div>
-                      <p className="font-medium text-lg">
-                        Din skattepliktige leie: {totalEarnedAmount.toLocaleString()} NOK (foreløpig)
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        Dette beløpet er basert på opptjent leie, uavhengig av om du har tatt ut pengene.
-                      </p>
+          <Card className="p-6">
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-xl font-semibold mb-4">
+                  Leieinntekter {currentYear}
+                </h2>
+                
+                {rentEarnings && rentEarnings.length > 0 ? (
+                  <div className="space-y-4">
+                    {rentEarnings.map((earning, index) => (
+                      <div key={index} className="flex justify-between items-center border-b pb-2">
+                        <span>{earning.property.name}</span>
+                        <span className="font-medium">
+                          {Number(earning.earned_amount).toLocaleString()} NOK
+                        </span>
+                      </div>
+                    ))}
+                    
+                    <div className="flex justify-between items-center pt-2 font-semibold">
+                      <span>Total leieinntekt</span>
+                      <span>{totalEarnings.toLocaleString()} NOK</span>
                     </div>
                   </div>
-                </div>
+                ) : (
+                  <p className="text-gray-500">
+                    Ingen leieinntekter registrert for {currentYear}
+                  </p>
+                )}
+              </div>
 
-                <div className="bg-secondary/30 p-4 rounded-lg mb-6">
+              <div className="space-y-4">
+                <div className="bg-primary/10 p-4 rounded-lg">
                   <div className="flex items-start gap-2">
-                    <Percent className="h-5 w-5 text-primary mt-1" />
+                    <DollarSign className="h-5 w-5 text-primary mt-1" />
                     <div>
-                      <p className="font-medium text-lg">
-                        Beregnet Skatt (veiledende): {estimatedTax.toLocaleString()} NOK
+                      <p className="font-medium text-lg">Estimert skatt (22%)</p>
+                      <p className="font-semibold text-2xl text-primary">
+                        {estimatedTax.toLocaleString()} NOK
                       </p>
                       <p className="text-sm text-gray-600">
                         Dette er et omtrentlig beløp. Faktisk skatt kan variere pga fradrag m.m.
@@ -166,49 +126,36 @@ const Skatt = () => {
                   </div>
                 </div>
 
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Eiendom</TableHead>
-                      <TableHead className="text-right">Årets opptjente leie</TableHead>
-                      <TableHead className="text-right">Uttatt leie</TableHead>
-                      <TableHead className="text-right">Ikke uttatt</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {rentEarnings && rentEarnings.length > 0 ? (
-                      rentEarnings.map((earning) => (
-                        <TableRow key={earning.id}>
-                          <TableCell>{earning.property.name}</TableCell>
-                          <TableCell className="text-right">
-                            {Number(earning.earned_amount).toLocaleString()} NOK
-                          </TableCell>
-                          <TableCell className="text-right">
-                            {Number(earning.withdrawn_amount).toLocaleString()} NOK
-                          </TableCell>
-                          <TableCell className="text-right">
-                            {(Number(earning.earned_amount) - Number(earning.withdrawn_amount)).toLocaleString()} NOK
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan={4} className="text-center py-4 text-gray-500">
-                          Ingen leieinntekter registrert for {currentYear}
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
+                <div className="bg-secondary/10 p-4 rounded-lg mb-6">
+                  <div className="flex items-start gap-2">
+                    <DollarSign className="h-5 w-5 text-primary mt-1" />
+                    <div>
+                      <p className="font-medium text-lg">Fradragsoversikt</p>
+                      <p className="text-sm text-gray-600">
+                        Her vil du kunne registrere fradragsberettigede utgifter som vedlikehold, 
+                        forsikring og andre relevante kostnader. (Kommer snart)
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-                <p className="mt-4 text-sm text-gray-500 italic">
-                  Merk: Denne rapporten er kun veiledende. Sjekk tallene nøye før innsending i skattemeldingen.
+              <div className="border-t pt-6">
+                <Button
+                  onClick={handleExportCSV}
+                  className="w-full flex items-center justify-center gap-2"
+                >
+                  <FileDown className="h-4 w-4" />
+                  Last ned skattedata (CSV)
+                </Button>
+                <p className="text-sm text-gray-500 mt-2 text-center">
+                  Last ned en CSV-fil med detaljert oversikt over leieinntekter
                 </p>
-              </Card>
+              </div>
             </div>
-          </div>
+          </Card>
         </div>
-      </main>
+      </div>
     </div>
   );
 };
