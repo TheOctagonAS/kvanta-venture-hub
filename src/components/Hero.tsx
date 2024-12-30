@@ -10,7 +10,7 @@ function Hero() {
   const { user } = useAuth();
   const [titleNumber, setTitleNumber] = useState(0);
   const titles = useMemo(
-    () => ["trygt", "enkelt", "lønnsomt", "transparent", "smart", "tilgjengelig"],
+    () => ["enkelt", "trygt", "lønnsomt", "transparent", "smart", "tilgjengelig"],
     []
   );
 
@@ -32,20 +32,20 @@ function Hero() {
   return (
     <div className="w-full">
       <div className="container mx-auto px-4">
-        <div className="flex gap-4 py-8 lg:py-16 items-center justify-center flex-col">
+        <div className="flex gap-4 py-6 lg:py-12 items-center justify-center flex-col">
           <div>
             <Link to="/les-mer">
               <Button 
                 variant="secondary" 
                 size="sm" 
-                className="gap-4 bg-white/80 hover:bg-white/90 backdrop-blur-sm text-nordic-charcoal font-medium rounded-full shadow-lg hover:shadow-xl transition-all border border-nordic-charcoal/10"
+                className="gap-2 bg-white/80 hover:bg-white/90 backdrop-blur-sm text-nordic-charcoal font-medium rounded-full shadow-sm hover:shadow-md transition-all border border-nordic-charcoal/10 text-sm px-4 py-2"
               >
-                Les mer om Kvanta.ai <ArrowUpRight className="w-4 h-4" />
+                Les mer om Kvanta.ai <ArrowUpRight className="w-3 h-3" />
               </Button>
             </Link>
           </div>
           <div className="flex gap-3 flex-col">
-            <h1 className="text-3xl md:text-6xl max-w-2xl tracking-tighter text-center font-regular text-nordic-charcoal px-2">
+            <h1 className="text-2xl sm:text-3xl md:text-5xl max-w-2xl tracking-tighter text-center font-regular text-nordic-charcoal px-2">
               <span>Eiendomsinvestering gjort</span>
               <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-4 md:pt-1">
                 &nbsp;
@@ -73,7 +73,7 @@ function Hero() {
               </span>
             </h1>
 
-            <p className="text-base md:text-lg leading-relaxed tracking-tight text-nordic-charcoal/80 max-w-xl text-center px-4">
+            <p className="text-sm sm:text-base leading-relaxed tracking-tight text-nordic-charcoal/80 max-w-xl text-center px-4">
               Start eiendomsreisen med bare 1000 kr. Opprett bruker og få <span className="font-bold">daglige</span> leieinntekter og verdistigning rett i din lommebok gjennom vår sikre, tokenbaserte plattform.
             </p>
           </div>
@@ -82,18 +82,18 @@ function Hero() {
             <Button 
               onClick={handleVippsLogin}
               size="lg" 
-              className="text-lg px-8 py-6 gap-4 bg-[#FF5B2D] hover:bg-[#FF5B2D]/90 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all mt-2"
+              className="text-base px-6 py-5 gap-2 bg-[#FF5B2D] hover:bg-[#FF5B2D]/90 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all mt-2 w-full sm:w-auto"
             >
-              Registrer med Vipps <ArrowUpRight className="w-5 h-5" />
+              Registrer med Vipps <ArrowUpRight className="w-4 h-4" />
             </Button>
           )}
 
           {user && (
-            <div className="flex flex-col sm:flex-row gap-3 mt-2">
-              <Link to="/eiendommer">
+            <div className="flex flex-col sm:flex-row gap-3 mt-2 w-full sm:w-auto">
+              <Link to="/eiendommer" className="w-full sm:w-auto">
                 <Button 
                   size="lg" 
-                  className="gap-4 bg-primary hover:bg-primary/90 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all"
+                  className="gap-2 bg-primary hover:bg-primary/90 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all w-full"
                 >
                   Se eiendommer <ArrowUpRight className="w-4 h-4" />
                 </Button>
