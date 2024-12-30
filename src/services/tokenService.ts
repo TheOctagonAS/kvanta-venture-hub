@@ -5,11 +5,18 @@ interface TokenOperationResult {
   error?: string;
 }
 
+interface TokenRPCParams {
+  p_user_id: string;
+  p_property_id: string;
+  p_token_count: number;
+}
+
+interface TransferTokensParams extends TokenRPCParams {
+  p_from_user_id: string;
+  p_to_user_id: string;
+}
+
 export class TokenService {
-  /**
-   * Reserves tokens for a user (e.g., when placing a sell order)
-   * TODO: Replace with smart contract calls in the future
-   */
   static async reserveTokens(
     userId: string,
     propertyId: string,
@@ -20,7 +27,7 @@ export class TokenService {
         p_user_id: userId,
         p_property_id: propertyId,
         p_token_count: quantity
-      });
+      } as TokenRPCParams);
 
       if (error) throw error;
       return { success: true };
@@ -33,10 +40,6 @@ export class TokenService {
     }
   }
 
-  /**
-   * Releases previously reserved tokens (e.g., when cancelling a sell order)
-   * TODO: Replace with smart contract calls in the future
-   */
   static async releaseTokens(
     userId: string,
     propertyId: string,
@@ -47,7 +50,7 @@ export class TokenService {
         p_user_id: userId,
         p_property_id: propertyId,
         p_token_count: quantity
-      });
+      } as TokenRPCParams);
 
       if (error) throw error;
       return { success: true };
@@ -60,10 +63,6 @@ export class TokenService {
     }
   }
 
-  /**
-   * Transfers tokens from one user to another (e.g., when executing an order)
-   * TODO: Replace with smart contract calls in the future
-   */
   static async transferTokens(
     fromUserId: string,
     toUserId: string,
@@ -76,7 +75,7 @@ export class TokenService {
         p_to_user_id: toUserId,
         p_property_id: propertyId,
         p_token_count: quantity
-      });
+      } as TransferTokensParams);
 
       if (error) throw error;
       return { success: true };
