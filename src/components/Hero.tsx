@@ -4,6 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { vippsService } from "@/services/vippsService";
 
 function Hero() {
   const { user } = useAuth();
@@ -23,6 +24,10 @@ function Hero() {
     }, 2000);
     return () => clearTimeout(timeoutId);
   }, [titleNumber, titles]);
+
+  const handleVippsLogin = () => {
+    window.location.href = vippsService.getVippsLoginUrl();
+  };
 
   return (
     <div className="w-full">
@@ -72,6 +77,17 @@ function Hero() {
               Start eiendomsreisen med bare 1000 kr. Opprett bruker og få <span className="font-bold">daglige</span> leieinntekter og verdistigning rett i din lommebok gjennom vår sikre, tokenbaserte plattform.
             </p>
           </div>
+          
+          {!user && (
+            <Button 
+              onClick={handleVippsLogin}
+              size="lg" 
+              className="text-lg px-8 py-6 gap-4 bg-[#FF5B2D] hover:bg-[#FF5B2D]/90 text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all"
+            >
+              Registrer med Vipps <ArrowUpRight className="w-5 h-5" />
+            </Button>
+          )}
+
           {user && (
             <div className="flex flex-col sm:flex-row gap-3">
               <Link to="/eiendommer">
