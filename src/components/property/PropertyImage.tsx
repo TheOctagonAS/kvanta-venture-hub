@@ -1,15 +1,15 @@
-type PropertyImageProps = {
+interface PropertyImageProps {
   imageUrl: string | null;
-  propertyName: string;
-};
+  name: string;
+}
 
-export const PropertyImage = ({ imageUrl, propertyName }: PropertyImageProps) => {
+export const PropertyImage = ({ imageUrl, name }: PropertyImageProps) => {
   return (
-    <div className="relative h-48 overflow-hidden">
+    <div className="relative aspect-[16/9]">
       <img
         src={imageUrl || '/placeholder.svg'}
-        alt={propertyName}
-        className="w-full h-full object-cover"
+        alt={name}
+        className="object-cover w-full h-full"
       />
     </div>
   );

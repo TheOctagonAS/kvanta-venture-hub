@@ -1,35 +1,28 @@
-import { MapPin, Coins } from "lucide-react";
-
-type PropertyDetailsProps = {
+interface PropertyDetailsProps {
+  name: string;
   location: string;
   pricePerToken: number;
-  availableTokens: number;
-  ratio: number;
-};
+  tokensSold: number;
+  maxTokens: number;
+}
 
-export const PropertyDetails = ({ location, pricePerToken, availableTokens, ratio }: PropertyDetailsProps) => {
+export const PropertyDetails = ({
+  name,
+  location,
+  pricePerToken,
+  tokensSold,
+  maxTokens,
+}: PropertyDetailsProps) => {
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2 text-nordic-gray">
-        <MapPin className="h-4 w-4" />
-        <span className="font-medium">{location}</span>
-      </div>
-      <div className="flex items-center gap-2 text-nordic-blue">
-        <Coins className="h-4 w-4" />
-        <span className="font-medium">
-          {pricePerToken} kr per token
-        </span>
-      </div>
-      
-      <div>
-        <div className="h-2 bg-nordic-softblue rounded-full overflow-hidden">
-          <div 
-            className="bg-nordic-blue h-full transition-all duration-300"
-            style={{ width: `${ratio * 100}%` }}
-          />
-        </div>
-        <p className="text-sm text-nordic-gray mt-2">
-          {availableTokens} andeler igjen
+    <div className="p-4">
+      <h3 className="text-lg font-semibold">{name}</h3>
+      <p className="text-gray-600">{location}</p>
+      <div className="mt-2">
+        <p className="text-sm text-gray-600">
+          Pris per token: {pricePerToken.toLocaleString()} NOK
+        </p>
+        <p className="text-sm text-gray-600">
+          Tokens solgt: {tokensSold} / {maxTokens}
         </p>
       </div>
     </div>

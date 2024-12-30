@@ -6,21 +6,6 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface PlaceOrderBody {
-  propertyId: string;
-  orderType: 'BUY' | 'SELL';
-  tokenCount: number;
-  pricePerToken: number;
-}
-
-interface ExecuteOrderBody {
-  orderId: string;
-}
-
-interface CancelOrderBody {
-  orderId: string;
-}
-
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -39,7 +24,6 @@ serve(async (req) => {
       }
     );
 
-    // Get the authorization header from the request
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       return new Response(
@@ -48,10 +32,7 @@ serve(async (req) => {
       );
     }
 
-    // Get the JWT token from the authorization header
     const token = authHeader.replace('Bearer ', '');
-    
-    // Verify the JWT token and get the user
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser(token);
     if (userError || !user) {
       return new Response(
@@ -65,28 +46,36 @@ serve(async (req) => {
 
     switch (path) {
       case 'placeOrder': {
-        if (req.method !== 'POST') {
-          return new Response(
-            JSON.stringify({ error: 'Method not allowed' }),
-            { status: 405, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        }
-
-        const body: PlaceOrderBody = await req.json();
+        const { propertyId, orderType, tokenCount, pricePerToken } = await req.json();
         
-        // Verify user has enough tokens if SELL order
-        if (body.orderType === 'SELL') {
-          const { data: holdings, error: holdingsError } = await supabaseClient
+        if (orderType === 'SELL') {
+          // Reserve tokens when placing a sell order
+          const { data: holdings } = await supabaseClient
             .from('user_holdings')
             .select('token_count')
             .eq('user_id', user.id)
-            .eq('property_id', body.propertyId)
+            .eq('property_id', propertyId)
             .single();
 
-          if (holdingsError || !holdings || holdings.token_count < body.tokenCount) {
+          if (!holdings || holdings.token_count < tokenCount) {
             return new Response(
               JSON.stringify({ error: 'Insufficient tokens' }),
               { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          }
+
+          // Reserve tokens using RPC function
+          const { error: reserveError } = await supabaseClient.rpc('reserve_tokens', {
+            p_user_id: user.id,
+            p_property_id: propertyId,
+            p_token_count: tokenCount
+          });
+
+          if (reserveError) {
+            console.error('Error reserving tokens:', reserveError);
+            return new Response(
+              JSON.stringify({ error: 'Failed to reserve tokens' }),
+              { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
             );
           }
         }
@@ -95,10 +84,10 @@ serve(async (req) => {
           .from('orders')
           .insert({
             user_id: user.id,
-            property_id: body.propertyId,
-            order_type: body.orderType,
-            token_count: body.tokenCount,
-            price_per_token: body.pricePerToken,
+            property_id: propertyId,
+            order_type: orderType,
+            token_count: tokenCount,
+            price_per_token: pricePerToken,
           })
           .select()
           .single();
@@ -118,16 +107,8 @@ serve(async (req) => {
       }
 
       case 'executeOrder': {
-        if (req.method !== 'POST') {
-          return new Response(
-            JSON.stringify({ error: 'Method not allowed' }),
-            { status: 405, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        }
+        const { orderId } = await req.json();
 
-        const { orderId }: ExecuteOrderBody = await req.json();
-
-        // Start a transaction
         const { data: order, error: orderError } = await supabaseClient
           .from('orders')
           .select('*')
@@ -167,8 +148,7 @@ serve(async (req) => {
           );
         }
 
-        // Transfer tokens from seller to buyer
-        // Note: In the future, this will be replaced with smart contract calls
+        // Transfer tokens using RPC function
         const { error: transferError } = await supabaseClient.rpc('transfer_tokens', {
           p_from_user_id: order.user_id,
           p_to_user_id: user.id,
@@ -191,14 +171,7 @@ serve(async (req) => {
       }
 
       case 'cancelOrder': {
-        if (req.method !== 'POST') {
-          return new Response(
-            JSON.stringify({ error: 'Method not allowed' }),
-            { status: 405, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          );
-        }
-
-        const { orderId }: CancelOrderBody = await req.json();
+        const { orderId } = await req.json();
 
         const { data: order, error: orderError } = await supabaseClient
           .from('orders')
@@ -213,6 +186,23 @@ serve(async (req) => {
             JSON.stringify({ error: 'Order not found or cannot be cancelled' }),
             { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
           );
+        }
+
+        if (order.order_type === 'SELL') {
+          // Release reserved tokens using RPC function
+          const { error: releaseError } = await supabaseClient.rpc('release_tokens', {
+            p_user_id: order.user_id,
+            p_property_id: order.property_id,
+            p_token_count: order.token_count
+          });
+
+          if (releaseError) {
+            console.error('Error releasing tokens:', releaseError);
+            return new Response(
+              JSON.stringify({ error: 'Failed to release tokens' }),
+              { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          }
         }
 
         const { error: updateError } = await supabaseClient
