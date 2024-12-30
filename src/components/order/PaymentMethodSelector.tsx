@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Bank, CreditCard, Smartphone } from "lucide-react";
+import { Banknote, CreditCard, Phone } from "lucide-react";
 
 type PaymentMethod = "bank_account" | "card" | "vipps" | null;
 
@@ -33,11 +33,11 @@ export const PaymentMethodSelector = ({
   const getMethodIcon = (method: PaymentMethod) => {
     switch (method) {
       case "bank_account":
-        return <Bank className="h-4 w-4" />;
+        return <Banknote className="h-4 w-4" />;
       case "card":
         return <CreditCard className="h-4 w-4" />;
       case "vipps":
-        return <Smartphone className="h-4 w-4" />;
+        return <Phone className="h-4 w-4" />;
       default:
         return null;
     }
@@ -77,7 +77,7 @@ export const PaymentMethodSelector = ({
             className="justify-start gap-2"
             onClick={() => handleSelect("bank_account")}
           >
-            <Bank className="h-4 w-4" />
+            <Banknote className="h-4 w-4" />
             Bankkonto
           </Button>
           <Button
@@ -95,7 +95,7 @@ export const PaymentMethodSelector = ({
             disabled
             onClick={() => handleSelect("vipps")}
           >
-            <Smartphone className="h-4 w-4" />
+            <Phone className="h-4 w-4" />
             Vipps
           </Button>
         </div>
