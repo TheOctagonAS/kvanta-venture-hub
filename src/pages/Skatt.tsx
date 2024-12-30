@@ -5,6 +5,15 @@ import { Button } from "@/components/ui/button";
 import { FileDown } from "lucide-react";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
+import { UserOptions } from "jspdf-autotable";
+
+// Extend jsPDF type to include autoTable properties
+interface jsPDFWithAutoTable extends jsPDF {
+  autoTable: (options: UserOptions) => void;
+  lastAutoTable: {
+    finalY: number;
+  };
+}
 
 const Skatt = () => {
   const { user } = useAuth();
@@ -38,7 +47,7 @@ const Skatt = () => {
   const previousYearIncome = currentYearIncome * 0.8;
 
   const handleExportPDF = () => {
-    const doc = new jsPDF();
+    const doc = new jsPDF() as jsPDFWithAutoTable;
     
     doc.setFontSize(16);
     doc.text("Skattesammendrag - Leieinntekter", 20, 20);
@@ -52,7 +61,7 @@ const Skatt = () => {
       ["Fjorårets leieinntekter", `${previousYearIncome.toFixed(2)} NOK`],
     ];
 
-    (doc as any).autoTable({
+    doc.autoTable({
       startY: 50,
       head: [["Beskrivelse", "Beløp"]],
       body: tableData,
