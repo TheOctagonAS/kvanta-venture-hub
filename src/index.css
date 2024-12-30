@@ -90,15 +90,15 @@
   }
 
   h1, .h1 {
-    @apply text-4xl font-bold text-nordic-charcoal dark:text-[#eee] tracking-heading mb-6;
+    @apply text-4xl font-bold text-nordic-charcoal dark:text-nordic-gray-dark tracking-heading mb-6;
   }
 
   h2, .h2 {
-    @apply text-3xl font-semibold text-nordic-charcoal dark:text-[#eee] tracking-heading mb-4;
+    @apply text-3xl font-semibold text-nordic-charcoal dark:text-nordic-gray-dark tracking-heading mb-4;
   }
 
   h3, .h3 {
-    @apply text-2xl font-medium text-nordic-charcoal dark:text-[#eee] tracking-heading mb-3;
+    @apply text-2xl font-medium text-nordic-charcoal dark:text-nordic-gray-dark tracking-heading mb-3;
   }
 
   p {
@@ -120,7 +120,7 @@
   }
 
   .card {
-    @apply bg-white dark:bg-[#1f1f1f] rounded-lg shadow-sm p-6 transition-all duration-200 hover:shadow-lg border border-transparent dark:border-[#333];
+    @apply bg-white dark:bg-overlay-dark rounded-lg shadow-sm p-6 transition-all duration-200 hover:shadow-lg border border-transparent dark:border-[#333];
   }
 
   .navbar {
@@ -141,6 +141,14 @@
 
   .nav-link {
     @apply text-[#333]/90 dark:text-[#eee]/90 hover:text-[#333] dark:hover:text-white transition-colors duration-200;
+  }
+
+  .overlay-box {
+    @apply bg-white dark:bg-overlay-dark text-nordic-charcoal dark:text-nordic-gray-dark shadow-sm hover:shadow-md transition-all duration-200 border border-transparent dark:border-[#333];
+  }
+
+  .highlight-box {
+    @apply bg-white dark:bg-overlay-highlight text-nordic-charcoal dark:text-nordic-gray-dark shadow-sm hover:shadow-md transition-all duration-200 border border-transparent dark:border-[#333];
   }
 }
 

@@ -45,6 +45,11 @@ export default {
           foreground: "#FFFFFF",
           dark: "#50D161",
         },
+        overlay: {
+          DEFAULT: "#FFFFFF",
+          dark: "#1f1f1f",
+          highlight: "#2a2a2a",
+        },
         nordic: {
           blue: "#345FF6",
           charcoal: {
@@ -53,7 +58,7 @@ export default {
           },
           gray: {
             DEFAULT: "#555555",
-            dark: "#e0e0e0",
+            dark: "#ddd",
           },
           lightgray: {
             DEFAULT: "#f8f9fa",
