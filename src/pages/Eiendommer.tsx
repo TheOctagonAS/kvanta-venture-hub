@@ -9,21 +9,6 @@ import { toast } from "sonner";
 import { PropertyCard } from "@/components/PropertyCard";
 import { Property } from "@/types/property";
 
-type Property = {
-  id: string;
-  name: string;
-  location: string;
-  price_per_token: number;
-  image_url: string | null;
-  yield: number;
-  max_tokens: number;
-  tokens_sold: number;
-  launch_date: string | null;
-  status: 'Active' | 'Coming Soon' | 'Sold Out';
-  is_featured: boolean;
-  property_type: string;
-};
-
 const fetchProperties = async () => {
   const { data, error } = await supabase
     .from('properties')
@@ -115,7 +100,7 @@ const Eiendommer = () => {
             <PropertyCard
               key={property.id}
               property={property}
-              onSelectProperty={setSelectedProperty}
+              onSelectProperty={(p: Property) => setSelectedProperty(p)}
             />
           ))}
         </div>
