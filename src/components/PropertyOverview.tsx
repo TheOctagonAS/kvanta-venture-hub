@@ -11,6 +11,7 @@ type HoldingWithProperty = {
   accumulated_rent: number;
   property: {
     price_per_token: number;
+    yield: number;
   };
 };
 
@@ -27,7 +28,8 @@ const PropertyOverview = () => {
           token_count,
           accumulated_rent,
           property:properties(
-            price_per_token
+            price_per_token,
+            yield
           )
         `)
         .eq('user_id', user.id);
@@ -50,6 +52,13 @@ const PropertyOverview = () => {
       total + (holding.accumulated_rent || 0), 0);
   };
 
+  const calculateAverageYield = () => {
+    if (!holdings || holdings.length === 0) return 0;
+    const totalYield = holdings.reduce((sum, holding) => 
+      sum + (holding.property.yield || 0), 0);
+    return (totalYield / holdings.length).toFixed(1);
+  };
+
   const handleDeposit = () => {
     toast.info("Innskudd-funksjonalitet kommer snart");
   };
@@ -61,7 +70,7 @@ const PropertyOverview = () => {
   return (
     <div className="mb-8">
       <h2 className="text-xl font-semibold mb-4 text-nordic-charcoal">Eiendomsoversikt</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
         {/* Account Value Box */}
         <Card className="p-6 bg-white">
           <div className="space-y-6">
@@ -130,6 +139,28 @@ const PropertyOverview = () => {
             {holdings?.length || 0}
           </p>
         </Card>
+      </div>
+
+      {/* New Statistics Row */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-[#f8f9fa] dark:bg-[#1f1f1f] p-4 rounded-lg">
+          <h3 className="text-base text-[#666] dark:text-gray-400 mb-1">Est. Eiendomsverdi</h3>
+          <p className="text-lg font-semibold text-nordic-charcoal dark:text-gray-200">
+            {calculateTotalValue().toLocaleString()} NOK
+          </p>
+        </div>
+        <div className="bg-[#f8f9fa] dark:bg-[#1f1f1f] p-4 rounded-lg">
+          <h3 className="text-base text-[#666] dark:text-gray-400 mb-1">Totalt avkastning</h3>
+          <p className="text-lg font-semibold text-nordic-charcoal dark:text-gray-200">
+            {calculateAverageYield()}%
+          </p>
+        </div>
+        <div className="bg-[#f8f9fa] dark:bg-[#1f1f1f] p-4 rounded-lg">
+          <h3 className="text-base text-[#666] dark:text-gray-400 mb-1">Totalt innestående</h3>
+          <p className="text-lg font-semibold text-nordic-charcoal dark:text-gray-200">
+            {(calculateTotalValue() + calculateTotalRent()).toLocaleString()} NOK
+          </p>
+        </div>
       </div>
     </div>
   );
