@@ -14,7 +14,7 @@ interface RentEarning {
   };
 }
 
-interface SupabaseRentEarning {
+interface SupabaseRentEarningResponse {
   earned_amount: number;
   property: {
     name: string;
@@ -41,14 +41,12 @@ const Skatt = () => {
       if (error) throw error;
       
       // Transform the data to match our RentEarning interface
-      const transformedData: RentEarning[] = (data || []).map((item: SupabaseRentEarning) => ({
+      return (data || []).map((item: SupabaseRentEarningResponse) => ({
         earned_amount: item.earned_amount,
         property: {
           name: item.property.name
         }
       }));
-
-      return transformedData;
     },
     enabled: !!user,
   });
