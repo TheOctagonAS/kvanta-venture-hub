@@ -6,83 +6,85 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --white: #ffffff;
-    --black: #000000;
-    --transparent: transparent;
-    --blue-300: #93c5fd;
-    --blue-400: #60a5fa;
-    --blue-500: #3b82f6;
-    --indigo-300: #a5b4fc;
-    --violet-200: #ddd6fe;
+    /* Base colors */
+    --background: #f8f9fa;
+    --background-dark: #1a1a1a;
+    --foreground: #333333;
+    --foreground-dark: #ffffff;
+    
+    /* Primary colors */
+    --primary: #345FF6;
+    --primary-foreground: #FFFFFF;
+    --primary-dark: #4B6EF6;
+    
+    /* Secondary colors */
+    --secondary: #E9F2FF;
+    --secondary-foreground: #333333;
+    --secondary-dark: #2A2A2A;
+    
+    /* Accent colors */
+    --accent: #47C757;
+    --accent-foreground: #FFFFFF;
+    --accent-dark: #3DB54C;
+    
+    /* Nordic theme colors */
+    --nordic-blue: #345FF6;
+    --nordic-charcoal: #333333;
+    --nordic-charcoal-dark: #ffffff;
+    --nordic-gray: #555555;
+    --nordic-gray-dark: #A0A0A0;
+    --nordic-lightgray: #f8f9fa;
+    --nordic-lightgray-dark: #1a1a1a;
+    --nordic-softblue: #E9F2FF;
+    --nordic-softblue-dark: #2A2A2A;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
+    /* System colors */
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
-
     --radius: 0.5rem;
-  }
-}
 
-@layer base {
+    /* Transition settings */
+    --theme-transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+  }
+
   * {
-    @apply border-border;
+    @apply border-border transition-colors;
   }
 
   body {
-    @apply bg-background text-foreground font-sans leading-relaxed;
+    @apply bg-background text-foreground font-sans leading-relaxed transition-colors duration-300;
   }
 
+  /* Typography */
   h1, .h1 {
-    @apply text-4xl font-bold text-nordic-charcoal tracking-heading mb-6;
+    @apply text-4xl font-bold text-nordic-charcoal tracking-heading mb-6 transition-colors duration-300;
   }
 
   h2, .h2 {
-    @apply text-3xl font-semibold text-nordic-charcoal tracking-heading mb-4;
+    @apply text-3xl font-semibold text-nordic-charcoal tracking-heading mb-4 transition-colors duration-300;
   }
 
   h3, .h3 {
-    @apply text-2xl font-medium text-nordic-charcoal tracking-heading mb-3;
+    @apply text-2xl font-medium text-nordic-charcoal tracking-heading mb-3 transition-colors duration-300;
   }
 
   p {
-    @apply text-nordic-gray mb-4;
+    @apply text-nordic-gray mb-4 transition-colors duration-300;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-primary hover:bg-primary/90 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 hover:shadow-lg;
+    @apply bg-primary hover:bg-primary/90 text-white font-medium px-6 py-3 rounded-lg transition-all duration-300 hover:shadow-lg;
   }
 
   .btn-secondary {
-    @apply bg-secondary hover:bg-secondary/90 text-nordic-charcoal font-medium px-6 py-3 rounded-lg transition-all duration-200 hover:shadow-lg;
+    @apply bg-secondary hover:bg-secondary/90 text-nordic-charcoal font-medium px-6 py-3 rounded-lg transition-all duration-300 hover:shadow-lg;
   }
 
   .card {
-    @apply bg-white rounded-lg shadow-md p-6 transition-all duration-200 hover:shadow-lg;
+    @apply bg-white rounded-lg shadow-md p-6 transition-all duration-300 hover:shadow-lg dark:bg-nordic-charcoal dark:text-white;
   }
 
   .section {
@@ -98,7 +100,7 @@
   }
 
   .nav-link {
-    @apply text-white/90 hover:text-white transition-colors duration-200;
+    @apply text-white/90 hover:text-white transition-colors duration-300;
   }
 }
 
