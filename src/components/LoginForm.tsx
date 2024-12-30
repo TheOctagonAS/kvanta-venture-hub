@@ -7,7 +7,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { vippsService } from "@/services/vippsService";
 
-// Declare the custom element for TypeScript
 declare global {
   namespace JSX {
     interface IntrinsicElements {
@@ -29,6 +28,7 @@ declare global {
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [referralCode, setReferralCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -69,11 +69,11 @@ const LoginForm = () => {
       if (error) {
         console.error("Login error details:", error);
         
-        if (error.message.includes("Invalid login credentials")) {
+        if (error.message.includes('Invalid login credentials')) {
           toast.error("Feil e-post eller passord.");
-        } else if (error.message.includes("Email not confirmed")) {
+        } else if (error.message.includes('Email not confirmed')) {
           toast.error("E-posten din er ikke bekreftet ennå. Sjekk innboksen din.");
-        } else if (error.message.includes("rate_limit")) {
+        } else if (error.message.includes('rate_limit')) {
           toast.error("For mange forsøk. Vennligst vent litt før du prøver igjen.");
         } else {
           toast.error("En feil oppstod under innlogging. Prøv igjen senere.");
@@ -127,6 +127,20 @@ const LoginForm = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
           placeholder="••••••••"
+          disabled={isLoading}
+          className="w-full bg-white border-nordic-softblue focus:border-nordic-blue transition-colors"
+        />
+      </div>
+      <div className="space-y-2">
+        <label htmlFor="referralCode" className="text-sm font-medium text-nordic-charcoal">
+          Har du en vervekode? (valgfritt)
+        </label>
+        <Input
+          id="referralCode"
+          type="text"
+          value={referralCode}
+          onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+          placeholder="ABCD1234"
           disabled={isLoading}
           className="w-full bg-white border-nordic-softblue focus:border-nordic-blue transition-colors"
         />
