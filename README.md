@@ -14,28 +14,53 @@ For testing kan du bruke følgende påloggingsinformasjon:
 
 ## Hovedfunksjoner
 
-- Tokenisert eiendomsinvestering
-- APY-visning på eiendom
-- Kalkulator på forsiden for investeringssummer
-- Forbedret 'Min side' med DeFi-stil design, daily yield og claim-knapp
-- KYC-verifisering av brukere
-- Automatisk beregning av leieinntekter
-- Porteføljeadministrasjon
+### Min Side Oversikt
+Inspirert av Lofty's "Assets Overview", tilbyr vi en omfattende oversikt over din portefølje:
+- **Kontraverdi**: Total verdi av dine eiendomstokens
+- **Tilgjengelig Saldo**: Din nåværende saldo for kjøp/salg
+- **Leiesaldo**: Akkumulert leieinntekt fra dine eiendommer
 
-## Algorand Integrasjonsplan
+### Innskudd/Uttak
+Enkel håndtering av din saldo:
+- Innskudd via Vipps eller bankkonto
+- Uttak til registrert bankkonto
+- Sanntidsoppdatering av saldo
+- Transaksjonsoversikt
+
+### Mine Eiendeler
+Detaljert oversikt over dine investeringer:
+- Tabell med alle user_holdings
+- Verdi per eiendom
+- Antall tokens
+- Akkumulert leieinntekt
+- Daglig estimert avkastning
+
+### Rent & Earn
+Transparent inntektsoversikt:
+- Daily rent breakdown per eiendom
+- Estimert årlig yield
+- Claim-funksjonalitet for leieinntekter
+- Historisk oversikt over utbetalinger
+
+### Skatt
+Forenklet skatterapportering:
+- Automatisk beregning av skattepliktig inntekt
+- Årsoversikt over leieinntekter
+- PDF-eksport av skattegrunnlag
+- Integrert med norske skatteregler (22% sats)
+
+## Algorand Integrasjon
 
 Vi har implementert en første versjon av Algorand-integrasjon:
-
-- Ny `AlgorandService` for wallet-tilkobling og transaksjons-signering (mock)
+- Ny `AlgorandService` for wallet-tilkobling og transaksjons-signering
 - Fremtidig plan: Utstede Algorand Standard Assets (ASA) for hver eiendom
-- Betalingsmetode "Crypto-lommebok" er tilgjengelig for KYC-verifiserte brukere (isKyc=true)
+- Betalingsmetode "Crypto-lommebok" tilgjengelig for KYC-verifiserte brukere
 
 ### Brukerflyt for Algorand-kjøp:
-
 1. Velg eiendom fra porteføljen
 2. Velg antall tokens
 3. Velg betalingsmetode => "Algorand wallet"
-4. Signer transaksjon (mock i denne versjonen)
+4. Signer transaksjon
 5. Ved vellykket signering => ordre plassert => userHoldings oppdatert
 
 ## Teknisk Dokumentasjon
