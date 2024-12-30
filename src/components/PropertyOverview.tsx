@@ -41,7 +41,13 @@ const PropertyOverview = () => {
         .eq('user_id', user.id);
       
       if (error) throw error;
-      return (data || []) as HoldingWithProperty[];
+      
+      // Transform the data to match our interface
+      return (data || []).map(holding => ({
+        token_count: holding.token_count,
+        accumulated_rent: holding.accumulated_rent,
+        property: holding.property[0] // Take first item since it's returned as an array
+      })) as HoldingWithProperty[];
     },
     enabled: !!user,
   });
