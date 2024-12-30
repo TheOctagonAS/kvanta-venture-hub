@@ -1,95 +1,98 @@
-import { useQuery } from "@tanstack/react-query"
-import { supabase } from "@/integrations/supabase/client"
-import { format } from "date-fns"
+import { Card } from "@/components/ui/card";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabaseClient";
 import {
   Area,
   AreaChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
   XAxis,
   YAxis,
-} from "recharts"
-import { Card } from "@/components/ui/card"
-import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart"
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 interface PriceHistoryChartProps {
-  propertyId: string
+  propertyId: string;
 }
+
+interface PriceData {
+  timestamp: string;
+  price: number;
+}
+
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white p-4 border rounded shadow">
+        <p className="text-sm text-gray-600">
+          {new Date(label).toLocaleDateString()}
+        </p>
+        <p className="text-sm font-bold text-nordic-blue">
+          {payload[0].value.toLocaleString()} NOK
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
 
 export const PriceHistoryChart = ({ propertyId }: PriceHistoryChartProps) => {
   const { data: priceHistory, isLoading } = useQuery({
-    queryKey: ["priceHistory", propertyId],
+    queryKey: ['priceHistory', propertyId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("token_price_history")
-        .select("price, timestamp")
-        .eq("property_id", propertyId)
-        .order("timestamp", { ascending: true })
+        .from('token_price_history')
+        .select('price, timestamp')
+        .eq('property_id', propertyId)
+        .order('timestamp', { ascending: true });
 
-      if (error) throw error
-      return data
+      if (error) throw error;
+      return data as PriceData[];
     },
-  })
+  });
 
   if (isLoading || !priceHistory) {
     return (
       <Card className="p-6">
-        <div className="h-[300px] animate-pulse bg-gray-200 rounded-lg" />
+        <div className="h-[400px] flex items-center justify-center">
+          <p className="text-gray-500">Loading price history...</p>
+        </div>
       </Card>
-    )
-  }
-
-  const chartData = priceHistory.map((record) => ({
-    date: format(new Date(record.timestamp), "MMM d"),
-    price: record.price,
-  }))
-
-  const config = {
-    price: {
-      label: "Price",
-      color: "#345FF6",
-    },
+    );
   }
 
   return (
     <Card className="p-6">
-      <h3 className="text-lg font-semibold mb-4">Price History</h3>
-      <div className="h-[300px]">
-        <ChartContainer config={config}>
-          <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+      <h3 className="text-lg font-semibold mb-4">Token Price History</h3>
+      <div className="h-[400px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart
+            data={priceHistory}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          >
             <defs>
-              <linearGradient id="priceGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#345FF6" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#345FF6" stopOpacity={0} />
+              <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#0066FF" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#0066FF" stopOpacity={0} />
               </linearGradient>
             </defs>
+            <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              dataKey="date"
-              stroke="#888888"
-              fontSize={12}
-              tickLine={false}
-              axisLine={false}
+              dataKey="timestamp"
+              tickFormatter={(timestamp) => new Date(timestamp).toLocaleDateString()}
             />
-            <YAxis
-              stroke="#888888"
-              fontSize={12}
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value) => `${value} NOK`}
-            />
-            <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200" />
-            <Tooltip content={(props) => <ChartTooltipContent {...props} />} />
+            <YAxis />
+            <Tooltip content={<CustomTooltip />} />
             <Area
               type="monotone"
               dataKey="price"
-              stroke="#345FF6"
+              stroke="#0066FF"
               fillOpacity={1}
-              fill="url(#priceGradient)"
+              fill="url(#colorPrice)"
             />
           </AreaChart>
-        </ChartContainer>
+        </ResponsiveContainer>
       </div>
     </Card>
-  )
-}
+  );
+};
