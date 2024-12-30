@@ -6,7 +6,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import YieldCalculator from "@/components/YieldCalculator";
 import { FlickeringGrid } from "@/components/FlickeringGrid";
 import { Hero } from "@/components/Hero";
-import VippsLogo from "../assets/vipps-logo.svg";
 
 const Index = () => {
   const features = [
@@ -62,18 +61,7 @@ const Index = () => {
       </div>
       <div className="relative z-10">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-nordic-charcoal">
-              Eiendomsinvestering for alle i Norden
-            </h1>
-            <p className="text-lg md:text-xl mb-8 max-w-2xl text-nordic-charcoal/80">
-              Start din eiendomsreise i dag med så lite som 1000 kr. Få daglige utbetalinger og full kontroll over investeringen din.
-            </p>
-            <button className="bg-[#FF5B2D] text-white text-lg px-8 py-4 rounded-full hover:bg-orange-600 transition-all duration-200 flex items-center justify-center">
-              <img src={VippsLogo} alt="Vipps" className="h-6 w-auto mr-3" />
-              Registrer deg med Vipps
-            </button>
-          </div>
+          <Hero />
 
           {/* Features section */}
           <motion.div
@@ -139,7 +127,7 @@ const Index = () => {
             </div>
           </motion.div>
 
-          {/* Investment Benefits Section */}
+          {/* New Investment Benefits Section */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
