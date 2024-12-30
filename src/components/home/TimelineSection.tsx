@@ -31,7 +31,7 @@ export const TimelineSection = () => {
         <div className="flex items-start gap-4">
           <CalendarClock className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
           <div>
-            <p>Koble til din foretrukne betalingsmetode. Vi støtter flere betalingsalternativer for å gjøre det enkelt å investere.</p>
+            <p>Koble til din foretrukne betalingsmetode. Vi støtter både tradisjonelle betalingsmetoder og krypto-lommebøker (Algorand) for å gjøre det enkelt å investere.</p>
           </div>
         </div>
       ),
