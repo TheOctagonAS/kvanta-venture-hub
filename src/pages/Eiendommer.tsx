@@ -79,16 +79,16 @@ const Eiendommer = () => {
           </p>
         </motion.div>
 
-        <div className="flex gap-4 mb-8 overflow-x-auto pb-2">
+        <div className="flex justify-center gap-3 mb-8 overflow-x-auto pb-2">
           {filterOptions.map((filter) => (
             <button
               key={filter.id}
               onClick={() => setSelectedFilter(filter.id)}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap ${
-                selectedFilter === filter.id
-                  ? "bg-[#345FF6] text-white"
+              className={`px-6 py-2.5 rounded-lg font-medium transition-all whitespace-nowrap relative
+                ${selectedFilter === filter.id
+                  ? "bg-[#E9F2FF] text-[#345FF6] after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-[#345FF6]"
                   : "bg-white text-gray-600 hover:bg-gray-50"
-              }`}
+                }`}
             >
               {filter.label}
             </button>

@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useState } from "react";
-import { Building2, MapPin } from "lucide-react";
+import { MapPin, Building2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface Property {
@@ -59,14 +59,14 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
         </div>
         
         <div className="p-6 space-y-4">
-          <div>
-            <h3 className="text-2xl font-bold text-nordic-charcoal mb-2">{property.name}</h3>
-            <div className="flex items-center text-gray-600 mb-4">
-              <MapPin className="h-4 w-4 mr-1" />
+          <div className="space-y-2">
+            <h3 className="text-xl font-bold text-nordic-charcoal leading-tight">{property.name}</h3>
+            <div className="flex items-center text-gray-600 text-sm">
+              <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
               <span>{property.location}</span>
             </div>
-            <div className="flex items-center text-gray-600">
-              <Building2 className="h-4 w-4 mr-1" />
+            <div className="flex items-center text-gray-500 text-xs">
+              <Building2 className="h-3.5 w-3.5 mr-1 flex-shrink-0" />
               <span>{property.property_type}</span>
             </div>
           </div>
