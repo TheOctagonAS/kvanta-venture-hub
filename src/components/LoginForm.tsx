@@ -18,34 +18,40 @@ const LoginForm = () => {
     setIsLoading(true);
 
     try {
+      console.log("Attempting login with email:", email);
+      
+      if (!email || !password) {
+        toast.error("Vennligst fyll ut både e-post og passord.");
+        return;
+      }
+
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+        email: email.trim(),
+        password: password.trim(),
       });
 
       if (error) {
+        console.error("Login error details:", error);
+        
         if (error.message.includes("Invalid login credentials")) {
-          toast.error("Feil e-post eller passord.");
+          toast.error("Feil e-post eller passord. Prøv igjen.");
         } else if (error.message.includes("Email not confirmed")) {
           toast.error("E-posten din er ikke bekreftet ennå. Sjekk innboksen din.");
-        } else if (error.message.includes("rate_limit")) {
-          toast.error("For mange forsøk. Vennligst vent litt før du prøver igjen.");
         } else {
-          console.error("Login error:", error);
           toast.error("En feil oppstod under innlogging. Prøv igjen senere.");
         }
-        setIsLoading(false);
         return;
       }
 
       if (data.user) {
-        login(data.user.email || "", password);
+        console.log("Login successful for user:", data.user.email);
+        await login(data.user.email || "", password);
         toast.success("Innlogging vellykket!");
         navigate("/minside");
       }
     } catch (error) {
-      console.error("Login error:", error);
-      toast.error("En feil oppstod under innlogging. Prøv igjen senere.");
+      console.error("Unexpected login error:", error);
+      toast.error("En uventet feil oppstod. Prøv igjen senere.");
     } finally {
       setIsLoading(false);
     }
