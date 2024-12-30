@@ -65,7 +65,7 @@ serve(async (req) => {
     
     switch (action) {
       case 'placeOrder': {
-        const { propertyId, orderType, tokenCount, pricePerToken } = await req.json();
+        const { propertyId, orderType, tokenCount, pricePerToken, paymentMethod } = await req.json();
         
         if (orderType === 'SELL') {
           // Reserve tokens when placing a sell order
@@ -84,6 +84,14 @@ serve(async (req) => {
           }
         }
 
+        // Validate payment method
+        if (orderType === 'BUY' && !paymentMethod) {
+          return new Response(
+            JSON.stringify({ error: 'Payment method is required for buy orders' }),
+            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
+
         const { data: order, error: orderError } = await supabaseClient
           .from('orders')
           .insert({
@@ -92,6 +100,7 @@ serve(async (req) => {
             order_type: orderType,
             token_count: tokenCount,
             price_per_token: pricePerToken,
+            payment_method: paymentMethod,
           })
           .select()
           .single();

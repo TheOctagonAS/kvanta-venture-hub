@@ -48,6 +48,7 @@ export type Database = {
           id: string
           on_chain_tx_id: string | null
           order_type: string
+          payment_method: string
           price_per_token: number
           property_id: string
           status: string
@@ -62,6 +63,7 @@ export type Database = {
           id?: string
           on_chain_tx_id?: string | null
           order_type: string
+          payment_method: string
           price_per_token: number
           property_id: string
           status?: string
@@ -76,6 +78,7 @@ export type Database = {
           id?: string
           on_chain_tx_id?: string | null
           order_type?: string
+          payment_method?: string
           price_per_token?: number
           property_id?: string
           status?: string

@@ -40,7 +40,8 @@ export const OrderForm = ({ property }: OrderFormProps) => {
       await tokenService.buyTokens(
         property.id,
         tokenCount,
-        property.price_per_token
+        property.price_per_token,
+        paymentMethod
       );
       toast.success("Ordre opprettet!");
       navigate("/minside");

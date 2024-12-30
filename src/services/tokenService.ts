@@ -1,14 +1,15 @@
 import { supabase } from "@/integrations/supabase/client";
 
 export const tokenService = {
-  async buyTokens(propertyId: string, tokenCount: number, pricePerToken: number) {
+  async buyTokens(propertyId: string, tokenCount: number, pricePerToken: number, paymentMethod: string) {
     const { data, error } = await supabase.functions.invoke('trade', {
       body: {
         action: 'placeOrder',
         propertyId,
         orderType: 'BUY',
         tokenCount,
-        pricePerToken
+        pricePerToken,
+        paymentMethod
       }
     });
 
