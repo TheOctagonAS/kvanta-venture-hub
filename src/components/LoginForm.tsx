@@ -65,7 +65,7 @@ const LoginForm = () => {
             id="terms"
             checked={acceptedTerms}
             onCheckedChange={(checked) => setAcceptedTerms(checked as boolean)}
-            className="border-gray-600"
+            className="border-gray-600 data-[state=checked]:bg-blue-500"
           />
           <label htmlFor="terms" className="text-sm text-gray-200">
             Jeg har lest{" "}
@@ -81,7 +81,7 @@ const LoginForm = () => {
             id="privacy"
             checked={acceptedPrivacy}
             onCheckedChange={(checked) => setAcceptedPrivacy(checked as boolean)}
-            className="border-gray-600"
+            className="border-gray-600 data-[state=checked]:bg-blue-500"
           />
           <label htmlFor="privacy" className="text-sm text-gray-200">
             Jeg har lest og godtar{" "}
