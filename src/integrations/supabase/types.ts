@@ -167,7 +167,7 @@ export type Database = {
         }
         Relationships: []
       }
-      property_loan_requests: {
+      property_loan_requests_deprecated: {
         Row: {
           created_at: string
           estimated_value: number
