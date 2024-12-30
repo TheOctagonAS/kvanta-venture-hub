@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
 import { tokenService } from "@/services/tokenService";
 import { toast } from "sonner";
+import { PaymentMethodSelector } from "./PaymentMethodSelector";
 
 interface OrderFormProps {
   property: Property;
@@ -18,6 +19,7 @@ const PRESET_QUANTITIES = [1, 10, 25, 50, 100];
 export const OrderForm = ({ property }: OrderFormProps) => {
   const [tokenCount, setTokenCount] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<"bank_account" | "card" | "vipps" | null>(null);
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -25,6 +27,11 @@ export const OrderForm = ({ property }: OrderFormProps) => {
     e.preventDefault();
     if (!user) {
       toast.error("Du må være logget inn for å handle tokens");
+      return;
+    }
+
+    if (!paymentMethod) {
+      toast.error("Velg en betalingsmetode");
       return;
     }
 
@@ -97,6 +104,14 @@ export const OrderForm = ({ property }: OrderFormProps) => {
           </div>
         </div>
 
+        <div className="space-y-2">
+          <Label>Betalingsmetode</Label>
+          <PaymentMethodSelector
+            selectedMethod={paymentMethod}
+            onSelect={setPaymentMethod}
+          />
+        </div>
+
         <div className="pt-4 border-t">
           <div className="flex justify-between items-center mb-4">
             <span className="text-lg">Totalt beløp</span>
@@ -108,7 +123,7 @@ export const OrderForm = ({ property }: OrderFormProps) => {
           <Button
             type="submit"
             className="w-full"
-            disabled={isLoading || tokenCount < 1}
+            disabled={isLoading || tokenCount < 1 || !paymentMethod}
           >
             {isLoading ? "Behandler..." : "Bekreft kjøp"}
           </Button>
