@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import UserHoldings from "@/components/UserHoldings";
 import StatisticsRow from "@/components/property-overview/StatisticsRow";
 import { usePropertyData } from "@/components/property-overview/usePropertyData";
+import OwnedProperties from "@/components/property/OwnedProperties";
 
 interface MainContentProps {
   isKyc: boolean;
@@ -61,6 +62,8 @@ const MainContent = ({ isKyc, onStartKYC }: MainContentProps) => {
       />
 
       <UserHoldings />
+      
+      {isKyc && <OwnedProperties />}
     </div>
   );
 };
