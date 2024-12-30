@@ -44,6 +44,36 @@
 
     --radius: 0.5rem;
   }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+  }
 }
 
 @layer base {
@@ -52,37 +82,37 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans leading-relaxed;
+    @apply bg-background text-foreground font-sans leading-relaxed transition-colors duration-200;
   }
 
   h1, .h1 {
-    @apply text-4xl font-bold text-nordic-charcoal tracking-heading mb-6;
+    @apply text-4xl font-bold text-nordic-charcoal dark:text-nordic-charcoal-dark tracking-heading mb-6;
   }
 
   h2, .h2 {
-    @apply text-3xl font-semibold text-nordic-charcoal tracking-heading mb-4;
+    @apply text-3xl font-semibold text-nordic-charcoal dark:text-nordic-charcoal-dark tracking-heading mb-4;
   }
 
   h3, .h3 {
-    @apply text-2xl font-medium text-nordic-charcoal tracking-heading mb-3;
+    @apply text-2xl font-medium text-nordic-charcoal dark:text-nordic-charcoal-dark tracking-heading mb-3;
   }
 
   p {
-    @apply text-nordic-gray mb-4;
+    @apply text-nordic-gray dark:text-nordic-gray-dark mb-4;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-primary hover:bg-primary/90 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 hover:shadow-lg;
+    @apply bg-primary hover:bg-primary/90 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 hover:shadow-lg dark:bg-primary-dark;
   }
 
   .btn-secondary {
-    @apply bg-secondary hover:bg-secondary/90 text-nordic-charcoal font-medium px-6 py-3 rounded-lg transition-all duration-200 hover:shadow-lg;
+    @apply bg-secondary hover:bg-secondary/90 text-nordic-charcoal dark:text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 hover:shadow-lg dark:bg-secondary-dark;
   }
 
   .card {
-    @apply bg-white rounded-lg shadow-md p-6 transition-all duration-200 hover:shadow-lg;
+    @apply bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-all duration-200 hover:shadow-lg;
   }
 
   .section {
@@ -94,7 +124,7 @@
   }
 
   .success-text {
-    @apply text-accent;
+    @apply text-accent dark:text-accent-dark;
   }
 
   .nav-link {
