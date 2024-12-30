@@ -8,10 +8,15 @@ import {
 
 interface EstimatedTaxCardProps {
   totalEarnings: number;
+  totalDeductions?: number;
 }
 
-export const EstimatedTaxCard = ({ totalEarnings }: EstimatedTaxCardProps) => {
-  const estimatedTax = totalEarnings * 0.22;
+export const EstimatedTaxCard = ({
+  totalEarnings,
+  totalDeductions = 0,
+}: EstimatedTaxCardProps) => {
+  const taxableIncome = Math.max(0, totalEarnings - totalDeductions);
+  const estimatedTax = taxableIncome * 0.22;
 
   return (
     <div className="bg-primary/10 p-4 rounded-lg">
@@ -26,7 +31,7 @@ export const EstimatedTaxCard = ({ totalEarnings }: EstimatedTaxCardProps) => {
                   <InfoIcon className="h-4 w-4 text-gray-500" />
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Formel: Opptjent leie x 22% (2023-sats)</p>
+                  <p>Formel: (Opptjent leie - fradrag) x 22% (2023-sats)</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -35,8 +40,8 @@ export const EstimatedTaxCard = ({ totalEarnings }: EstimatedTaxCardProps) => {
             {estimatedTax.toLocaleString()} NOK
           </p>
           <p className="text-sm text-gray-600">
-            Dette er et omtrentlig beløp. Faktisk skatt kan variere pga fradrag
-            m.m.
+            Dette er et omtrentlig beløp. Faktisk skatt kan variere pga
+            kompleksiteten i fradragsregler m.m.
           </p>
         </div>
       </div>

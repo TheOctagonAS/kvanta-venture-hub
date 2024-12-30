@@ -1,6 +1,6 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -15,13 +15,7 @@ interface RentEarning {
   earned_amount: number;
   property: {
     name: string;
-  };
-}
-
-interface SupabaseRentEarningResponse {
-  earned_amount: number;
-  property: {
-    name: string;
+    id: string;
   };
 }
 
@@ -37,25 +31,40 @@ const Skatt = () => {
         .from("rent_earnings")
         .select(`
           earned_amount,
-          property:properties(name)
+          property:properties(name, id)
         `)
         .eq("user_id", user.id)
         .eq("year", currentYear);
 
       if (error) throw error;
+      return data;
+    },
+    enabled: !!user,
+  });
 
-      return (data as SupabaseRentEarningResponse[] || []).map((item) => ({
-        earned_amount: item.earned_amount,
-        property: {
-          name: item.property.name,
-        },
-      }));
+  const { data: deductions } = useQuery({
+    queryKey: ["tax-deductions", user?.id, currentYear],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data, error } = await supabase
+        .from("tax_deductions")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("year", currentYear);
+
+      if (error) throw error;
+      return data;
     },
     enabled: !!user,
   });
 
   const totalEarnings = (rentEarnings || []).reduce(
     (sum, earning) => sum + Number(earning.earned_amount),
+    0
+  );
+
+  const totalDeductions = (deductions || []).reduce(
+    (sum, deduction) => sum + Number(deduction.amount),
     0
   );
 
@@ -88,6 +97,8 @@ const Skatt = () => {
   };
 
   if (!user) return null;
+
+  const firstProperty = rentEarnings?.[0]?.property;
 
   return (
     <div className="min-h-screen bg-[#f8faff] py-12">
@@ -134,11 +145,16 @@ const Skatt = () => {
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-6">
                 <TaxableRentCard rentEarnings={rentEarnings || []} />
-                <EstimatedTaxCard totalEarnings={totalEarnings} />
+                <EstimatedTaxCard
+                  totalEarnings={totalEarnings}
+                  totalDeductions={totalDeductions}
+                />
               </div>
 
               <div>
-                <DeductionsCard />
+                <DeductionsCard
+                  propertyId={firstProperty?.id || ""}
+                />
               </div>
             </div>
 
