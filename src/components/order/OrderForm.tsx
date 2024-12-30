@@ -10,6 +10,7 @@ import { tokenService } from "@/services/tokenService";
 import { toast } from "sonner";
 import { PaymentMethodSelector } from "./PaymentMethodSelector";
 import { Separator } from "@/components/ui/separator";
+import { algorandService } from "@/services/AlgorandService";
 import {
   Dialog,
   DialogContent,
@@ -48,12 +49,25 @@ export const OrderForm = ({ property }: OrderFormProps) => {
 
     setIsLoading(true);
     try {
+      if (paymentMethod === "algorand") {
+        // Mock Algorand transaction
+        const txResult = await algorandService.signTransaction({
+          from: "MOCK-USER-ADDRESS",
+          to: "MOCK-CONTRACT-ADDRESS",
+          amount: tokenCount * property.price_per_token,
+          note: `Purchase ${tokenCount} tokens of ${property.name}`
+        });
+
+        console.log("Mock Algorand transaction completed:", txResult);
+      }
+
       await tokenService.buyTokens(
         property.id,
         tokenCount,
         property.price_per_token,
-        paymentMethod // Make sure we pass the payment method here
+        paymentMethod
       );
+      
       toast.success("Ordre opprettet!");
       navigate("/minside");
     } catch (error) {
