@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { differenceInDays } from "date-fns";
+import { Loader2 } from "lucide-react";
 
 type Property = {
   price_per_token: number;
@@ -20,10 +21,11 @@ type HoldingWithProperty = {
 const RentClaim = () => {
   const { user } = useAuth();
 
-  const { data: holding, refetch } = useQuery({
+  const { data: holding, refetch, isLoading } = useQuery({
     queryKey: ['holdings-for-claim', user?.id],
     queryFn: async () => {
-      if (!user) return null;
+      if (!user?.id) throw new Error('No user ID');
+      
       const { data, error } = await supabase
         .from('user_holdings')
         .select(`
@@ -44,18 +46,21 @@ const RentClaim = () => {
       
       return data;
     },
-    enabled: !!user,
+    enabled: !!user?.id,
+    retry: 1,
   });
 
   const handleClaim = async () => {
-    if (!user || !holding) return;
+    if (!user?.id || !holding) return;
 
     try {
+      const dailyYield = holding.token_count * (holding.property.price_per_token * (holding.property.yield / 100) / 365);
+      
       const { error } = await supabase
         .from('user_holdings')
         .update({ 
           last_claim_at: new Date().toISOString(),
-          accumulated_rent: holding.token_count * (holding.property.price_per_token * (holding.property.yield / 100) / 365)
+          accumulated_rent: dailyYield
         })
         .eq('user_id', user.id);
 
@@ -63,7 +68,7 @@ const RentClaim = () => {
       
       await refetch();
       toast.success("Utbetaling er krevd!");
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error claiming rent:', error);
       toast.error("Kunne ikke kreve utbetaling");
     }
@@ -77,6 +82,16 @@ const RentClaim = () => {
     );
     return daysSinceLastClaim >= 1;
   };
+
+  if (isLoading) {
+    return (
+      <Card className="bg-white dark:bg-[#1f1f1f] shadow-lg">
+        <CardContent className="flex justify-center items-center py-6">
+          <Loader2 className="h-6 w-6 animate-spin text-primary dark:text-primary-dark" />
+        </CardContent>
+      </Card>
+    );
+  }
 
   if (!user || !holding) return null;
 
