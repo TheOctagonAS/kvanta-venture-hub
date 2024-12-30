@@ -36,6 +36,7 @@ const fetchProperties = async () => {
 
 const Eiendommer = () => {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [selectedFilter, setSelectedFilter] = useState<string>("all");
   const { user } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -44,6 +45,17 @@ const Eiendommer = () => {
     queryKey: ['properties'],
     queryFn: fetchProperties,
   });
+
+  const filterOptions = [
+    { id: 'all', label: 'Alle eiendommer' },
+    { id: 'Residential', label: 'Bolig' },
+    { id: 'Commercial', label: 'Næringseiendom' },
+    { id: 'Multi-Family', label: 'Flermannsbolig' },
+  ];
+
+  const filteredProperties = properties?.filter(property => 
+    selectedFilter === 'all' || property.property_type === selectedFilter
+  );
 
   if (isLoading) {
     return (
@@ -78,8 +90,24 @@ const Eiendommer = () => {
           </p>
         </motion.div>
 
+        <div className="flex gap-4 mb-8 overflow-x-auto pb-2">
+          {filterOptions.map((filter) => (
+            <button
+              key={filter.id}
+              onClick={() => setSelectedFilter(filter.id)}
+              className={`px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap ${
+                selectedFilter === filter.id
+                  ? "bg-[#345FF6] text-white"
+                  : "bg-white text-gray-600 hover:bg-gray-50"
+              }`}
+            >
+              {filter.label}
+            </button>
+          ))}
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {properties?.map((property) => (
+          {filteredProperties?.map((property) => (
             <PropertyCard
               key={property.id}
               property={property}

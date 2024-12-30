@@ -17,7 +17,7 @@ export const PropertyBadges = ({ yield: yieldValue, isSoldOut, status, isFeature
           className="bg-[#9b59b6] text-white border-none font-medium text-sm"
         >
           <Star className="h-3 w-3 mr-1" />
-          Featured
+          Fremhevet
         </Badge>
       )}
       
@@ -34,7 +34,7 @@ export const PropertyBadges = ({ yield: yieldValue, isSoldOut, status, isFeature
           variant="secondary" 
           className="bg-yellow-100 text-yellow-600 border border-yellow-200 font-medium text-sm"
         >
-          Coming Soon
+          Kommer snart
         </Badge>
       )}
       

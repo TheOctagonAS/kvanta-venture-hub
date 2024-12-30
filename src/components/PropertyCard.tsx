@@ -73,11 +73,11 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
 
           <div className="space-y-2">
             <div className="flex justify-between items-center text-sm">
-              <span className="text-gray-600">Projected Rental Yield</span>
+              <span className="text-gray-600">Forventet leieavkastning</span>
               <span className="font-semibold text-[#345FF6]">{property.yield}%</span>
             </div>
             <div className="flex justify-between items-center text-sm">
-              <span className="text-gray-600">Tokens Available</span>
+              <span className="text-gray-600">Tilgjengelige tokens</span>
               <span className="font-semibold">
                 {property.max_tokens - property.tokens_sold} / {property.max_tokens}
               </span>
@@ -88,7 +88,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
 
       <div className="p-6 pt-0">
         <div className="mb-4">
-          <span className="text-sm text-gray-600">Price per token</span>
+          <span className="text-sm text-gray-600">Pris per token</span>
           <div className="text-xl font-bold text-[#345FF6]">
             {property.price_per_token.toLocaleString()} NOK
           </div>
@@ -108,7 +108,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
               }}
             >
               {property.status === 'Coming Soon' 
-                ? "Coming Soon" 
+                ? "Kommer snart" 
                 : property.status === 'Sold Out' 
                   ? "Utsolgt" 
                   : "Handle tokens"}

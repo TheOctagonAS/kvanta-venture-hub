@@ -1,27 +1,13 @@
-import { createContext, useContext, ReactElement, ReactNode } from 'react';
-import { ResponsiveContainer } from 'recharts';
-import { ChartProps, ChartContextType } from './types';
+import React, { ReactNode } from "react";
 
-const ChartContext = createContext<ChartContextType | undefined>(undefined);
+interface ChartContainerProps {
+  children: ReactNode;
+}
 
-export const useChart = () => {
-  const context = useContext(ChartContext);
-  if (!context) {
-    throw new Error('useChart must be used within a ChartContainer');
-  }
-  return context;
-};
-
-export const ChartContainer = ({ 
-  data, 
-  config, 
-  children 
-}: ChartProps & { children: ReactNode }) => {
+export const ChartContainer = ({ children }: ChartContainerProps) => {
   return (
-    <ChartContext.Provider value={{ data, config }}>
-      <ResponsiveContainer width="100%" height={400}>
-        {children}
-      </ResponsiveContainer>
-    </ChartContext.Provider>
+    <div className="w-full h-full flex flex-col">
+      {children}
+    </div>
   );
 };
