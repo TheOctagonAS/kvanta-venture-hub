@@ -11,6 +11,8 @@ import { FileDown, FileText, Table } from "lucide-react";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface TaxReportModalProps {
   rentEarnings: any[];
@@ -23,6 +25,7 @@ export const TaxReportModal = ({
   deductions,
   estimatedTax,
 }: TaxReportModalProps) => {
+  const { user } = useAuth();
   const currentYear = new Date().getFullYear();
 
   const generatePDF = () => {

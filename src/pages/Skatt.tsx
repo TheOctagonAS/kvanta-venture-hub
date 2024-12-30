@@ -9,6 +9,7 @@ import { TaxableRentCard } from "@/components/tax/TaxableRentCard";
 import { EstimatedTaxCard } from "@/components/tax/EstimatedTaxCard";
 import { DeductionsCard } from "@/components/tax/DeductionsCard";
 import { TaxReportModal } from "@/components/tax/TaxReportModal";
+import { RentEarningsChart } from "@/components/tax/RentEarningsChart";
 import { Database } from "@/integrations/supabase/types";
 
 type RentEarning = Database["public"]["Tables"]["rent_earnings"]["Row"] & {
@@ -16,6 +17,11 @@ type RentEarning = Database["public"]["Tables"]["rent_earnings"]["Row"] & {
 };
 
 type TaxDeduction = Database["public"]["Tables"]["tax_deductions"]["Row"];
+
+const monthNames = [
+  "Jan", "Feb", "Mar", "Apr", "Mai", "Jun",
+  "Jul", "Aug", "Sep", "Okt", "Nov", "Des"
+];
 
 const Skatt = () => {
   const { user } = useAuth();
@@ -55,6 +61,12 @@ const Skatt = () => {
     },
     enabled: !!user,
   });
+
+  const monthlyData = monthNames.map((month, index) => ({
+    month,
+    earned_amount: rentEarnings.reduce((sum, earning) => sum + Number(earning.earned_amount) / 12, 0),
+    withdrawn_amount: rentEarnings.reduce((sum, earning) => sum + Number(earning.withdrawn_amount) / 12, 0),
+  }));
 
   const totalEarnings = rentEarnings.reduce(
     (sum, earning) => sum + Number(earning.earned_amount),
@@ -99,6 +111,8 @@ const Skatt = () => {
                 </p>
               </div>
             </div>
+
+            <RentEarningsChart rentEarnings={monthlyData} />
 
             <p className="text-sm text-gray-500 mb-6">
               Vi hjelper deg å samle nøkkeltall, men du er selv ansvarlig for
