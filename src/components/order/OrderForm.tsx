@@ -13,6 +13,8 @@ interface OrderFormProps {
   property: Property;
 }
 
+const PRESET_QUANTITIES = [1, 10, 25, 50, 100];
+
 export const OrderForm = ({ property }: OrderFormProps) => {
   const [tokenCount, setTokenCount] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,21 +45,49 @@ export const OrderForm = ({ property }: OrderFormProps) => {
     }
   };
 
+  const handleQuantitySelect = (quantity: number) => {
+    setTokenCount(quantity);
+  };
+
+  const handleCustomQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value) || 0;
+    const maxTokens = property.max_tokens - property.tokens_sold;
+    setTokenCount(Math.min(Math.max(0, value), maxTokens));
+  };
+
   const totalAmount = tokenCount * property.price_per_token;
 
   return (
     <Card className="p-6">
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-2">
-          <Label htmlFor="tokenCount">Antall tokens</Label>
-          <Input
-            id="tokenCount"
-            type="number"
-            min="1"
-            max={property.max_tokens - property.tokens_sold}
-            value={tokenCount}
-            onChange={(e) => setTokenCount(parseInt(e.target.value) || 1)}
-          />
+        <div className="space-y-4">
+          <Label>Velg antall tokens</Label>
+          <div className="flex flex-wrap gap-2">
+            {PRESET_QUANTITIES.map((quantity) => (
+              <Button
+                key={quantity}
+                type="button"
+                variant={tokenCount === quantity ? "default" : "outline"}
+                onClick={() => handleQuantitySelect(quantity)}
+                className="flex-1 min-w-[80px]"
+              >
+                {quantity} {quantity === 1 ? 'token' : 'tokens'}
+              </Button>
+            ))}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="customQuantity">Egendefinert antall</Label>
+            <Input
+              id="customQuantity"
+              type="number"
+              min="1"
+              max={property.max_tokens - property.tokens_sold}
+              value={tokenCount}
+              onChange={handleCustomQuantityChange}
+              className="w-full"
+            />
+          </div>
         </div>
 
         <div className="space-y-2">
