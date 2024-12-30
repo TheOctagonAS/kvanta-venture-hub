@@ -19,18 +19,18 @@ const GrowthChart: React.FC<GrowthChartProps> = ({ data }) => {
   };
 
   return (
-    <div className="mt-6 mb-6">
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <h3 className="text-sm font-medium text-nordic-charcoal mb-4">
+    <div className="mt-4">
+      <div className="bg-white rounded-lg p-4">
+        <h3 className="text-sm font-medium text-nordic-charcoal mb-3">
           Din mulige vekst — med reinvestering vs. uten
         </h3>
-        <div className="w-full h-[300px]">
+        <div className="w-full h-[240px]">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
               data={data}
               margin={{
                 top: 5,
-                right: 30,
+                right: 20,
                 left: 20,
                 bottom: 5,
               }}
@@ -38,11 +38,10 @@ const GrowthChart: React.FC<GrowthChartProps> = ({ data }) => {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis 
                 dataKey="year"
-                padding={{ left: 30, right: 30 }}
-                tick={{ fill: '#666' }}
+                tick={{ fill: '#666', fontSize: 12 }}
               />
               <YAxis
-                tick={{ fill: '#666' }}
+                tick={{ fill: '#666', fontSize: 12 }}
                 tickFormatter={formatCurrency}
               />
               <Tooltip 
