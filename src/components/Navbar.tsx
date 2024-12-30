@@ -62,9 +62,14 @@ const Navbar = () => {
               variant="ghost"
               size="icon"
               onClick={toggleTheme}
-              className="mr-2"
+              className="mr-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+              title={theme === 'dark' ? 'Bytt til lys modus' : 'Bytt til mørk modus'}
             >
-              {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              {theme === 'dark' ? (
+                <Sun className="h-5 w-5 text-yellow-500" />
+              ) : (
+                <Moon className="h-5 w-5 text-gray-600" />
+              )}
             </Button>
             {user && (
               <Button
@@ -117,12 +122,18 @@ const Navbar = () => {
                 variant="ghost"
                 size="sm"
                 onClick={toggleTheme}
-                className="w-full justify-start"
+                className="w-full justify-start gap-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
               >
                 {theme === 'dark' ? (
-                  <><Sun className="h-4 w-4 mr-2" /> Lys modus</>
+                  <>
+                    <Sun className="h-4 w-4 text-yellow-500" />
+                    <span>Lys modus</span>
+                  </>
                 ) : (
-                  <><Moon className="h-4 w-4 mr-2" /> Mørk modus</>
+                  <>
+                    <Moon className="h-4 w-4 text-gray-600" />
+                    <span>Mørk modus</span>
+                  </>
                 )}
               </Button>
             </div>
