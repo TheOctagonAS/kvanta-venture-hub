@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabaseClient";
 import UserProfile from "@/components/UserProfile";
 import UserHoldings from "@/components/UserHoldings";
 import Statistics from "@/components/Statistics";
@@ -9,6 +9,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { ChartBar } from "lucide-react";
 
 const MinSide = () => {
   const { user } = useAuth();
@@ -73,9 +75,18 @@ const MinSide = () => {
   return (
     <div className="min-h-screen bg-[#f8faff]">
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">
-          Portefølje
-        </h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">
+            Portefølje
+          </h1>
+          <Button
+            onClick={() => navigate('/leie-og-avkastning')}
+            className="flex items-center gap-2"
+          >
+            <ChartBar className="h-4 w-4" />
+            Leie og Avkastning
+          </Button>
+        </div>
         
         <motion.div
           initial={{ opacity: 0, y: 20 }}
