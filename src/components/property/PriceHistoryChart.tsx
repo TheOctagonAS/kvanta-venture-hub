@@ -10,6 +10,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface PriceHistoryChartProps {
   propertyId: string;
@@ -36,6 +37,13 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
+const ChartSkeleton = () => (
+  <div className="space-y-3">
+    <Skeleton className="h-[20px] w-[200px]" />
+    <Skeleton className="h-[300px] w-full" />
+  </div>
+);
+
 export const PriceHistoryChart = ({ propertyId }: PriceHistoryChartProps) => {
   const { data: priceHistory, isLoading } = useQuery({
     queryKey: ['priceHistory', propertyId],
@@ -51,11 +59,19 @@ export const PriceHistoryChart = ({ propertyId }: PriceHistoryChartProps) => {
     },
   });
 
-  if (isLoading || !priceHistory) {
+  if (isLoading) {
+    return (
+      <Card className="p-6">
+        <ChartSkeleton />
+      </Card>
+    );
+  }
+
+  if (!priceHistory?.length) {
     return (
       <Card className="p-6">
         <div className="h-[400px] flex items-center justify-center">
-          <p className="text-gray-500">Loading price history...</p>
+          <p className="text-gray-500">Prisdata ikke tilgjengelig enda</p>
         </div>
       </Card>
     );
