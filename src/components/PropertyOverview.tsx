@@ -8,6 +8,7 @@ import { toast } from "sonner";
 
 type HoldingWithProperty = {
   token_count: number;
+  accumulated_rent: number;
   property: {
     price_per_token: number;
   };
@@ -16,7 +17,7 @@ type HoldingWithProperty = {
 const PropertyOverview = () => {
   const { user } = useAuth();
 
-  const { data: holdings } = useQuery({
+  const { data: holdings } = useQuery<HoldingWithProperty[]>({
     queryKey: ['holdings-overview', user?.id],
     queryFn: async () => {
       if (!user) return [];
