@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Clock, Banknote, ArrowUpRight, Wallet, Home, TrendingUp, Shield, PiggyBank, Gift, RefreshCw, LineChart } from "lucide-react";
+import { Clock, Banknote, ArrowUpRight, Wallet, Shield, TrendingUp, PiggyBank, Gift, RefreshCw, LineChart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import YieldCalculator from "@/components/YieldCalculator";
@@ -173,7 +173,6 @@ const Index = () => {
             </div>
           </motion.div>
 
-          {/* Partners section */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
