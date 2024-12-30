@@ -46,6 +46,7 @@ export type Database = {
           created_at: string | null
           executed_at: string | null
           id: string
+          on_chain_tx_id: string | null
           order_type: string
           price_per_token: number
           property_id: string
@@ -59,6 +60,7 @@ export type Database = {
           created_at?: string | null
           executed_at?: string | null
           id?: string
+          on_chain_tx_id?: string | null
           order_type: string
           price_per_token: number
           property_id: string
@@ -72,6 +74,7 @@ export type Database = {
           created_at?: string | null
           executed_at?: string | null
           id?: string
+          on_chain_tx_id?: string | null
           order_type?: string
           price_per_token?: number
           property_id?: string

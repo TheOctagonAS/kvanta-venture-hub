@@ -78,6 +78,24 @@ Constraints:
 - CHECK (token_count >= 0)
 - CHECK (accumulated_rent >= 0)
 
+#### orders
+Håndterer kjøp og salg av tokens.
+- `id` UUID PRIMARY KEY DEFAULT gen_random_uuid()
+- `user_id` UUID NOT NULL (refererer til auth.users.id)
+- `property_id` UUID NOT NULL (refererer til properties.id)
+- `order_type` TEXT NOT NULL
+- `token_count` INTEGER NOT NULL
+- `price_per_token` INTEGER NOT NULL
+- `status` TEXT NOT NULL DEFAULT 'OPEN'
+- `buyer_id` UUID
+- `on_chain_tx_id` TEXT
+- `created_at` TIMESTAMPTZ DEFAULT now()
+- `executed_at` TIMESTAMPTZ
+- `cancelled_at` TIMESTAMPTZ
+
+Noter:
+- Når vi integrerer med EVM-lignende chain, on_chain_tx_id = txHash.
+
 ### Relasjoner og Referanser
 
 1. **Bruker-Profil Relasjon**
