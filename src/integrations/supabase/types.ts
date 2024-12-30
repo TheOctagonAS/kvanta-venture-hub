@@ -118,51 +118,81 @@ export type Database = {
       }
       properties: {
         Row: {
+          amenities: string[] | null
+          bathrooms: number | null
+          bedrooms: number | null
+          commercial_lease_term_months: number | null
+          commercial_occupancy_rate: number | null
           created_at: string
           id: string
           image_url: string | null
           is_featured: boolean
+          last_renovation_year: number | null
           launch_date: string | null
           location: string
           max_tokens: number
+          monthly_rent: number | null
           name: string
           price_per_token: number
+          property_description: string | null
           property_token_asa_id: number | null
           property_type: string
+          size_sqm: number | null
           status: string
           tokens_sold: number
+          year_built: number | null
           yield: number
         }
         Insert: {
+          amenities?: string[] | null
+          bathrooms?: number | null
+          bedrooms?: number | null
+          commercial_lease_term_months?: number | null
+          commercial_occupancy_rate?: number | null
           created_at?: string
           id?: string
           image_url?: string | null
           is_featured?: boolean
+          last_renovation_year?: number | null
           launch_date?: string | null
           location: string
           max_tokens?: number
+          monthly_rent?: number | null
           name: string
           price_per_token: number
+          property_description?: string | null
           property_token_asa_id?: number | null
           property_type?: string
+          size_sqm?: number | null
           status?: string
           tokens_sold?: number
+          year_built?: number | null
           yield?: number
         }
         Update: {
+          amenities?: string[] | null
+          bathrooms?: number | null
+          bedrooms?: number | null
+          commercial_lease_term_months?: number | null
+          commercial_occupancy_rate?: number | null
           created_at?: string
           id?: string
           image_url?: string | null
           is_featured?: boolean
+          last_renovation_year?: number | null
           launch_date?: string | null
           location?: string
           max_tokens?: number
+          monthly_rent?: number | null
           name?: string
           price_per_token?: number
+          property_description?: string | null
           property_token_asa_id?: number | null
           property_type?: string
+          size_sqm?: number | null
           status?: string
           tokens_sold?: number
+          year_built?: number | null
           yield?: number
         }
         Relationships: []
