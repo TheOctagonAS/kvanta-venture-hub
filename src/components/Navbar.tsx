@@ -57,13 +57,18 @@ const Navbar = () => {
               Min side
             </Link>
             {user && (
-              <Button
-                variant="outline"
-                onClick={handleLogout}
-                className="ml-4"
-              >
-                Logg ut
-              </Button>
+              <>
+                <Link to="/skatt" className={`${isActive("/skatt")} transition-colors duration-200`}>
+                  Skatt
+                </Link>
+                <Button
+                  variant="outline"
+                  onClick={handleLogout}
+                  className="ml-4"
+                >
+                  Logg ut
+                </Button>
+              </>
             )}
           </div>
 
@@ -103,13 +108,22 @@ const Navbar = () => {
               Min side
             </Link>
             {user && (
-              <Button
-                variant="outline"
-                onClick={handleLogout}
-                className="w-full mt-2"
-              >
-                Logg ut
-              </Button>
+              <>
+                <Link
+                  to="/skatt"
+                  className={`${isActive("/skatt")} block px-3 py-2 rounded-md text-base transition-colors duration-200`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Skatt
+                </Link>
+                <Button
+                  variant="outline"
+                  onClick={handleLogout}
+                  className="w-full mt-2"
+                >
+                  Logg ut
+                </Button>
+              </>
             )}
           </div>
         </div>
