@@ -13,6 +13,7 @@ export interface AlgorandTransaction {
   from: string;
   to: string;
   amount: number;
+  assetId?: number;  // ASA ID for token transfers
   note?: string;
 }
 
@@ -29,15 +30,41 @@ class AlgorandService {
   }
 
   /**
-   * Gets the balance of an Algorand address.
+   * Gets the balance of an Algorand address for a specific ASA.
    * TODO: Implement real balance check using Algorand indexer
    */
-  async getBalance(algoAddress: string): Promise<number> {
-    console.log('Mock: Getting balance for address:', algoAddress);
+  async getAsaBalance(algoAddress: string, asaId: number): Promise<number> {
+    console.log('Mock: Getting ASA balance for address:', algoAddress, 'ASA ID:', asaId);
     // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 500));
-    // Return random mock balance between 0 and 100 ALGO
+    // Return random mock balance between 0 and 100 tokens
     return Math.floor(Math.random() * 100);
+  }
+
+  /**
+   * Signs and submits an Algorand ASA transfer transaction.
+   * TODO: Implement real transaction signing and submission
+   */
+  async transferASA(
+    from: string,
+    to: string,
+    asaId: number,
+    amount: number,
+    note?: string
+  ): Promise<string> {
+    console.log('Mock: Transferring ASA:', {
+      from,
+      to,
+      asaId,
+      amount,
+      note
+    });
+    
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Return mock transaction ID
+    return "ASA-TX-" + Math.random().toString(36).substring(7);
   }
 
   /**
@@ -46,7 +73,18 @@ class AlgorandService {
    */
   async signTransaction(transaction: AlgorandTransaction): Promise<string> {
     console.log('Mock: Signing transaction:', transaction);
-    // Simulate network delay
+    
+    if (transaction.assetId) {
+      return this.transferASA(
+        transaction.from,
+        transaction.to,
+        transaction.assetId,
+        transaction.amount,
+        transaction.note
+      );
+    }
+    
+    // Simulate network delay for regular ALGO transactions
     await new Promise(resolve => setTimeout(resolve, 1500));
     // Return mock transaction ID
     return "MOCK-TX-" + Math.random().toString(36).substring(7);

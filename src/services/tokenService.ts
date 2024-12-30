@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { algorandService } from "./AlgorandService";
 
 export const tokenService = {
   async buyTokens(
@@ -49,5 +50,34 @@ export const tokenService = {
 
     if (error) throw error;
     return data;
+  },
+
+  async transferASATokens(
+    fromAddress: string,
+    toAddress: string,
+    propertyId: string,
+    tokenCount: number
+  ) {
+    // Get property ASA ID
+    const { data: property, error: propertyError } = await supabase
+      .from('properties')
+      .select('property_token_asa_id')
+      .eq('id', propertyId)
+      .single();
+
+    if (propertyError || !property?.property_token_asa_id) {
+      throw new Error('Could not find property ASA ID');
+    }
+
+    // Transfer ASA tokens
+    const txId = await algorandService.transferASA(
+      fromAddress,
+      toAddress,
+      property.property_token_asa_id,
+      tokenCount,
+      `Transfer ${tokenCount} tokens of property ${propertyId}`
+    );
+
+    return txId;
   }
 };

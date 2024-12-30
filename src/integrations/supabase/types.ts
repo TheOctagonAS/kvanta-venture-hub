@@ -127,6 +127,7 @@ export type Database = {
           max_tokens: number
           name: string
           price_per_token: number
+          property_token_asa_id: number | null
           property_type: string
           status: string
           tokens_sold: number
@@ -142,6 +143,7 @@ export type Database = {
           max_tokens?: number
           name: string
           price_per_token: number
+          property_token_asa_id?: number | null
           property_type?: string
           status?: string
           tokens_sold?: number
@@ -157,6 +159,7 @@ export type Database = {
           max_tokens?: number
           name?: string
           price_per_token?: number
+          property_token_asa_id?: number | null
           property_type?: string
           status?: string
           tokens_sold?: number
