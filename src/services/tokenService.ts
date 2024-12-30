@@ -27,7 +27,7 @@ export class TokenService {
         p_user_id: userId,
         p_property_id: propertyId,
         p_token_count: quantity
-      });
+      } as TokenRPCParams);
 
       if (error) throw error;
       return { success: true };
@@ -50,7 +50,7 @@ export class TokenService {
         p_user_id: userId,
         p_property_id: propertyId,
         p_token_count: quantity
-      });
+      } as TokenRPCParams);
 
       if (error) throw error;
       return { success: true };
@@ -75,7 +75,7 @@ export class TokenService {
         p_to_user_id: toUserId,
         p_property_id: propertyId,
         p_token_count: quantity
-      });
+      } as TransferTokensParams);
 
       if (error) throw error;
       return { success: true };
