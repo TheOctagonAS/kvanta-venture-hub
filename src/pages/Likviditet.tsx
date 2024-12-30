@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Building, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Likviditet = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-[#f8faff] py-12">
       <div className="container mx-auto px-4">
@@ -22,7 +25,7 @@ const Likviditet = () => {
             <Button 
               size="lg"
               className="w-full sm:w-auto flex items-center justify-center gap-2"
-              onClick={() => console.log("Start prosessen clicked")}
+              onClick={() => navigate("/loan/register-property")}
             >
               Start prosessen
               <ArrowRight className="h-4 w-4" />

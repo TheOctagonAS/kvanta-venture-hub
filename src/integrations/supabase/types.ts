@@ -167,6 +167,48 @@ export type Database = {
         }
         Relationships: []
       }
+      property_loan_requests: {
+        Row: {
+          created_at: string
+          estimated_value: number
+          id: string
+          interest_rate: number
+          ownership_declaration: boolean
+          property_type: string
+          repayment_months: number
+          requested_amount: number
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          estimated_value: number
+          id?: string
+          interest_rate: number
+          ownership_declaration?: boolean
+          property_type: string
+          repayment_months: number
+          requested_amount: number
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          estimated_value?: number
+          id?: string
+          interest_rate?: number
+          ownership_declaration?: boolean
+          property_type?: string
+          repayment_months?: number
+          requested_amount?: number
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       rent_earnings: {
         Row: {
           created_at: string
