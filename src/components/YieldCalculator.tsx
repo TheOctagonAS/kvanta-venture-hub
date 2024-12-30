@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Calculator, Info } from "lucide-react";
+import { Home, Gift, Info } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import YieldCards from "./calculator/YieldCards";
 import GrowthChart from "./calculator/GrowthChart";
@@ -66,66 +66,82 @@ const YieldCalculator = () => {
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto bg-[#f8fbff] p-2 rounded-lg">
-      <Card className="bg-white shadow-sm">
-        <CardHeader className="space-y-1 border-b border-gray-100 p-3">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <CardTitle className="text-base font-bold flex items-center gap-2">
-              <Calculator className="w-4 h-4 text-nordic-blue" />
-              Kalkulator
-            </CardTitle>
+    <div className="w-full max-w-4xl mx-auto space-y-4">
+      <h2 className="text-3xl font-bold text-nordic-charcoal mb-8">
+        Hvor langt kan investeringen* din gå?
+      </h2>
+      
+      <Card className="bg-white shadow-sm border-0">
+        <CardContent className="p-6">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="p-2 rounded-full bg-nordic-softblue">
+              <Home className="w-6 h-6 text-nordic-blue" />
+            </div>
+            <div className="flex-1">
+              <p className="text-lg text-nordic-charcoal">
+                Når du investerer for
+              </p>
+              <div className="flex items-center gap-2">
+                <Input
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="text-2xl font-bold border-none shadow-none p-0 h-auto w-48"
+                />
+                <span className="text-2xl font-bold text-nordic-charcoal">NOK</span>
+              </div>
+            </div>
+          </div>
+
+          <Slider
+            defaultValue={[100000]}
+            max={5000000}
+            step={1000}
+            value={[parseFloat(amount) || 0]}
+            onValueChange={handleSliderChange}
+            className="mb-8 [&>.relative>.absolute]:bg-nordic-blue [&>.relative]:bg-nordic-softblue [&>.block]:border-nordic-blue [&>.block]:bg-white"
+          />
+
+          <div className="flex items-center gap-4 p-4 bg-[#f8fbff] rounded-lg mb-6">
+            <div className="p-2 rounded-full bg-[#47C757]/10">
+              <Gift className="w-6 h-6 text-[#47C757]" />
+            </div>
+            <div className="flex-1">
+              <p className="text-lg text-nordic-charcoal">Du tjener*</p>
+              <p className="text-3xl font-bold text-[#47C757]">
+                {yields.yearly.toLocaleString('nb-NO', {
+                  style: 'currency',
+                  currency: 'NOK',
+                  maximumFractionDigits: 0
+                })}
+                <span className="text-base font-normal text-gray-500 ml-2">per år</span>
+              </p>
+            </div>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
-                  <div className="flex items-center gap-1 text-sm">
-                    <span className="font-medium text-nordic-charcoal">Årlig avkastning:</span>
-                    <span className="font-bold text-nordic-blue">{APY}%</span>
-                    <Info className="w-3 h-3 text-gray-400 hover:text-gray-600" />
-                  </div>
+                  <Info className="w-5 h-5 text-gray-400" />
                 </TooltipTrigger>
-                <TooltipContent className="max-w-[200px]">
-                  <p className="text-xs">
-                    Beregnet av gj.snitt leie + antatt verdiøkning
+                <TooltipContent>
+                  <p className="text-sm max-w-[200px]">
+                    Basert på {APY}% årlig avkastning fra leieinntekter og antatt verdiøkning
                   </p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </div>
-        </CardHeader>
-        <CardContent className="grid gap-2 p-3">
-          <div className="grid gap-2">
-            <div className="bg-white rounded-lg">
-              <div className="flex flex-col gap-2">
-                <div className="flex-1">
-                  <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-1 block">
-                    Investeringsbeløp (NOK)
-                  </label>
-                  <Input
-                    type="number"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    className="text-base font-medium"
-                  />
-                </div>
-                <div className="flex-1">
-                  <Slider
-                    defaultValue={[100000]}
-                    max={5000000}
-                    step={1000}
-                    value={[parseFloat(amount) || 0]}
-                    onValueChange={handleSliderChange}
-                    className="[&>.relative>.absolute]:bg-nordic-blue [&>.relative]:bg-nordic-softblue [&>.block]:border-nordic-blue [&>.block]:bg-white"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <YieldCards yields={yields} />
-          <GrowthChart data={growthData} />
-          <CalculatorCTA />
+          <div className="space-y-6">
+            <YieldCards yields={yields} />
+            <GrowthChart data={growthData} />
+            <CalculatorCTA />
+          </div>
         </CardContent>
       </Card>
+
+      <p className="text-sm text-gray-500 text-center">
+        *Alle beregninger er basert på {APY}% årlig avkastning. Faktisk avkastning kan variere.
+      </p>
     </div>
   );
 };
