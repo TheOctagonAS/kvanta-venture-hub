@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { vippsService } from "@/services/vippsService";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -65,7 +66,6 @@ const LoginForm = () => {
         console.log("Login successful for user:", data.user.email);
         await login(data.user.email || "", password);
         toast.success("Innlogging vellykket!");
-        // Ensure immediate navigation after successful login
         navigate("/minside", { replace: true });
       }
     } catch (error) {
@@ -74,6 +74,10 @@ const LoginForm = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleVippsLogin = () => {
+    window.location.href = vippsService.getVippsLoginUrl();
   };
 
   return (
@@ -115,6 +119,24 @@ const LoginForm = () => {
       >
         {isLoading ? "Logger inn..." : "Logg inn"}
       </Button>
+      
+      <div className="relative my-6">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-gray-300"></div>
+        </div>
+        <div className="relative flex justify-center text-sm">
+          <span className="px-2 bg-white text-gray-500">eller</span>
+        </div>
+      </div>
+
+      <Button 
+        type="button"
+        onClick={handleVippsLogin}
+        className="w-full bg-[#ff5b24] hover:bg-[#ff5b24]/90 text-white font-medium"
+      >
+        Logg inn med Vipps
+      </Button>
+
       <div className="text-center mt-6">
         <Link 
           to="/register" 
