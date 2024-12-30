@@ -22,12 +22,14 @@ interface OrderFormProps {
   property: Property;
 }
 
+type PaymentMethod = "bank_account" | "card" | "vipps" | "algorand" | null;
+
 const PRESET_QUANTITIES = [1, 10, 25, 50, 100];
 
 export const OrderForm = ({ property }: OrderFormProps) => {
   const [tokenCount, setTokenCount] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<"bank_account" | "card" | "vipps" | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(null);
   const [showPreviewDialog, setShowPreviewDialog] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
