@@ -22,6 +22,22 @@ For testing kan du bruke følgende påloggingsinformasjon:
 - Automatisk beregning av leieinntekter
 - Porteføljeadministrasjon
 
+## Algorand Integrasjonsplan
+
+Vi har implementert en første versjon av Algorand-integrasjon:
+
+- Ny `AlgorandService` for wallet-tilkobling og transaksjons-signering (mock)
+- Fremtidig plan: Utstede Algorand Standard Assets (ASA) for hver eiendom
+- Betalingsmetode "Crypto-lommebok" er tilgjengelig for KYC-verifiserte brukere (isKyc=true)
+
+### Brukerflyt for Algorand-kjøp:
+
+1. Velg eiendom fra porteføljen
+2. Velg antall tokens
+3. Velg betalingsmetode => "Algorand wallet"
+4. Signer transaksjon (mock i denne versjonen)
+5. Ved vellykket signering => ordre plassert => userHoldings oppdatert
+
 ## Teknisk Dokumentasjon
 
 Se følgende filer for detaljert teknisk dokumentasjon:
