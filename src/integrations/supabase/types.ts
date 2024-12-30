@@ -380,6 +380,39 @@ export type Database = {
           },
         ]
       }
+      wallets: {
+        Row: {
+          address: string | null
+          balance: number | null
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          updated_at: string | null
+          user_id: string | null
+          wallet_type: string
+        }
+        Insert: {
+          address?: string | null
+          balance?: number | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+          wallet_type: string
+        }
+        Update: {
+          address?: string | null
+          balance?: number | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+          wallet_type?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -392,6 +425,10 @@ export type Database = {
           months: number
         }
         Returns: number
+      }
+      migrate_to_wallets: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
     }
     Enums: {
