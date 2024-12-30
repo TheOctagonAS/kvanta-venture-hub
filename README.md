@@ -85,7 +85,7 @@ Håndterer kjøp og salg av tokens.
 - `property_id` UUID NOT NULL (refererer til properties.id)
 - `order_type` TEXT NOT NULL
 - `token_count` INTEGER NOT NULL
-- `price_per_token` INTEGER NOT NULL
+- `price_per_token` NUMERIC NOT NULL
 - `status` TEXT NOT NULL DEFAULT 'OPEN'
 - `buyer_id` UUID
 - `on_chain_tx_id` TEXT
@@ -95,6 +95,7 @@ Håndterer kjøp og salg av tokens.
 
 Noter:
 - Når vi integrerer med EVM-lignende chain, on_chain_tx_id = txHash.
+- Videre kan man utvide med ordrebok, partial fill, etc.
 
 ### Relasjoner og Referanser
 
