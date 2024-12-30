@@ -28,6 +28,30 @@ const Skatt = () => {
               Denne informasjonen er kun veiledende, og erstatter ikke profesjonell skatterådgivning. 
               Du er selv ansvarlig for korrekt rapportering til Skatteetaten.
             </p>
+
+            <div className="mt-8">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                Hvordan beskattes leieinntekter?
+              </h2>
+              <ul className="list-disc pl-6 space-y-3 text-gray-700">
+                <li>
+                  I Norge beskattes utleieinntekter som alminnelig inntekt (pt. 22%) i det år 
+                  de er "opptjent" (periodisering).
+                </li>
+                <li>
+                  Det vil si at selv om du ikke "claimer" (tar ut) leien, regnes den som 
+                  skattepliktig inntekt når den er opptjent eller tilgjengelig for deg.
+                </li>
+                <li>
+                  Du må rapportere brutto leie, evt. fradrag for kostnader, i skattemeldingen.
+                </li>
+              </ul>
+              
+              <p className="mt-6 text-sm text-gray-600 italic">
+                Exakt rapportering kan variere. Sjekk Skatteetatens retningslinjer eller 
+                kontakt en skatterådgiver.
+              </p>
+            </div>
           </div>
         </div>
       </main>
