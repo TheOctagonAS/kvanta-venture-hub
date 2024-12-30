@@ -24,21 +24,21 @@ export default {
         ring: "hsl(var(--ring))",
         background: {
           DEFAULT: "#f8f9fa",
-          dark: "#1a1a1a",
+          dark: "#101010",
         },
         foreground: {
           DEFAULT: "#333333",
-          dark: "#ffffff",
+          dark: "#eeeeee",
         },
         primary: {
           DEFAULT: "#345FF6",
           foreground: "#FFFFFF",
-          dark: "#4B6FFF",
+          dark: "#5a7dfc",
         },
         secondary: {
           DEFAULT: "#E9F2FF",
           foreground: "#333333",
-          dark: "#2A2A2A",
+          dark: "#1a1a1a",
         },
         accent: {
           DEFAULT: "#47C757",
@@ -49,7 +49,7 @@ export default {
           blue: "#345FF6",
           charcoal: {
             DEFAULT: "#333333",
-            dark: "#ffffff",
+            dark: "#eeeeee",
           },
           gray: {
             DEFAULT: "#555555",
@@ -57,11 +57,11 @@ export default {
           },
           lightgray: {
             DEFAULT: "#f8f9fa",
-            dark: "#1a1a1a",
+            dark: "#101010",
           },
           softblue: {
             DEFAULT: "#E9F2FF",
-            dark: "#2A2A2A",
+            dark: "#1a1a1a",
           },
         },
       },

@@ -85,6 +85,10 @@
     @apply bg-background text-foreground font-sans leading-relaxed transition-colors duration-200;
   }
 
+  .dark body {
+    @apply bg-background-dark text-foreground-dark;
+  }
+
   h1, .h1 {
     @apply text-4xl font-bold text-nordic-charcoal dark:text-nordic-charcoal-dark tracking-heading mb-6;
   }
@@ -112,7 +116,11 @@
   }
 
   .card {
-    @apply bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-all duration-200 hover:shadow-lg;
+    @apply bg-white dark:bg-secondary-dark rounded-lg shadow-md p-6 transition-all duration-200 hover:shadow-lg;
+  }
+
+  .navbar {
+    @apply bg-white dark:bg-secondary-dark border-b border-gray-200 dark:border-gray-800 transition-colors duration-200;
   }
 
   .section {
