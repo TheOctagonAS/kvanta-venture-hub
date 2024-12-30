@@ -1,151 +1,129 @@
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Menu, User } from "lucide-react";
-
-const navigation = [
-  { name: 'Eiendommer', href: '/eiendommer' },
-  { name: 'Invester i Belånt Eiendom', href: '/loan/invest' },
-  { name: 'Leie og Avkastning', href: '/leie-og-avkastning' },
-  { name: 'Likviditet', href: '/likviditet' },
-  { name: 'Les Mer', href: '/les-mer' },
-];
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { KvantaLogo } from "./KvantaLogo";
 
 const Navbar = () => {
-  const { user, signOut } = useAuth();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  const isActive = (path: string) => {
+    return location.pathname === path ? "text-primary font-semibold" : "text-gray-600 hover:text-primary";
+  };
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      logout();
+      toast.success("Du er nå logget ut");
+      navigate("/");
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("Kunne ikke logge ut");
+    }
+  };
 
   return (
-    <nav className="bg-white shadow-sm">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 justify-between">
-          <div className="flex">
-            <div className="flex flex-shrink-0 items-center">
-              <Link to="/" className="text-xl font-bold text-nordic-lake">
-                Nordic Tokenized Real Estate
-              </Link>
-            </div>
-          </div>
-
-          <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700"
+    <nav className="bg-white shadow-sm sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex items-center">
+            <Link to="/" className="flex items-center gap-2 py-2 px-4 group">
+              <KvantaLogo />
+              <Badge 
+                variant="secondary" 
+                className="ml-2 text-xs bg-gradient-to-r from-rose-500 to-rose-600 text-white font-medium shadow-sm"
               >
-                {item.name}
-              </Link>
-            ))}
+                Beta
+              </Badge>
+            </Link>
           </div>
-
-          <div className="hidden sm:ml-6 sm:flex sm:items-center">
-            {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                    <User className="h-5 w-5" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>
-                    <Link to="/minside" className="w-full">Min Side</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link to="/lommebok" className="w-full">Lommebok</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => signOut()}>
-                    Logg ut
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <div className="space-x-2">
-                <Link to="/login">
-                  <Button variant="ghost">Logg inn</Button>
+          
+          <div className="hidden sm:flex items-center space-x-8">
+            <Link to="/" className={`${isActive("/")} transition-colors duration-200`}>
+              Forside
+            </Link>
+            <Link to="/eiendommer" className={`${isActive("/eiendommer")} transition-colors duration-200`}>
+              Eiendommer
+            </Link>
+            <Link to="/minside" className={`${isActive("/minside")} transition-colors duration-200`}>
+              Min side
+            </Link>
+            {user && (
+              <>
+                <Link to="/skatt" className={`${isActive("/skatt")} transition-colors duration-200`}>
+                  Skatt
                 </Link>
-                <Link to="/register">
-                  <Button>Registrer</Button>
-                </Link>
-              </div>
+                <Button
+                  variant="outline"
+                  onClick={handleLogout}
+                  className="ml-4"
+                >
+                  Logg ut
+                </Button>
+              </>
             )}
           </div>
 
-          <div className="flex items-center sm:hidden">
+          <div className="sm:hidden">
             <button
-              type="button"
-              className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-gray-600 hover:text-primary"
             >
-              <Menu className="h-6 w-6" />
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
       </div>
 
-      {mobileMenuOpen && (
+      {isMenuOpen && (
         <div className="sm:hidden">
-          <div className="space-y-1 pb-3 pt-2">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className="block px-3 py-2 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item.name}
-              </Link>
-            ))}
-            {user ? (
+          <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t">
+            <Link
+              to="/"
+              className={`${isActive("/")} block px-3 py-2 rounded-md text-base transition-colors duration-200`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Forside
+            </Link>
+            <Link
+              to="/eiendommer"
+              className={`${isActive("/eiendommer")} block px-3 py-2 rounded-md text-base transition-colors duration-200`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Eiendommer
+            </Link>
+            <Link
+              to="/minside"
+              className={`${isActive("/minside")} block px-3 py-2 rounded-md text-base transition-colors duration-200`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Min side
+            </Link>
+            {user && (
               <>
                 <Link
-                  to="/minside"
-                  className="block px-3 py-2 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700"
-                  onClick={() => setMobileMenuOpen(false)}
+                  to="/skatt"
+                  className={`${isActive("/skatt")} block px-3 py-2 rounded-md text-base transition-colors duration-200`}
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  Min Side
+                  Skatt
                 </Link>
-                <Link
-                  to="/lommebok"
-                  className="block px-3 py-2 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Lommebok
-                </Link>
-                <button
-                  onClick={() => {
-                    signOut();
-                    setMobileMenuOpen(false);
-                  }}
-                  className="block w-full px-3 py-2 text-left text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                <Button
+                  variant="outline"
+                  onClick={handleLogout}
+                  className="w-full mt-2"
                 >
                   Logg ut
-                </button>
+                </Button>
               </>
-            ) : (
-              <div className="space-y-1 px-3 py-2">
-                <Link
-                  to="/login"
-                  className="block text-base font-medium text-gray-500 hover:text-gray-700"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Logg inn
-                </Link>
-                <Link
-                  to="/register"
-                  className="block text-base font-medium text-gray-500 hover:text-gray-700"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Registrer
-                </Link>
-              </div>
             )}
           </div>
         </div>
