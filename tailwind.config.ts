@@ -38,7 +38,7 @@ export default {
         secondary: {
           DEFAULT: "#E9F2FF",
           foreground: "#333333",
-          dark: "#1a1a1a",
+          dark: "#1f1f1f",
         },
         accent: {
           DEFAULT: "#47C757",
@@ -61,7 +61,7 @@ export default {
           },
           softblue: {
             DEFAULT: "#E9F2FF",
-            dark: "#1a1a1a",
+            dark: "#1f1f1f",
           },
         },
       },

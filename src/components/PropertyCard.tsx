@@ -89,7 +89,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="h-full flex flex-col bg-white dark:bg-[#1a1a1a] hover:shadow-lg transition-all duration-300 hover:scale-105 relative overflow-hidden">
+      <Card className="h-full flex flex-col bg-white dark:bg-[#1f1f1f] hover:shadow-lg transition-all duration-300 hover:scale-105 relative overflow-hidden border border-transparent dark:border-[#333]">
         {!isLive && (
           <div className="absolute inset-0 z-20 bg-white/80 dark:bg-[#2a2a2a]/80 backdrop-blur-sm flex flex-col items-center justify-center px-4">
             <div className="w-[80%] md:w-full flex flex-col items-center">
@@ -98,7 +98,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
                   <span className="text-sm md:text-base text-nordic-blue font-medium block">
                     Kommer snart!
                   </span>
-                  <div className="mt-2 bg-white dark:bg-[#1a1a1a] rounded-lg px-3 py-1 shadow-sm">
+                  <div className="mt-2 bg-white dark:bg-[#1f1f1f] rounded-lg px-3 py-1 shadow-sm">
                     <span className="text-xs md:text-sm text-nordic-blue">
                       Går live om: {countdown}
                     </span>
@@ -186,7 +186,7 @@ export const PropertyCard = ({ property, onSelectProperty }: PropertyCardProps) 
               {isNotifying ? "Registrerer..." : "Påminn meg"}
             </Button>
           )}
-          <p className="text-xs text-nordic-gray italic text-center">
+          <p className="text-xs text-nordic-gray dark:text-[#ccc] italic text-center">
             *APY er estimert årlig avkastning, ikke garantert.
           </p>
         </CardFooter>

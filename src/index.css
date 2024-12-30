@@ -90,19 +90,19 @@
   }
 
   h1, .h1 {
-    @apply text-4xl font-bold text-nordic-charcoal dark:text-[#fff] tracking-heading mb-6;
+    @apply text-4xl font-bold text-nordic-charcoal dark:text-[#eee] tracking-heading mb-6;
   }
 
   h2, .h2 {
-    @apply text-3xl font-semibold text-nordic-charcoal dark:text-[#f1f1f1] tracking-heading mb-4;
+    @apply text-3xl font-semibold text-nordic-charcoal dark:text-[#eee] tracking-heading mb-4;
   }
 
   h3, .h3 {
-    @apply text-2xl font-medium text-nordic-charcoal dark:text-[#f1f1f1] tracking-heading mb-3;
+    @apply text-2xl font-medium text-nordic-charcoal dark:text-[#eee] tracking-heading mb-3;
   }
 
   p {
-    @apply text-nordic-gray dark:text-[#e0e0e0] mb-4;
+    @apply text-nordic-gray dark:text-[#ccc] mb-4;
   }
 
   a {
@@ -120,7 +120,7 @@
   }
 
   .card {
-    @apply bg-white dark:bg-[#1a1a1a] rounded-lg shadow-sm p-6 transition-all duration-200 hover:shadow-lg;
+    @apply bg-white dark:bg-[#1f1f1f] rounded-lg shadow-sm p-6 transition-all duration-200 hover:shadow-lg border border-transparent dark:border-[#333];
   }
 
   .navbar {
