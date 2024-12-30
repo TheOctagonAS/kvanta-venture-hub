@@ -21,7 +21,7 @@ const Skatt = () => {
   const { data: rentEarnings } = useQuery<RentEarning[]>({
     queryKey: ['rent-earnings', user?.id, currentYear],
     queryFn: async () => {
-      if (!user) return null;
+      if (!user) return [];
       const { data, error } = await supabase
         .from('rent_earnings')
         .select(`
@@ -32,13 +32,13 @@ const Skatt = () => {
         .eq('year', currentYear);
 
       if (error) throw error;
-      return data;
+      return (data || []) as RentEarning[];
     },
     enabled: !!user,
   });
 
-  const totalEarnings = rentEarnings?.reduce((sum, earning) => 
-    sum + Number(earning.earned_amount), 0) || 0;
+  const totalEarnings = (rentEarnings || []).reduce((sum, earning) => 
+    sum + Number(earning.earned_amount), 0);
 
   const estimatedTax = totalEarnings * 0.22;
 
