@@ -27,18 +27,25 @@ const YieldCalculator = () => {
     compound: number;
   }>>([]);
 
-  const APY = 8.5;
+  const APY = 8.5; // Rental yield
+  const PROPERTY_APPRECIATION = 5.0; // Annual property value appreciation rate
 
   useEffect(() => {
     const investment = parseFloat(amount) || 0;
-    const apyRate = APY / 100;
-    const dailyRate = apyRate / 365;
+    const rentalRate = APY / 100;
+    const appreciationRate = PROPERTY_APPRECIATION / 100;
+    
+    // Daily rates
+    const dailyRentalRate = rentalRate / 365;
+    const dailyAppreciationRate = appreciationRate / 365;
 
-    const dailyYield = (investment * apyRate) / 365;
-    const monthlyYield = (investment * apyRate) / 12;
-    const yearlyYield = investment * apyRate;
+    const dailyYield = (investment * rentalRate) / 365;
+    const monthlyYield = (investment * rentalRate) / 12;
+    const yearlyYield = investment * rentalRate;
 
-    const compoundedAmount = investment * Math.pow(1 + dailyRate, 365);
+    // Calculate compounded returns including both rental income and property appreciation
+    const totalDailyRate = dailyRentalRate + dailyAppreciationRate;
+    const compoundedAmount = investment * Math.pow(1 + totalDailyRate, 365);
     const compoundedYearlyYield = compoundedAmount - investment;
 
     setYields({
@@ -48,13 +55,20 @@ const YieldCalculator = () => {
       compoundedYearly: compoundedYearlyYield,
     });
 
+    // Generate growth data for the chart
     const data = [];
     for (let day = 0; day <= 30; day++) {
-      const standardGrowth = investment + (dailyYield * day);
-      const compoundGrowth = investment * Math.pow(1 + dailyRate, day);
+      // Standard growth includes both rental income and property appreciation
+      const standardRentalGrowth = investment + (dailyYield * day);
+      const standardAppreciationGrowth = investment * (1 + (dailyAppreciationRate * day));
+      const standardTotal = standardRentalGrowth + (standardAppreciationGrowth - investment);
+
+      // Compound growth includes reinvested profits and property appreciation
+      const compoundGrowth = investment * Math.pow(1 + totalDailyRate, day);
+      
       data.push({
         day,
-        standard: standardGrowth,
+        standard: standardTotal,
         compound: compoundGrowth,
       });
     }
@@ -107,9 +121,9 @@ const YieldCalculator = () => {
               <Gift className="w-6 h-6 text-[#47C757]" />
             </div>
             <div className="flex-1">
-              <p className="text-lg text-nordic-charcoal">Du tjener*</p>
+              <p className="text-lg text-nordic-charcoal">Total årlig avkastning*</p>
               <p className="text-3xl font-bold text-[#47C757]">
-                {yields.yearly.toLocaleString('nb-NO', {
+                {yields.compoundedYearly.toLocaleString('nb-NO', {
                   style: 'currency',
                   currency: 'NOK',
                   maximumFractionDigits: 0
@@ -124,7 +138,7 @@ const YieldCalculator = () => {
                 </TooltipTrigger>
                 <TooltipContent>
                   <p className="text-sm max-w-[200px]">
-                    Basert på {APY}% årlig avkastning fra leieinntekter og antatt verdiøkning
+                    Basert på {APY}% årlig leieavkastning og {PROPERTY_APPRECIATION}% årlig verdiøkning på eiendommen
                   </p>
                 </TooltipContent>
               </Tooltip>
@@ -140,7 +154,7 @@ const YieldCalculator = () => {
       </Card>
 
       <p className="text-sm text-gray-500 text-center">
-        *Alle beregninger er basert på {APY}% årlig avkastning. Faktisk avkastning kan variere.
+        *Basert på {APY}% årlig leieavkastning og {PROPERTY_APPRECIATION}% årlig verdiøkning. Faktisk avkastning kan variere.
       </p>
     </div>
   );
