@@ -7,11 +7,18 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { InfoIcon, FileDown, DollarSign } from "lucide-react";
 import { toast } from "sonner";
 
+interface RentEarning {
+  earned_amount: number;
+  property: {
+    name: string;
+  };
+}
+
 const Skatt = () => {
   const { user } = useAuth();
   const currentYear = new Date().getFullYear();
 
-  const { data: rentEarnings } = useQuery({
+  const { data: rentEarnings } = useQuery<RentEarning[]>({
     queryKey: ['rent-earnings', user?.id, currentYear],
     queryFn: async () => {
       if (!user) return null;
