@@ -34,20 +34,21 @@ export const PropertyOverview = () => {
   });
 
   useEffect(() => {
-    const channel = supabase.channel('user_holdings_changes');
-    
-    channel
-      .on('postgres_changes', { 
-        event: '*', 
-        schema: 'public', 
-        table: 'user_holdings' 
-      }, () => {
+    const subscription = supabase
+      .from('user_holdings')
+      .on('INSERT', () => {
+        refetch();
+      })
+      .on('UPDATE', () => {
+        refetch();
+      })
+      .on('DELETE', () => {
         refetch();
       })
       .subscribe();
 
     return () => {
-      channel.unsubscribe();
+      supabase.removeSubscription(subscription);
     };
   }, [refetch]);
 
@@ -58,11 +59,9 @@ export const PropertyOverview = () => {
           <h3>{holding.properties.name}</h3>
           <p>Location: {holding.properties.location}</p>
           <p>Price per Token: {holding.properties.price_per_token}</p>
-          <p>Yield: {holding.properties.yield}%</p>
+          <p>Yield: {holding.properties.yield}</p>
         </div>
       ))}
     </div>
   );
 };
-
-export default PropertyOverview;
