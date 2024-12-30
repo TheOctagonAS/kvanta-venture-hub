@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import HeaderActions from "@/components/minside/HeaderActions";
@@ -16,43 +16,22 @@ const MinSide = () => {
     }
   }, [user, navigate]);
 
-  const { data: profile, refetch: refetchProfile, isLoading } = useQuery({
+  const { data: profile, isLoading } = useQuery({
     queryKey: ['profile', user?.id],
     queryFn: async () => {
       if (!user) return null;
       
-      const [profileResponse, kycResponse] = await Promise.all([
-        supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .maybeSingle(),
-        supabase
-          .from('kyc_data')
-          .select('*')
-          .eq('user_id', user.id)
-          .maybeSingle()
-      ]);
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
 
-      if (profileResponse.error) {
-        throw profileResponse.error;
-      }
-
-      if (kycResponse.error && kycResponse.error.code !== 'PGRST116') {
-        throw kycResponse.error;
-      }
-
-      return {
-        ...profileResponse.data,
-        kyc_data: kycResponse.data
-      };
+      if (error) throw error;
+      return data;
     },
     enabled: !!user,
   });
-
-  const handleStartKYC = async () => {
-    await refetchProfile();
-  };
 
   if (isLoading) {
     return (
@@ -72,7 +51,12 @@ const MinSide = () => {
         <HeaderActions />
         <MainContent 
           isKyc={profile?.is_kyc || false}
-          onStartKYC={handleStartKYC}
+          onStartKYC={async () => {
+            await supabase
+              .from('profiles')
+              .update({ is_kyc: true })
+              .eq('id', user.id);
+          }}
         />
       </main>
     </div>

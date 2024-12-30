@@ -4,11 +4,13 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import KYCForm from "@/components/kyc/KYCForm";
+import { useQueryClient } from "@tanstack/react-query";
 
 const KYC = () => {
   const navigate = useNavigate();
   const [showBankID, setShowBankID] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleKYCComplete = () => {
     setShowBankID(true);
@@ -25,19 +27,20 @@ const KYC = () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) throw new Error("Ingen bruker funnet");
 
-        // Update both profiles and kyc_data tables
-        const [profileUpdate] = await Promise.all([
-          supabase
-            .from('profiles')
-            .update({ is_kyc: true })
-            .eq('id', user.id)
-        ]);
+        // Update profiles table to set is_kyc to true
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update({ is_kyc: true })
+          .eq('id', user.id);
 
-        if (profileUpdate.error) throw profileUpdate.error;
+        if (profileError) throw profileError;
+
+        // Invalidate and refetch profile data
+        await queryClient.invalidateQueries({ queryKey: ['profile'] });
 
         toast.success("KYC-verifisering fullført!");
         navigate("/minside");
-      } catch (error) {
+      } catch (error: any) {
         console.error("KYC verification failed:", error);
         toast.error("Kunne ikke fullføre KYC-verifisering");
       } finally {
