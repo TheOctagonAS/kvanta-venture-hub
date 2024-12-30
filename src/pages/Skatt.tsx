@@ -12,12 +12,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
-import { Receipt, Info } from "lucide-react";
+import { Receipt, Info, Percent, DollarSign } from "lucide-react";
 
 const Skatt = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
+  const TAX_RATE = 0.22; // 22% skattesats
 
   useEffect(() => {
     if (!user) {
@@ -46,6 +47,8 @@ const Skatt = () => {
 
   const totalEarnedAmount = rentEarnings?.reduce((sum, earning) => 
     sum + Number(earning.earned_amount), 0) || 0;
+  
+  const estimatedTax = totalEarnedAmount * TAX_RATE;
 
   if (!user) {
     return null;
@@ -106,6 +109,33 @@ const Skatt = () => {
                       </p>
                       <p className="text-sm text-gray-600">
                         Dette beløpet er basert på opptjent leie, uavhengig av om du har tatt ut pengene.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-secondary/30 p-4 rounded-lg mb-6">
+                  <div className="flex items-start gap-2">
+                    <Percent className="h-5 w-5 text-primary mt-1" />
+                    <div>
+                      <p className="font-medium text-lg">
+                        Beregnet Skatt (veiledende): {estimatedTax.toLocaleString()} NOK
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        Dette er et omtrentlig beløp. Faktisk skatt kan variere pga fradrag m.m.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-secondary/10 p-4 rounded-lg mb-6">
+                  <div className="flex items-start gap-2">
+                    <DollarSign className="h-5 w-5 text-primary mt-1" />
+                    <div>
+                      <p className="font-medium text-lg">Fradragsoversikt</p>
+                      <p className="text-sm text-gray-600">
+                        Her vil du kunne registrere fradragsberettigede utgifter som vedlikehold, 
+                        forsikring og andre relevante kostnader. (Kommer snart)
                       </p>
                     </div>
                   </div>
