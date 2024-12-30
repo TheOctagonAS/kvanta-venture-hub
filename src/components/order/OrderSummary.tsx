@@ -9,6 +9,10 @@ interface OrderSummaryProps {
 
 export const OrderSummary = ({ tokenCount, property, paymentMethod }: OrderSummaryProps) => {
   const totalAmount = tokenCount * property.price_per_token;
+  
+  // Mock ALGO conversion rate (1 ALGO = 25 NOK for this example)
+  const mockAlgoRate = 25;
+  const estimatedAlgoCost = totalAmount / mockAlgoRate;
 
   return (
     <div className="bg-[#f8f9fa] p-4 rounded-lg shadow-sm">
@@ -26,12 +30,25 @@ export const OrderSummary = ({ tokenCount, property, paymentMethod }: OrderSumma
         <span className="text-nordic-blue">{totalAmount.toLocaleString()} NOK</span>
       </div>
       {paymentMethod && (
-        <div className="flex justify-between items-center mt-2">
-          <span className="text-gray-600">Betalingsmetode:</span>
-          <span className="font-medium capitalize">
-            {paymentMethod.replace('_', ' ')}
-          </span>
-        </div>
+        <>
+          <div className="flex justify-between items-center mt-2">
+            <span className="text-gray-600">Betalingsmetode:</span>
+            <span className="font-medium capitalize">
+              {paymentMethod.replace('_', ' ')}
+            </span>
+          </div>
+          {paymentMethod === 'algorand' && (
+            <div className="mt-2 p-2 bg-blue-50 rounded-md">
+              <div className="text-sm text-gray-600">
+                <p>ASA Token Transfer</p>
+                <p className="mt-1">Estimert kostnad: ~{estimatedAlgoCost.toFixed(2)} ALGO</p>
+                <p className="text-xs mt-1 text-gray-500">
+                  (Estimert kurs: 1 ALGO = {mockAlgoRate} NOK)
+                </p>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

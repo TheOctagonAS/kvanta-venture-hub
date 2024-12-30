@@ -5,12 +5,15 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { OrderSummary } from "./OrderSummary";
 
 interface OrderPreviewDialogProps {
   isOpen: boolean;
   onClose: () => void;
+  onConfirm: () => void;
   tokenCount: number;
   property: Property;
   paymentMethod: string | null;
@@ -19,6 +22,7 @@ interface OrderPreviewDialogProps {
 export const OrderPreviewDialog = ({
   isOpen,
   onClose,
+  onConfirm,
   tokenCount,
   property,
   paymentMethod,
@@ -27,9 +31,9 @@ export const OrderPreviewDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Ordresammendrag</DialogTitle>
+          <DialogTitle>Bekreft ordre</DialogTitle>
           <DialogDescription>
-            Vennligst bekreft ordreinformasjonen under
+            Du er i ferd med å kjøpe tokens i {property.name}
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 pt-4">
@@ -38,7 +42,25 @@ export const OrderPreviewDialog = ({
             property={property}
             paymentMethod={paymentMethod}
           />
+          {paymentMethod === 'algorand' && (
+            <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded-md">
+              <p>Ved å bekrefte denne ordren vil du:</p>
+              <ul className="list-disc list-inside mt-2 space-y-1">
+                <li>Initiere en ASA token-overføring</li>
+                <li>Motta {tokenCount} tokens i {property.name}</li>
+                <li>Transaksjonen vil bli registrert på Algorand blockchain</li>
+              </ul>
+            </div>
+          )}
         </div>
+        <DialogFooter className="flex space-x-2 justify-end">
+          <Button variant="outline" onClick={onClose}>
+            Avbryt
+          </Button>
+          <Button onClick={onConfirm}>
+            Bekreft ordre
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

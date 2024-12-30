@@ -55,6 +55,10 @@ export const OrderForm = ({ property }: OrderFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setShowPreviewDialog(true);
+  };
+
+  const handleConfirmOrder = async () => {
     if (!user) {
       toast.error("Du må være logget inn for å handle tokens");
       return;
@@ -85,6 +89,7 @@ export const OrderForm = ({ property }: OrderFormProps) => {
           from: "MOCK-USER-ADDRESS",
           to: "MOCK-CONTRACT-ADDRESS",
           amount: tokenCount * property.price_per_token,
+          assetId: property.property_token_asa_id,
           note: `Purchase ${tokenCount} tokens of ${property.name}`
         });
 
@@ -107,6 +112,7 @@ export const OrderForm = ({ property }: OrderFormProps) => {
       toast.error("Kunne ikke opprette ordre");
     } finally {
       setIsLoading(false);
+      setShowPreviewDialog(false);
     }
   };
 
@@ -183,6 +189,7 @@ export const OrderForm = ({ property }: OrderFormProps) => {
       <OrderPreviewDialog
         isOpen={showPreviewDialog}
         onClose={() => setShowPreviewDialog(false)}
+        onConfirm={handleConfirmOrder}
         tokenCount={tokenCount}
         property={property}
         paymentMethod={paymentMethod}
