@@ -1,136 +1,66 @@
-import { Card } from "@/components/ui/card";
-import { Check } from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 interface SummaryStepProps {
-  formData: {
-    basicInfo: {
-      name: string;
-      location: string;
-      pricePerToken: string;
-      maxTokens: string;
-      yield: string;
-    };
-    documents: {
-      deed: File | null;
-      valuation: File | null;
-      insurance: File | null;
-    };
-    dueDiligence: {
-      hasCurrentTenant: boolean;
-      livingArea: string;
-      monthlyRent: string;
-      constructionYear: string;
-      lastRenovation: string;
-    };
-  };
+  formData: any; // Update with proper typing
 }
 
 const SummaryStep = ({ formData }: SummaryStepProps) => {
-  const { basicInfo, documents, dueDiligence } = formData;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
-  const formatCurrency = (value: string) => {
-    return Number(value).toLocaleString("nb-NO", {
-      style: "currency",
-      currency: "NOK",
-    });
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase
+        .from('properties')
+        .update({ status: 'PENDING_REVIEW' })
+        .eq('id', formData.propertyId);
+
+      if (error) throw error;
+
+      toast.success(
+        "Property submitted for review. You will be notified once it's approved."
+      );
+      navigate('/minside');
+    } catch (error) {
+      console.error('Error submitting property:', error);
+      toast.error("Failed to submit property");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="space-y-6">
-      <div className="mb-8">
-        <h3 className="text-lg font-medium text-gray-900">
-          Oppsummering
-        </h3>
-        <p className="text-sm text-gray-500 mt-1">
-          Gjennomgå informasjonen før du publiserer
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <p className="text-sm text-blue-800">
+          Your property listing will be reviewed by our team before it becomes visible to investors.
+          Please ensure all information and documents are accurate and complete.
         </p>
       </div>
 
-      <Card className="p-6 space-y-6">
-        <div>
-          <h4 className="font-medium text-gray-900 mb-4">Eiendomsinformasjon</h4>
-          <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <dt className="text-sm text-gray-500">Navn</dt>
-              <dd className="text-sm font-medium text-gray-900 mt-1">
-                {basicInfo.name}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-sm text-gray-500">Beliggenhet</dt>
-              <dd className="text-sm font-medium text-gray-900 mt-1">
-                {basicInfo.location}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-sm text-gray-500">Pris per token</dt>
-              <dd className="text-sm font-medium text-gray-900 mt-1">
-                {formatCurrency(basicInfo.pricePerToken)}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-sm text-gray-500">Antall tokens</dt>
-              <dd className="text-sm font-medium text-gray-900 mt-1">
-                {basicInfo.maxTokens}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-sm text-gray-500">Forventet avkastning</dt>
-              <dd className="text-sm font-medium text-gray-900 mt-1">
-                {basicInfo.yield}%
-              </dd>
-            </div>
-          </dl>
-        </div>
+      {/* Display summary of the property details */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Property Details</h3>
+        <p><strong>Name:</strong> {formData.basicInfo.name}</p>
+        <p><strong>Location:</strong> {formData.basicInfo.location}</p>
+        <p><strong>Price per Token:</strong> {formData.basicInfo.pricePerToken}</p>
+        <p><strong>Max Tokens:</strong> {formData.basicInfo.maxTokens}</p>
+        <p><strong>Yield:</strong> {formData.basicInfo.yield}</p>
+        <p><strong>Image URL:</strong> {formData.basicInfo.imageUrl}</p>
+      </div>
 
-        <div>
-          <h4 className="font-medium text-gray-900 mb-4">Opplastede dokumenter</h4>
-          <ul className="space-y-3">
-            {Object.entries(documents).map(([key, file]) => (
-              <li key={key} className="flex items-center gap-2">
-                <Check className="w-5 h-5 text-green-500" />
-                <span className="text-sm text-gray-600">
-                  {file?.name || "Ingen fil lastet opp"}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="font-medium text-gray-900 mb-4">Due Diligence</h4>
-          <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <dt className="text-sm text-gray-500">Boligareal</dt>
-              <dd className="text-sm font-medium text-gray-900 mt-1">
-                {dueDiligence.livingArea} kvm
-              </dd>
-            </div>
-            <div>
-              <dt className="text-sm text-gray-500">Byggeår</dt>
-              <dd className="text-sm font-medium text-gray-900 mt-1">
-                {dueDiligence.constructionYear}
-              </dd>
-            </div>
-            {dueDiligence.hasCurrentTenant && (
-              <div>
-                <dt className="text-sm text-gray-500">Månedlig leieinntekt</dt>
-                <dd className="text-sm font-medium text-gray-900 mt-1">
-                  {formatCurrency(dueDiligence.monthlyRent)}
-                </dd>
-              </div>
-            )}
-            {dueDiligence.lastRenovation && (
-              <div>
-                <dt className="text-sm text-gray-500">Siste renovering</dt>
-                <dd className="text-sm font-medium text-gray-900 mt-1">
-                  {dueDiligence.lastRenovation}
-                </dd>
-              </div>
-            )}
-          </dl>
-        </div>
-      </Card>
+      <Button
+        onClick={handleSubmit}
+        disabled={isSubmitting}
+        className="w-full"
+      >
+        {isSubmitting ? "Submitting..." : "Submit for Review"}
+      </Button>
     </div>
   );
 };

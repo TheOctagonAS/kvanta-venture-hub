@@ -1,4 +1,4 @@
-import { TrendingUp, Ban, Star } from "lucide-react";
+import { TrendingUp, Ban, Star, Clock, CheckCircle, XCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 type PropertyBadgesProps = {
@@ -29,21 +29,38 @@ export const PropertyBadges = ({ yield: yieldValue, isSoldOut, status, isFeature
         APY: {yieldValue}%
       </Badge>
       
-      {status === 'Coming Soon' ? (
+      {status === 'PENDING_REVIEW' ? (
+        <Badge 
+          variant="outline" 
+          className="bg-yellow-50 text-yellow-700 border border-yellow-200 font-medium text-sm flex items-center"
+        >
+          <Clock className="h-3 w-3 mr-1" />
+          Under gjennomgang
+        </Badge>
+      ) : status === 'APPROVED' ? (
+        <Badge 
+          variant="secondary" 
+          className="bg-green-100 text-green-700 border border-green-200 font-medium text-sm flex items-center"
+        >
+          <CheckCircle className="h-3 w-3 mr-1" />
+          Verifisert
+        </Badge>
+      ) : status === 'REJECTED' ? (
+        <Badge 
+          variant="destructive" 
+          className="bg-red-100 text-red-600 border border-red-200 font-medium text-sm flex items-center"
+        >
+          <XCircle className="h-3 w-3 mr-1" />
+          Avvist
+        </Badge>
+      ) : status === 'Coming Soon' ? (
         <Badge 
           variant="outline" 
           className="bg-[#FFF4C2] text-[#6B5E00] border border-[#FFD966] font-medium text-sm"
         >
           Kommer snart
         </Badge>
-      ) : status === 'Active' ? (
-        <Badge 
-          variant="secondary" 
-          className="bg-[#47C757] text-white border-none font-medium text-sm"
-        >
-          Aktiv
-        </Badge>
-      ) : status === 'Sold Out' && (
+      ) : isSoldOut && (
         <Badge 
           variant="destructive" 
           className="bg-red-100 text-red-600 border border-red-200 font-medium text-sm flex items-center"

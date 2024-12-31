@@ -138,6 +138,7 @@ export type Database = {
           property_description: string | null
           property_token_asa_id: number | null
           property_type: string
+          rejection_reason: string | null
           size_sqm: number | null
           status: string
           tokens_sold: number
@@ -165,6 +166,7 @@ export type Database = {
           property_description?: string | null
           property_token_asa_id?: number | null
           property_type?: string
+          rejection_reason?: string | null
           size_sqm?: number | null
           status?: string
           tokens_sold?: number
@@ -192,6 +194,7 @@ export type Database = {
           property_description?: string | null
           property_token_asa_id?: number | null
           property_type?: string
+          rejection_reason?: string | null
           size_sqm?: number | null
           status?: string
           tokens_sold?: number
