@@ -7,6 +7,7 @@ import DocumentUploadStep from "./steps/DocumentUploadStep";
 import DueDiligenceStep from "./steps/DueDiligenceStep";
 import SummaryStep from "./steps/SummaryStep";
 import WizardProgress from "./WizardProgress";
+import TokenizationGuide from "./TokenizationGuide";
 
 type WizardStep = {
   title: string;
@@ -108,40 +109,48 @@ const PropertyListingWizard = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Card className="max-w-3xl mx-auto p-6">
-        <WizardProgress steps={STEPS} currentStep={currentStep} />
-        
-        <div className="mt-8">{renderStep()}</div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
+          <Card className="p-6">
+            <WizardProgress steps={STEPS} currentStep={currentStep} />
+            
+            <div className="mt-8">{renderStep()}</div>
 
-        <div className="mt-6 flex justify-between">
-          {currentStep > 0 && (
-            <Button
-              onClick={handleBack}
-              variant="outline"
-              className="flex items-center gap-2"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              Tilbake
-            </Button>
-          )}
-          
-          <div className="ml-auto">
-            <Button
-              onClick={handleNext}
-              className="flex items-center gap-2"
-            >
-              {currentStep === STEPS.length - 1 ? (
-                "Publiser"
-              ) : (
-                <>
-                  Neste
-                  <ChevronRight className="w-4 h-4" />
-                </>
+            <div className="mt-6 flex justify-between">
+              {currentStep > 0 && (
+                <Button
+                  onClick={handleBack}
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  Tilbake
+                </Button>
               )}
-            </Button>
-          </div>
+              
+              <div className="ml-auto">
+                <Button
+                  onClick={handleNext}
+                  className="flex items-center gap-2"
+                >
+                  {currentStep === STEPS.length - 1 ? (
+                    "Publiser"
+                  ) : (
+                    <>
+                      Neste
+                      <ChevronRight className="w-4 h-4" />
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </Card>
         </div>
-      </Card>
+        
+        <div className="lg:col-span-1">
+          <TokenizationGuide />
+        </div>
+      </div>
     </div>
   );
 };
