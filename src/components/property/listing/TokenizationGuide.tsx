@@ -1,4 +1,4 @@
-import { ListOrdered, FileUpload, MessageSquare, CheckCircle, Globe, Users, FileText } from "lucide-react";
+import { ListOrdered, Upload, MessageSquare, CheckCircle, Globe, Users, FileText } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 const TokenizationGuide = () => {
@@ -9,7 +9,7 @@ const TokenizationGuide = () => {
       description: "Start med å legge inn grunnleggende informasjon om eiendommen din."
     },
     {
-      icon: FileUpload,
+      icon: Upload,
       title: "Last opp dokumenter",
       description: "Last opp nødvendige dokumenter som skjøte, verdivurdering og forsikringspapirer."
     },
