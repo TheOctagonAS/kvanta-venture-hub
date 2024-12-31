@@ -8,6 +8,7 @@ import UserHoldings from "@/components/UserHoldings";
 import StatisticsRow from "@/components/property-overview/StatisticsRow";
 import { usePropertyData } from "@/components/property-overview/usePropertyData";
 import OwnedProperties from "@/components/property/OwnedProperties";
+import OwnerInfoBox from "./OwnerInfoBox";
 
 interface MainContentProps {
   isKyc: boolean;
@@ -60,6 +61,8 @@ const MainContent = ({ isKyc, onStartKYC }: MainContentProps) => {
         averageYield={calculateAverageYield()}
         totalBalance={calculateTotalRent()}
       />
+
+      <OwnerInfoBox />
 
       <UserHoldings />
       
