@@ -13,7 +13,6 @@ interface BasicInfoFormData {
   name: string;
   location: string;
   desiredTokenization: string;
-  maxTokens: string;
   imageUrl: string;
 }
 
@@ -54,7 +53,7 @@ const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps
         .insert([{
           name: formData.name,
           location: formData.location,
-          max_tokens: calculatedTokens || parseInt(formData.maxTokens),
+          max_tokens: calculatedTokens || 0,
           image_url: formData.imageUrl,
           status: 'PENDING_REVIEW'
         }])
@@ -93,7 +92,6 @@ const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps
         </AlertDescription>
       </Alert>
 
-      {/* ... keep existing code (form fields) */}
       <FormItem>
         <Label htmlFor="name">Navn på eiendom</Label>
         <Input
