@@ -40,9 +40,8 @@ const PropertyListingWizard = () => {
     basicInfo: {
       name: "",
       location: "",
-      pricePerToken: "",
+      desiredTokenization: "",
       maxTokens: "",
-      yield: "",
       imageUrl: "",
     },
     documents: {
