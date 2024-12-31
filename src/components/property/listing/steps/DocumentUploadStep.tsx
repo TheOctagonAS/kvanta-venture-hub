@@ -12,6 +12,7 @@ interface DocumentUploadStepProps {
     insurance: File | null;
   };
   onUpdate: (data: any) => void;
+  propertyId?: string;
 }
 
 const REQUIRED_DOCUMENTS = [

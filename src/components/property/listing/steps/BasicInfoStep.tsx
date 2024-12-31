@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormItem } from "@/components/ui/form";
+import { supabase } from "@/lib/supabaseClient";
+import { useToast } from "@/components/ui/use-toast";
 
 interface BasicInfoFormData {
   name: string;
@@ -15,15 +17,50 @@ interface BasicInfoFormData {
 interface BasicInfoStepProps {
   data: BasicInfoFormData;
   onUpdate: (data: BasicInfoFormData) => void;
+  onPropertyCreated?: (id: string) => void;
 }
 
-const BasicInfoStep = ({ data, onUpdate }: BasicInfoStepProps) => {
+const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps) => {
+  const { toast } = useToast();
   const { register, handleSubmit, formState: { errors } } = useForm<BasicInfoFormData>({
     defaultValues: data,
   });
 
-  const onSubmit = (formData: BasicInfoFormData) => {
-    onUpdate(formData);
+  const onSubmit = async (formData: BasicInfoFormData) => {
+    try {
+      const { data: property, error } = await supabase
+        .from('properties')
+        .insert([{
+          name: formData.name,
+          location: formData.location,
+          price_per_token: parseFloat(formData.pricePerToken),
+          max_tokens: parseInt(formData.maxTokens),
+          yield: parseFloat(formData.yield),
+          image_url: formData.imageUrl,
+        }])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      if (property && onPropertyCreated) {
+        onPropertyCreated(property.id);
+      }
+
+      onUpdate(formData);
+      
+      toast({
+        title: "Eiendom opprettet",
+        description: "Grunnleggende informasjon er lagret",
+      });
+    } catch (error) {
+      console.error('Error creating property:', error);
+      toast({
+        title: "Feil ved opprettelse",
+        description: "Kunne ikke opprette eiendom. Prøv igjen senere.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
