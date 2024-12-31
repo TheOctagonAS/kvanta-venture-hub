@@ -200,6 +200,38 @@ export type Database = {
         }
         Relationships: []
       }
+      property_documents: {
+        Row: {
+          created_at: string | null
+          doc_type: string
+          file_url: string
+          id: string
+          property_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          doc_type: string
+          file_url: string
+          id?: string
+          property_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          doc_type?: string
+          file_url?: string
+          id?: string
+          property_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_documents_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       property_loan_requests_deprecated: {
         Row: {
           created_at: string
