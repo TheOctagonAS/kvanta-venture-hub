@@ -29,7 +29,7 @@ const STEPS: WizardStep[] = [
   },
   {
     title: "Oppsummering",
-    description: "Gjennomgå og publiser",
+    description: "Gjennomgå og send inn",
   },
 ];
 
@@ -41,7 +41,6 @@ const PropertyListingWizard = () => {
       name: "",
       location: "",
       desiredTokenization: "",
-      maxTokens: "",
       imageUrl: "",
     },
     documents: {
@@ -100,7 +99,12 @@ const PropertyListingWizard = () => {
           />
         );
       case 3:
-        return <SummaryStep formData={formData} />;
+        return (
+          <SummaryStep 
+            formData={formData}
+            propertyId={propertyId!}
+          />
+        );
       default:
         return null;
     }
@@ -115,34 +119,30 @@ const PropertyListingWizard = () => {
             
             <div className="mt-8">{renderStep()}</div>
 
-            <div className="mt-6 flex justify-between">
-              {currentStep > 0 && (
-                <Button
-                  onClick={handleBack}
-                  variant="outline"
-                  className="flex items-center gap-2"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                  Tilbake
-                </Button>
-              )}
-              
-              <div className="ml-auto">
-                <Button
-                  onClick={handleNext}
-                  className="flex items-center gap-2"
-                >
-                  {currentStep === STEPS.length - 1 ? (
-                    "Publiser"
-                  ) : (
-                    <>
-                      Neste
-                      <ChevronRight className="w-4 h-4" />
-                    </>
-                  )}
-                </Button>
+            {currentStep < STEPS.length - 1 && (
+              <div className="mt-6 flex justify-between">
+                {currentStep > 0 && (
+                  <Button
+                    onClick={handleBack}
+                    variant="outline"
+                    className="flex items-center gap-2"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    Tilbake
+                  </Button>
+                )}
+                
+                <div className="ml-auto">
+                  <Button
+                    onClick={handleNext}
+                    className="flex items-center gap-2"
+                  >
+                    Neste
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
-            </div>
+            )}
           </Card>
         </div>
         
