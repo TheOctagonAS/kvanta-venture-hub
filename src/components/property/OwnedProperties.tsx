@@ -31,7 +31,17 @@ const OwnedProperties = () => {
     enabled: !!user,
   });
 
-  if (!ownedProperties?.length) return null;
+  if (!ownedProperties?.length) return (
+    <Card className="bg-white shadow-sm p-4 rounded-lg">
+      <div className="flex items-center gap-2 mb-4">
+        <Building className="h-6 w-6 text-nordic-blue" />
+        <h2 className="text-xl font-semibold">Mine Eiendommer</h2>
+      </div>
+      <div className="text-center text-gray-500 py-8">
+        Du har ingen eiendommer ennå. Klikk 'Liste Eiendom' for å opprette.
+      </div>
+    </Card>
+  );
 
   return (
     <Card className="bg-white shadow-sm p-4 rounded-lg">
