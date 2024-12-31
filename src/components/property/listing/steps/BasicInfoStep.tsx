@@ -46,28 +46,45 @@ const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps
 
   const onSubmit = async (formData: BasicInfoFormData) => {
     try {
+      if (!calculatedTokens) {
+        toast.error("Ugyldig token-beregning", {
+          description: "Vennligst sjekk tokeniseringsandelen",
+        });
+        return;
+      }
+
       // Create the property
       const { data: property, error: insertError } = await supabase
         .from('properties')
         .insert([{
           name: formData.name,
           location: formData.location,
-          max_tokens: calculatedTokens || 0,
+          max_tokens: calculatedTokens,
           image_url: formData.imageUrl,
           status: 'PENDING_REVIEW',
-          price_per_token: pricePerToken // Adding required field
+          price_per_token: pricePerToken,
+          property_type: 'Residential', // Adding required field
+          yield: 5.0 // Adding required field with default value
         }])
         .select()
         .single();
 
-      if (insertError) throw insertError;
-
-      if (property && onPropertyCreated) {
-        console.log("Property created with ID:", property.id);
-        onPropertyCreated(property.id);
+      if (insertError) {
+        console.error('Error inserting property:', insertError);
+        throw insertError;
       }
 
+      if (!property || !property.id) {
+        throw new Error('No property ID returned after creation');
+      }
+
+      console.log("Property created successfully:", property);
+      
+      // Update form data and notify parent
       onUpdate(formData);
+      if (onPropertyCreated) {
+        onPropertyCreated(property.id);
+      }
       
       toast.success("Eiendom opprettet", {
         description: "Grunnleggende informasjon er lagret",
