@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Info } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface BasicInfoFormData {
   name: string;
@@ -22,6 +23,7 @@ interface BasicInfoStepProps {
 }
 
 const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps) => {
+  const { user } = useAuth();
   const { register, handleSubmit, watch, formState: { errors } } = useForm<BasicInfoFormData>({
     defaultValues: data,
   });
@@ -45,27 +47,37 @@ const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps
   }, [desiredTokenization]);
 
   const onSubmit = async (formData: BasicInfoFormData) => {
-    try {
-      if (!calculatedTokens) {
-        toast.error("Ugyldig token-beregning", {
-          description: "Vennligst sjekk tokeniseringsandelen",
-        });
-        return;
-      }
+    if (!user) {
+      toast.error("Du må være logget inn for å liste en eiendom");
+      return;
+    }
 
-      // Create the property
+    if (!calculatedTokens || calculatedTokens <= 0) {
+      toast.error("Ugyldig token-beregning", {
+        description: "Vennligst sjekk tokeniseringsandelen",
+      });
+      return;
+    }
+
+    try {
+      // Create the property with all required fields
+      const propertyData = {
+        name: formData.name,
+        location: formData.location,
+        max_tokens: calculatedTokens,
+        image_url: formData.imageUrl,
+        status: 'PENDING_REVIEW',
+        price_per_token: pricePerToken,
+        property_type: 'Residential',
+        yield: 5.0,
+        owner_id: user.id
+      };
+
+      console.log("Creating property with data:", propertyData);
+
       const { data: property, error: insertError } = await supabase
         .from('properties')
-        .insert([{
-          name: formData.name,
-          location: formData.location,
-          max_tokens: calculatedTokens,
-          image_url: formData.imageUrl,
-          status: 'PENDING_REVIEW',
-          price_per_token: pricePerToken,
-          property_type: 'Residential', // Adding required field
-          yield: 5.0 // Adding required field with default value
-        }])
+        .insert([propertyData])
         .select()
         .single();
 
@@ -75,13 +87,16 @@ const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps
       }
 
       if (!property || !property.id) {
-        throw new Error('No property ID returned after creation');
+        console.error('No property data returned after creation');
+        throw new Error('Failed to create property - no ID returned');
       }
 
       console.log("Property created successfully:", property);
       
-      // Update form data and notify parent
+      // First update the form data
       onUpdate(formData);
+      
+      // Then notify parent about the created property
       if (onPropertyCreated) {
         onPropertyCreated(property.id);
       }
@@ -92,7 +107,7 @@ const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps
     } catch (error) {
       console.error('Error creating property:', error);
       toast.error("Kunne ikke opprette eiendom", {
-        description: "Prøv igjen senere",
+        description: error instanceof Error ? error.message : "Prøv igjen senere",
       });
     }
   };
