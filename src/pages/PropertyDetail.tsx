@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PriceHistoryChart } from "@/components/property/PriceHistoryChart";
 import { Separator } from "@/components/ui/separator";
 import { BackToProperties } from "@/components/property/BackToProperties";
+import { DocumentsAndDD } from "@/components/property/DocumentsAndDD";
 import { toast } from "sonner";
 
 const PropertyDetail = () => {
@@ -65,9 +66,6 @@ const PropertyDetail = () => {
     );
   }
 
-  const isLive = property.launch_date && new Date(property.launch_date) <= new Date();
-  const isSoldOut = property.tokens_sold >= property.max_tokens;
-
   return (
     <div className="container mx-auto px-4 py-8">
       <BackToProperties />
@@ -114,7 +112,7 @@ const PropertyDetail = () => {
                   <Calendar className="h-5 w-5 text-nordic-blue" />
                   <div>
                     <p className="text-sm text-gray-600">Byggeår</p>
-                    <p className="text-base">2015</p>
+                    <p className="text-base">{property.year_built || "N/A"}</p>
                   </div>
                 </div>
               </div>
@@ -160,6 +158,9 @@ const PropertyDetail = () => {
               </div>
             </Card>
           </div>
+
+          {/* Documents and Due Diligence Section */}
+          <DocumentsAndDD propertyId={property.id} status={property.status} />
         </div>
 
         {/* Quick Info Box */}
