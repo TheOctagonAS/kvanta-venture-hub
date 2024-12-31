@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormItem } from "@/components/ui/form";
-import { supabase } from "@/lib/supabaseClient";
-import { useToast } from "@/components/ui/use-toast";
-import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Info } from "lucide-react";
 
@@ -23,7 +22,6 @@ interface BasicInfoStepProps {
 }
 
 const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps) => {
-  const { toast } = useToast();
   const { register, handleSubmit, watch, formState: { errors } } = useForm<BasicInfoFormData>({
     defaultValues: data,
   });
@@ -48,36 +46,36 @@ const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps
 
   const onSubmit = async (formData: BasicInfoFormData) => {
     try {
-      const { data: property, error } = await supabase
+      // Create the property
+      const { data: property, error: insertError } = await supabase
         .from('properties')
         .insert([{
           name: formData.name,
           location: formData.location,
           max_tokens: calculatedTokens || 0,
           image_url: formData.imageUrl,
-          status: 'PENDING_REVIEW'
+          status: 'PENDING_REVIEW',
+          price_per_token: pricePerToken // Adding required field
         }])
         .select()
         .single();
 
-      if (error) throw error;
+      if (insertError) throw insertError;
 
       if (property && onPropertyCreated) {
+        console.log("Property created with ID:", property.id);
         onPropertyCreated(property.id);
       }
 
       onUpdate(formData);
       
-      toast({
-        title: "Eiendom opprettet",
+      toast.success("Eiendom opprettet", {
         description: "Grunnleggende informasjon er lagret",
       });
     } catch (error) {
       console.error('Error creating property:', error);
-      toast({
-        title: "Feil ved opprettelse",
-        description: "Kunne ikke opprette eiendom. Prøv igjen senere.",
-        variant: "destructive",
+      toast.error("Kunne ikke opprette eiendom", {
+        description: "Prøv igjen senere",
       });
     }
   };
@@ -139,7 +137,10 @@ const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps
 
       <FormItem>
         <Label htmlFor="imageUrl">Bilde URL</Label>
-        <Input id="imageUrl" {...register("imageUrl")} />
+        <Input 
+          id="imageUrl" 
+          {...register("imageUrl")} 
+        />
       </FormItem>
     </form>
   );
