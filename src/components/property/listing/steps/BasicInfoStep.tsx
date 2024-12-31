@@ -8,9 +8,8 @@ import { useToast } from "@/components/ui/use-toast";
 interface BasicInfoFormData {
   name: string;
   location: string;
-  pricePerToken: string;
+  desiredTokenization: string;
   maxTokens: string;
-  yield: string;
   imageUrl: string;
 }
 
@@ -33,10 +32,9 @@ const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps
         .insert([{
           name: formData.name,
           location: formData.location,
-          price_per_token: parseFloat(formData.pricePerToken),
           max_tokens: parseInt(formData.maxTokens),
-          yield: parseFloat(formData.yield),
           image_url: formData.imageUrl,
+          status: 'PENDING_REVIEW'
         }])
         .select()
         .single();
@@ -64,7 +62,7 @@ const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps
   };
 
   return (
-    <form onChange={handleSubmit(onSubmit)} className="space-y-4">
+    <form onChange={handleSubmit(onSubmit)} className="space-y-6">
       <FormItem>
         <Label htmlFor="name">Navn på eiendom</Label>
         <Input
@@ -88,17 +86,18 @@ const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps
       </FormItem>
 
       <FormItem>
-        <Label htmlFor="pricePerToken">Pris per token (NOK)</Label>
+        <Label htmlFor="desiredTokenization">Ønsket belåning / andel (%)</Label>
         <Input
-          id="pricePerToken"
+          id="desiredTokenization"
           type="number"
-          {...register("pricePerToken", {
-            required: "Pris er påkrevd",
-            min: { value: 1, message: "Pris må være større enn 0" },
+          {...register("desiredTokenization", {
+            required: "Ønsket belåning er påkrevd",
+            min: { value: 1, message: "Må være større enn 0%" },
+            max: { value: 100, message: "Kan ikke være mer enn 100%" }
           })}
         />
-        {errors.pricePerToken && (
-          <p className="text-red-500 text-sm mt-1">{errors.pricePerToken.message}</p>
+        {errors.desiredTokenization && (
+          <p className="text-red-500 text-sm mt-1">{errors.desiredTokenization.message}</p>
         )}
       </FormItem>
 
@@ -112,26 +111,29 @@ const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps
             min: { value: 1, message: "Må være minst 1 token" },
           })}
         />
+        <p className="text-sm text-gray-500 mt-1">
+          Dette tallet kan bli justert av Kvanta.ai basert på verdivurdering
+        </p>
         {errors.maxTokens && (
           <p className="text-red-500 text-sm mt-1">{errors.maxTokens.message}</p>
         )}
       </FormItem>
 
-      <FormItem>
-        <Label htmlFor="yield">Forventet avkastning (%)</Label>
-        <Input
-          id="yield"
-          type="number"
-          step="0.1"
-          {...register("yield", {
-            required: "Avkastning er påkrevd",
-            min: { value: 0, message: "Avkastning kan ikke være negativ" },
-          })}
-        />
-        {errors.yield && (
-          <p className="text-red-500 text-sm mt-1">{errors.yield.message}</p>
-        )}
-      </FormItem>
+      <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
+        <div>
+          <Label className="text-gray-600">Pris per token</Label>
+          <p className="text-sm text-gray-500 mt-1">
+            Blir satt av Kvanta.ai etter verdivurdering
+          </p>
+        </div>
+
+        <div>
+          <Label className="text-gray-600">Forventet avkastning</Label>
+          <p className="text-sm text-gray-500 mt-1">
+            Dette fastsettes av Kvanta.ai
+          </p>
+        </div>
+      </div>
 
       <FormItem>
         <Label htmlFor="imageUrl">Bilde URL</Label>
