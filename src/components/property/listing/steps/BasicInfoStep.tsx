@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { FormItem } from "@/components/ui/form";
 import { supabase } from "@/lib/supabaseClient";
 import { useToast } from "@/components/ui/use-toast";
+import { useState, useEffect } from "react";
 
 interface BasicInfoFormData {
   name: string;
@@ -21,9 +22,27 @@ interface BasicInfoStepProps {
 
 const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps) => {
   const { toast } = useToast();
-  const { register, handleSubmit, formState: { errors } } = useForm<BasicInfoFormData>({
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<BasicInfoFormData>({
     defaultValues: data,
   });
+
+  const [calculatedTokens, setCalculatedTokens] = useState<number | null>(null);
+  const desiredTokenization = watch("desiredTokenization");
+
+  // Simulate property value calculation (this would be replaced with actual valuation)
+  const estimatedPropertyValue = 5000000; // 5 million NOK
+  const pricePerToken = 1000; // 1000 NOK per token
+
+  useEffect(() => {
+    if (desiredTokenization) {
+      const percentage = parseFloat(desiredTokenization);
+      if (!isNaN(percentage)) {
+        const tokenizedValue = (estimatedPropertyValue * percentage) / 100;
+        const tokens = Math.floor(tokenizedValue / pricePerToken);
+        setCalculatedTokens(tokens);
+      }
+    }
+  }, [desiredTokenization]);
 
   const onSubmit = async (formData: BasicInfoFormData) => {
     try {
@@ -32,7 +51,7 @@ const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps
         .insert([{
           name: formData.name,
           location: formData.location,
-          max_tokens: parseInt(formData.maxTokens),
+          max_tokens: calculatedTokens || parseInt(formData.maxTokens),
           image_url: formData.imageUrl,
           status: 'PENDING_REVIEW'
         }])
@@ -86,12 +105,12 @@ const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps
       </FormItem>
 
       <FormItem>
-        <Label htmlFor="desiredTokenization">Ønsket belåning / andel (%)</Label>
+        <Label htmlFor="desiredTokenization">Andel av eiendom til tokens (%)</Label>
         <Input
           id="desiredTokenization"
           type="number"
           {...register("desiredTokenization", {
-            required: "Ønsket belåning er påkrevd",
+            required: "Ønsket andel er påkrevd",
             min: { value: 1, message: "Må være større enn 0%" },
             max: { value: 100, message: "Kan ikke være mer enn 100%" }
           })}
@@ -99,23 +118,12 @@ const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps
         {errors.desiredTokenization && (
           <p className="text-red-500 text-sm mt-1">{errors.desiredTokenization.message}</p>
         )}
-      </FormItem>
-
-      <FormItem>
-        <Label htmlFor="maxTokens">Antall tokens</Label>
-        <Input
-          id="maxTokens"
-          type="number"
-          {...register("maxTokens", {
-            required: "Antall tokens er påkrevd",
-            min: { value: 1, message: "Må være minst 1 token" },
-          })}
-        />
-        <p className="text-sm text-gray-500 mt-1">
-          Dette tallet kan bli justert av Kvanta.ai basert på verdivurdering
-        </p>
-        {errors.maxTokens && (
-          <p className="text-red-500 text-sm mt-1">{errors.maxTokens.message}</p>
+        {calculatedTokens !== null && (
+          <p className="text-sm text-gray-600 mt-2">
+            Beregnede tokens: {calculatedTokens} 
+            <br />
+            (Basert på estimert eiendomsverdi og token-pris som fastsettes av Kvanta.ai)
+          </p>
         )}
       </FormItem>
 
