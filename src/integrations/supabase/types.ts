@@ -200,6 +200,38 @@ export type Database = {
         }
         Relationships: []
       }
+      property_dd_answers: {
+        Row: {
+          answer: string
+          created_at: string | null
+          id: string
+          property_id: string | null
+          question: string
+        }
+        Insert: {
+          answer: string
+          created_at?: string | null
+          id?: string
+          property_id?: string | null
+          question: string
+        }
+        Update: {
+          answer?: string
+          created_at?: string | null
+          id?: string
+          property_id?: string | null
+          question?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_dd_answers_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       property_documents: {
         Row: {
           created_at: string | null

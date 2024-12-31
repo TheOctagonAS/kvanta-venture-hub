@@ -3,6 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormItem } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
+import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface DueDiligenceFormData {
   hasCurrentTenant: boolean;
@@ -15,16 +17,57 @@ interface DueDiligenceFormData {
 interface DueDiligenceStepProps {
   data: DueDiligenceFormData;
   onUpdate: (data: DueDiligenceFormData) => void;
+  propertyId?: string;
 }
 
-const DueDiligenceStep = ({ data, onUpdate }: DueDiligenceStepProps) => {
+const DueDiligenceStep = ({ data, onUpdate, propertyId }: DueDiligenceStepProps) => {
+  const { toast } = useToast();
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<DueDiligenceFormData>({
     defaultValues: data,
   });
 
   const hasCurrentTenant = watch("hasCurrentTenant");
 
-  const onSubmit = (formData: DueDiligenceFormData) => {
+  const saveAnswer = async (question: string, answer: string) => {
+    if (!propertyId) return;
+
+    try {
+      const { error } = await supabase
+        .from('property_dd_answers')
+        .insert({
+          property_id: propertyId,
+          question,
+          answer,
+        });
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error saving answer:', error);
+      toast({
+        title: "Feil ved lagring av svar",
+        description: "Kunne ikke lagre svaret ditt. Prøv igjen senere.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const onSubmit = async (formData: DueDiligenceFormData) => {
+    if (!propertyId) {
+      console.error('No property ID provided');
+      return;
+    }
+
+    // Save each answer individually
+    await saveAnswer('Har leietaker', formData.hasCurrentTenant ? 'Ja' : 'Nei');
+    await saveAnswer('Boligareal', `${formData.livingArea} kvm`);
+    if (formData.hasCurrentTenant) {
+      await saveAnswer('Månedlig leie', `${formData.monthlyRent} NOK`);
+    }
+    await saveAnswer('Byggeår', formData.constructionYear);
+    if (formData.lastRenovation) {
+      await saveAnswer('Siste renovering', formData.lastRenovation);
+    }
+
     onUpdate(formData);
   };
 

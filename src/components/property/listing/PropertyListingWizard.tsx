@@ -34,6 +34,7 @@ const STEPS: WizardStep[] = [
 
 const PropertyListingWizard = () => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [propertyId, setPropertyId] = useState<string>();
   const [formData, setFormData] = useState({
     basicInfo: {
       name: "",
@@ -79,6 +80,7 @@ const PropertyListingWizard = () => {
           <BasicInfoStep
             data={formData.basicInfo}
             onUpdate={(data) => updateFormData("basicInfo", data)}
+            onPropertyCreated={setPropertyId}
           />
         );
       case 1:
@@ -86,6 +88,7 @@ const PropertyListingWizard = () => {
           <DocumentUploadStep
             data={formData.documents}
             onUpdate={(data) => updateFormData("documents", data)}
+            propertyId={propertyId}
           />
         );
       case 2:
@@ -93,6 +96,7 @@ const PropertyListingWizard = () => {
           <DueDiligenceStep
             data={formData.dueDiligence}
             onUpdate={(data) => updateFormData("dueDiligence", data)}
+            propertyId={propertyId}
           />
         );
       case 3:
