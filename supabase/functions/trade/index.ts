@@ -26,6 +26,52 @@ async function checkKYCStatus(supabaseClient: any, userId: string) {
   return profile?.is_kyc || false;
 }
 
+async function updateOwnerBalance(supabaseClient: any, {
+  ownerId,
+  amount
+}: {
+  ownerId: string;
+  amount: number;
+}) {
+  const { data: existingBalance, error: fetchError } = await supabaseClient
+    .from('user_balance')
+    .select('*')
+    .eq('user_id', ownerId)
+    .single();
+
+  if (fetchError && fetchError.code !== 'PGRST116') {
+    console.error('Error fetching owner balance:', fetchError);
+    throw new Error('Failed to fetch owner balance');
+  }
+
+  if (existingBalance) {
+    const { error: updateError } = await supabaseClient
+      .from('user_balance')
+      .update({
+        balance: existingBalance.balance + amount,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', existingBalance.id);
+
+    if (updateError) {
+      console.error('Error updating owner balance:', updateError);
+      throw new Error('Failed to update owner balance');
+    }
+  } else {
+    const { error: insertError } = await supabaseClient
+      .from('user_balance')
+      .insert({
+        user_id: ownerId,
+        balance: amount,
+      });
+
+    if (insertError) {
+      console.error('Error creating owner balance:', insertError);
+      throw new Error('Failed to create owner balance');
+    }
+  }
+}
+
 async function createOrder(supabaseClient: any, {
   userId,
   propertyId,
@@ -213,13 +259,46 @@ serve(async (req) => {
         });
 
         if (orderType === 'BUY') {
+          // Get property owner information
+          const { data: property, error: propertyError } = await supabaseClient
+            .from('properties')
+            .select('owner_id, tokens_sold')
+            .eq('id', propertyId)
+            .single();
+
+          if (propertyError) {
+            console.error('Error fetching property:', propertyError);
+            throw new Error('Failed to fetch property information');
+          }
+
+          // Update tokens_sold count
           const { error: updateError } = await supabaseClient
+            .from('properties')
+            .update({ 
+              tokens_sold: property.tokens_sold + tokenCount 
+            })
+            .eq('id', propertyId);
+
+          if (updateError) {
+            console.error('Error updating tokens sold:', updateError);
+            throw new Error('Failed to update tokens sold');
+          }
+
+          // Update owner's balance
+          if (property.owner_id) {
+            await updateOwnerBalance(supabaseClient, {
+              ownerId: property.owner_id,
+              amount: finalPricePerToken * tokenCount
+            });
+          }
+
+          const { error: updateOrderError } = await supabaseClient
             .from('orders')
             .update({ status: 'FILLED' })
             .eq('id', order.id);
 
-          if (updateError) {
-            console.error('Error updating order status:', updateError);
+          if (updateOrderError) {
+            console.error('Error updating order status:', updateOrderError);
             return new Response(
               JSON.stringify({ error: 'Failed to update order status' }),
               { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

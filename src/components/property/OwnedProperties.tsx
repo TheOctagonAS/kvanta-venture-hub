@@ -1,22 +1,17 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Building } from "lucide-react";
-import { Property } from "@/types/property";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { OwnerBalanceCard } from "./OwnerBalanceCard";
 
 const OwnedProperties = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
-  const { data: ownedProperties } = useQuery<Property[]>({
+  const { data: ownedProperties } = useQuery({
     queryKey: ['owned-properties', user?.id],
     queryFn: async () => {
       if (!user) return [];
@@ -24,7 +19,7 @@ const OwnedProperties = () => {
         .from('properties')
         .select('*')
         .eq('owner_id', user.id);
-
+      
       if (error) throw error;
       return data;
     },
@@ -44,41 +39,51 @@ const OwnedProperties = () => {
   );
 
   return (
-    <Card className="bg-white shadow-sm p-4 rounded-lg">
-      <div className="flex items-center gap-2 mb-4">
-        <Building className="h-6 w-6 text-nordic-blue" />
-        <h2 className="text-xl font-semibold">Mine Eiendommer</h2>
-      </div>
+    <div className="space-y-6">
+      <OwnerBalanceCard />
+      
+      <Card className="bg-white shadow-sm p-4 rounded-lg">
+        <div className="flex items-center gap-2 mb-4">
+          <Building className="h-6 w-6 text-nordic-blue" />
+          <h2 className="text-xl font-semibold">Mine Eiendommer</h2>
+        </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Eiendom</TableHead>
-            <TableHead>Beliggenhet</TableHead>
-            <TableHead className="text-right">Pris per token</TableHead>
-            <TableHead className="text-right">Solgte tokens</TableHead>
-            <TableHead className="text-right">Avkastning</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {ownedProperties.map((property) => (
-            <TableRow key={property.id}>
-              <TableCell>{property.name}</TableCell>
-              <TableCell>{property.location}</TableCell>
-              <TableCell className="text-right">
-                {property.price_per_token.toLocaleString()} NOK
-              </TableCell>
-              <TableCell className="text-right">
-                {property.tokens_sold.toLocaleString()} / {property.max_tokens.toLocaleString()}
-              </TableCell>
-              <TableCell className="text-right">
-                {property.yield}%
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </Card>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="text-left border-b">
+                <th className="pb-2">Navn</th>
+                <th className="pb-2">Sted</th>
+                <th className="pb-2">Tokens solgt</th>
+                <th className="pb-2">Status</th>
+                <th className="pb-2"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {ownedProperties.map((property) => (
+                <tr key={property.id} className="border-b last:border-0">
+                  <td className="py-3">{property.name}</td>
+                  <td className="py-3">{property.location}</td>
+                  <td className="py-3">
+                    {property.tokens_sold} / {property.max_tokens}
+                  </td>
+                  <td className="py-3">{property.status}</td>
+                  <td className="py-3">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate(`/property/${property.id}`)}
+                    >
+                      Detaljer
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
   );
 };
 
