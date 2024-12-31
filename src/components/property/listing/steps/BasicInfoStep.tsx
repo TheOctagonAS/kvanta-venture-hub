@@ -1,3 +1,4 @@
+import React from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -5,6 +6,8 @@ import { FormItem } from "@/components/ui/form";
 import { supabase } from "@/lib/supabaseClient";
 import { useToast } from "@/components/ui/use-toast";
 import { useState, useEffect } from "react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Info } from "lucide-react";
 
 interface BasicInfoFormData {
   name: string;
@@ -82,6 +85,15 @@ const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps
 
   return (
     <form onChange={handleSubmit(onSubmit)} className="space-y-6">
+      <Alert variant="default" className="bg-blue-50 border-blue-200">
+        <Info className="h-4 w-4 stroke-blue-600" />
+        <AlertDescription className="text-blue-800">
+          Priser og avkastningsprosent settes endelig av Kvanta.ai basert på verdivurdering. 
+          Vi tar kontakt for å avtale takst / verdivurdering. Du eier fremdeles 100% av eiendommen til alt er godkjent og publisert.
+        </AlertDescription>
+      </Alert>
+
+      {/* ... keep existing code (form fields) */}
       <FormItem>
         <Label htmlFor="name">Navn på eiendom</Label>
         <Input
@@ -126,22 +138,6 @@ const BasicInfoStep = ({ data, onUpdate, onPropertyCreated }: BasicInfoStepProps
           </p>
         )}
       </FormItem>
-
-      <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
-        <div>
-          <Label className="text-gray-600">Pris per token</Label>
-          <p className="text-sm text-gray-500 mt-1">
-            Blir satt av Kvanta.ai etter verdivurdering
-          </p>
-        </div>
-
-        <div>
-          <Label className="text-gray-600">Forventet avkastning</Label>
-          <p className="text-sm text-gray-500 mt-1">
-            Dette fastsettes av Kvanta.ai
-          </p>
-        </div>
-      </div>
 
       <FormItem>
         <Label htmlFor="imageUrl">Bilde URL</Label>
