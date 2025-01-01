@@ -180,6 +180,8 @@ const UserHoldings = () => {
         isOpen={!!selectedHolding}
         onClose={() => setSelectedHolding(null)}
         tokenSymbol={selectedHolding?.property.on_chain_symbol}
+        propertyId={selectedHolding?.property.id || ''}
+        tokenCount={selectedHolding?.token_count || 0}
       />
     </Card>
   );

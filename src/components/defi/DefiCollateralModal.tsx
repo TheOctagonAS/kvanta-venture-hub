@@ -3,26 +3,67 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Wallet, ArrowRight, Link, Shield, Info } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/lib/supabaseClient";
+import { toast } from "sonner";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { TransferHistory } from "./TransferHistory";
+import { Separator } from "@/components/ui/separator";
 
 interface DefiCollateralModalProps {
   isOpen: boolean;
   onClose: () => void;
   tokenSymbol?: string;
+  propertyId: string;
+  tokenCount?: number;
 }
 
 export const DefiCollateralModal = ({
   isOpen,
   onClose,
   tokenSymbol = "KVANTA",
+  propertyId,
+  tokenCount = 0,
 }: DefiCollateralModalProps) => {
   const [step, setStep] = useState(1);
   const [metamaskAddress, setMetamaskAddress] = useState("");
+  const [isTransferring, setIsTransferring] = useState(false);
+  const { user } = useAuth();
+
+  const handleTransfer = async () => {
+    if (!user || !metamaskAddress) return;
+
+    try {
+      setIsTransferring(true);
+      
+      // Log the transfer
+      const { error } = await supabase
+        .from('on_chain_transfers')
+        .insert({
+          user_id: user.id,
+          property_id: propertyId,
+          tx_hash: `MOCK-TX-${Date.now()}`,
+          from_address: 'KVANTA_CUSTODY',
+          to_address: metamaskAddress,
+          token_count: tokenCount,
+        });
+
+      if (error) throw error;
+
+      toast.success('Tokens overført til din Metamask-lommebok');
+      setStep(2);
+    } catch (error) {
+      console.error('Transfer error:', error);
+      toast.error('Kunne ikke overføre tokens');
+    } finally {
+      setIsTransferring(false);
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -51,11 +92,11 @@ export const DefiCollateralModal = ({
                   className="mb-2"
                 />
                 <Button 
-                  onClick={() => setStep(2)}
-                  disabled={!metamaskAddress}
+                  onClick={handleTransfer}
+                  disabled={!metamaskAddress || isTransferring}
                   className="w-full"
                 >
-                  Overfør fra Kvanta custody
+                  {isTransferring ? "Overfører..." : "Overfør fra Kvanta custody"}
                 </Button>
               </div>
             </div>
@@ -93,6 +134,13 @@ export const DefiCollateralModal = ({
                 </div>
               </div>
             </div>
+          </div>
+
+          <Separator />
+
+          <div>
+            <h3 className="font-semibold mb-3">Overføringshistorikk</h3>
+            <TransferHistory />
           </div>
 
           <div className="mt-6">
