@@ -42,6 +42,8 @@ export default {
           gray: "#555555",
           lightgray: "#f8f9fa",
           softblue: "#E9F2FF",
+          neon: "#00FFD1",
+          neonAlt: "#7DFEF0",
         },
       },
       borderRadius: {
