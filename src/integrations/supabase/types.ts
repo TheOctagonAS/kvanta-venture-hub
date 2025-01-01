@@ -39,6 +39,50 @@ export type Database = {
         }
         Relationships: []
       }
+      on_chain_transfers: {
+        Row: {
+          block_number: number | null
+          created_at: string | null
+          from_address: string
+          id: string
+          property_id: string
+          to_address: string
+          token_count: number
+          tx_hash: string
+          user_id: string
+        }
+        Insert: {
+          block_number?: number | null
+          created_at?: string | null
+          from_address: string
+          id?: string
+          property_id: string
+          to_address: string
+          token_count: number
+          tx_hash: string
+          user_id: string
+        }
+        Update: {
+          block_number?: number | null
+          created_at?: string | null
+          from_address?: string
+          id?: string
+          property_id?: string
+          to_address?: string
+          token_count?: number
+          tx_hash?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "on_chain_transfers_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders: {
         Row: {
           buyer_id: string | null

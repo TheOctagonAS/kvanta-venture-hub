@@ -2,9 +2,12 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { vippsService } from "@/services/vippsService";
 import VippsLogo from "../assets/vipps-logo.svg";
+import { useAuth } from "@/contexts/AuthContext";
+import { Separator } from "@/components/ui/separator";
 
 declare global {
   namespace JSX {
@@ -27,6 +30,10 @@ declare global {
 const LoginForm = () => {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
 
   const handleVippsLogin = () => {
     if (!acceptedTerms || !acceptedPrivacy) {
@@ -34,6 +41,24 @@ const LoginForm = () => {
       return;
     }
     window.location.href = vippsService.getVippsLoginUrl();
+  };
+
+  const handleEmailLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!acceptedTerms || !acceptedPrivacy) {
+      toast.error("Du må godta både personvernreglene og brukervilkårene for å fortsette");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      await login(email, password);
+      toast.success("Logget inn!");
+    } catch (error: any) {
+      toast.error(error.message || "Kunne ikke logge inn");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -78,6 +103,41 @@ const LoginForm = () => {
           Logg inn med Vipps
         </button>
       </div>
+
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-gray-600" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-[#25262B] px-2 text-gray-400">Eller</span>
+        </div>
+      </div>
+
+      <form onSubmit={handleEmailLogin} className="space-y-4">
+        <div className="space-y-2">
+          <Input
+            type="email"
+            placeholder="E-post"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="bg-gray-800 border-gray-700 text-white"
+          />
+          <Input
+            type="password"
+            placeholder="Passord"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="bg-gray-800 border-gray-700 text-white"
+          />
+        </div>
+        <Button 
+          type="submit" 
+          className="w-full bg-blue-600 hover:bg-blue-700"
+          disabled={isLoading}
+        >
+          {isLoading ? "Logger inn..." : "Logg inn med e-post"}
+        </Button>
+      </form>
 
       <div className="text-center mt-6">
         <p className="text-gray-300">
