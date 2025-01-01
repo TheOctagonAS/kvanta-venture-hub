@@ -9,16 +9,20 @@ import {
   TableRow,
   TableFooter,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
 import { Link } from "react-router-dom";
-import { Building2 } from "lucide-react";
+import { Building2, Wallet } from "lucide-react";
+import { useState } from "react";
+import { DefiCollateralModal } from "./defi/DefiCollateralModal";
 
 type Property = {
   id: string;
   name: string;
   price_per_token: number;
   yield: number;
+  on_chain_symbol?: string;
 };
 
 type HoldingWithProperty = {
@@ -30,6 +34,7 @@ type HoldingWithProperty = {
 
 const UserHoldings = () => {
   const { user } = useAuth();
+  const [selectedHolding, setSelectedHolding] = useState<HoldingWithProperty | null>(null);
 
   const { data: holdings } = useQuery<HoldingWithProperty[]>({
     queryKey: ['holdings', user?.id],
@@ -45,7 +50,8 @@ const UserHoldings = () => {
             id,
             name,
             price_per_token,
-            yield
+            yield,
+            on_chain_symbol
           )
         `)
         .eq('user_id', user.id);
@@ -95,6 +101,7 @@ const UserHoldings = () => {
             <TableHead className="text-right">Verdi (NOK)</TableHead>
             <TableHead className="text-right">Daglig leie</TableHead>
             <TableHead className="text-right">Total avkastning</TableHead>
+            <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -107,7 +114,7 @@ const UserHoldings = () => {
                 <TableRow key={holding.id}>
                   <TableCell>
                     <Link 
-                      to={`/eiendom/${holding.property.id}`}
+                      to={`/property/${holding.property.id}`}
                       className="text-nordic-blue hover:underline"
                     >
                       {holding.property.name}
@@ -125,12 +132,23 @@ const UserHoldings = () => {
                   <TableCell className="text-right">
                     {holding.accumulated_rent.toLocaleString()} NOK
                   </TableCell>
+                  <TableCell>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full flex items-center gap-2"
+                      onClick={() => setSelectedHolding(holding)}
+                    >
+                      <Wallet className="h-4 w-4" />
+                      DeFi
+                    </Button>
+                  </TableCell>
                 </TableRow>
               );
             })
           ) : (
             <TableRow>
-              <TableCell colSpan={5} className="text-center text-gray-500 py-8">
+              <TableCell colSpan={6} className="text-center text-gray-500 py-8">
                 Du har ingen tokens i porteføljen ennå
               </TableCell>
             </TableRow>
@@ -152,10 +170,17 @@ const UserHoldings = () => {
               <TableCell className="text-right">
                 {totalRent.toLocaleString()} NOK
               </TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableFooter>
         )}
       </Table>
+
+      <DefiCollateralModal
+        isOpen={!!selectedHolding}
+        onClose={() => setSelectedHolding(null)}
+        tokenSymbol={selectedHolding?.property.on_chain_symbol}
+      />
     </Card>
   );
 };
