@@ -1,4 +1,4 @@
-import { ListOrdered, Upload, MessageSquare, CheckCircle, Globe, Users, FileText } from "lucide-react";
+import { ListOrdered, Upload, MessageSquare, CheckCircle, Globe, Users } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 const TokenizationGuide = () => {
@@ -36,7 +36,7 @@ const TokenizationGuide = () => {
   ];
 
   return (
-    <Card className="p-6 bg-white">
+    <Card className="p-6 bg-white shadow-md hover:shadow-xl transition-all duration-200 ease-in-out border border-gray-100">
       <div className="space-y-6">
         <div className="border-b pb-4">
           <h2 className="text-2xl font-semibold text-gray-900">Hvordan tokenisere eiendom?</h2>
@@ -47,9 +47,12 @@ const TokenizationGuide = () => {
         
         <div className="space-y-6">
           {steps.map((step, index) => (
-            <div key={index} className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <step.icon className="w-5 h-5 text-primary" />
+            <div 
+              key={index} 
+              className="flex items-start gap-4 p-4 rounded-lg hover:bg-gray-50 transition-all duration-200 ease-in-out group"
+            >
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-nordic-softblue flex items-center justify-center group-hover:bg-nordic-blue/10 transition-all duration-200">
+                <step.icon className="w-5 h-5 text-nordic-blue" />
               </div>
               <div>
                 <h3 className="font-medium text-gray-900">
@@ -59,6 +62,15 @@ const TokenizationGuide = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="mt-6 p-4 rounded-lg bg-gradient-to-r from-nordic-neon/5 to-nordic-neonAlt/5 border border-nordic-neon/10">
+          <p className="text-sm text-gray-700">
+            Trenger du hjelp med tokeniseringen? 
+            <a href="/support" className="text-nordic-blue hover:text-nordic-blue/80 ml-1 transition-colors duration-200">
+              Kontakt oss
+            </a>
+          </p>
         </div>
       </div>
     </Card>

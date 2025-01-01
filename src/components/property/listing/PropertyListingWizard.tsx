@@ -114,7 +114,7 @@ const PropertyListingWizard = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <Card className="p-6">
+          <Card className="p-6 bg-white shadow-md hover:shadow-xl transition-all duration-200 ease-in-out border border-gray-100">
             <WizardProgress steps={STEPS} currentStep={currentStep} />
             
             <div className="mt-8">{renderStep()}</div>
@@ -125,7 +125,7 @@ const PropertyListingWizard = () => {
                   <Button
                     onClick={handleBack}
                     variant="outline"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 transition-all duration-200 ease-in-out hover:bg-gray-100"
                   >
                     <ChevronLeft className="w-4 h-4" />
                     Tilbake
@@ -135,7 +135,7 @@ const PropertyListingWizard = () => {
                 <div className="ml-auto">
                   <Button
                     onClick={handleNext}
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 bg-nordic-blue hover:bg-nordic-blue/90 text-white transition-all duration-200 ease-in-out"
                   >
                     Neste
                     <ChevronRight className="w-4 h-4" />
