@@ -64,7 +64,22 @@ const MainContent = ({ isKyc, onStartKYC }: MainContentProps) => {
 
       <OwnerInfoBox />
 
-      <UserHoldings />
+      <div className="grid gap-6">
+        <div>
+          <h2 className="text-xl font-semibold mb-4">DeFi Muligheter</h2>
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-100">
+            <h3 className="text-lg font-medium text-blue-900 mb-2">
+              Bruk dine eiendomstokens som sikkerhet
+            </h3>
+            <p className="text-blue-700 mb-4">
+              Du kan nå bruke dine eiendomstokens som sikkerhet i DeFi-protokoller. 
+              Velg en eiendom fra listen nedenfor og klikk på "DeFi" knappen for å komme i gang.
+            </p>
+          </div>
+        </div>
+
+        <UserHoldings />
+      </div>
       
       {isKyc && <OwnedProperties />}
     </div>
