@@ -2,7 +2,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
 import { Button } from "@/components/ui/button";
-import { Plus, Wallet, Building2, ChartBar, Receipt, DollarSign, Percent, PiggyBank, TrendingUp } from "lucide-react";
+import { Plus, Wallet, Building2, ChartBar, Receipt, DollarSign, Percent, PiggyBank, TrendingUp, CircuitBoard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import UserHoldings from "@/components/UserHoldings";
 import { usePropertyData } from "@/components/property-overview/usePropertyData";
@@ -93,20 +93,21 @@ const MainContent = ({ isKyc, onStartKYC }: MainContentProps) => {
       </div>
 
       {/* DeFi Section */}
-      <div className="bg-gradient-to-r from-[#E9F2FF] to-[#F5F8FF] p-6 rounded-xl border border-blue-100">
+      <div className="bg-white rounded-xl shadow-sm p-6 border border-[#00FFD1] relative overflow-hidden">
         <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-lg font-medium text-nordic-charcoal mb-2">
-              Bruk dine eiendomstokens som sikkerhet
-            </h3>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <CircuitBoard className="h-6 w-6 text-[#00FFD1]" />
+              <h3 className="text-lg font-bold text-nordic-charcoal">
+                Bruk eiendomstokens som sikkerhet
+              </h3>
+            </div>
             <p className="text-gray-600 max-w-2xl">
-              Du kan nå bruke dine eiendomstokens som sikkerhet i DeFi-protokoller. 
-              Få tilgang til likviditet uten å selge dine tokens.
+              Få tilgang til likviditet ved å låne mot dine tokens i DeFi-protokoller. Uten å selge!
             </p>
           </div>
           <Button 
-            size="lg"
-            className="bg-nordic-blue hover:bg-nordic-blue/90 text-white flex items-center gap-2 shadow-md transition-all duration-200 hover:shadow-lg hover:translate-y-[-1px]"
+            className="bg-nordic-blue hover:bg-blue-700 transition-colors ease-in-out text-white flex items-center gap-2"
             onClick={() => {
               const firstHolding = document.querySelector('[data-defi-button]');
               if (firstHolding) {
