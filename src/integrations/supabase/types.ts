@@ -121,6 +121,8 @@ export type Database = {
           amenities: string[] | null
           bathrooms: number | null
           bedrooms: number | null
+          chain_explorer_url: string | null
+          chain_name: string | null
           commercial_lease_term_months: number | null
           commercial_occupancy_rate: number | null
           created_at: string
@@ -130,18 +132,23 @@ export type Database = {
           last_renovation_year: number | null
           launch_date: string | null
           location: string
+          max_investors: number | null
           max_tokens: number
           monthly_rent: number | null
           name: string
+          on_chain_decimals: number | null
+          on_chain_symbol: string | null
           owner_id: string | null
           price_per_token: number
           property_description: string | null
+          property_token_address: string | null
           property_token_asa_id: number | null
           property_type: string
           rejection_reason: string | null
           size_sqm: number | null
           status: string
           tokens_sold: number
+          total_raise_cap: number | null
           year_built: number | null
           yield: number
         }
@@ -149,6 +156,8 @@ export type Database = {
           amenities?: string[] | null
           bathrooms?: number | null
           bedrooms?: number | null
+          chain_explorer_url?: string | null
+          chain_name?: string | null
           commercial_lease_term_months?: number | null
           commercial_occupancy_rate?: number | null
           created_at?: string
@@ -158,18 +167,23 @@ export type Database = {
           last_renovation_year?: number | null
           launch_date?: string | null
           location: string
+          max_investors?: number | null
           max_tokens?: number
           monthly_rent?: number | null
           name: string
+          on_chain_decimals?: number | null
+          on_chain_symbol?: string | null
           owner_id?: string | null
           price_per_token: number
           property_description?: string | null
+          property_token_address?: string | null
           property_token_asa_id?: number | null
           property_type?: string
           rejection_reason?: string | null
           size_sqm?: number | null
           status?: string
           tokens_sold?: number
+          total_raise_cap?: number | null
           year_built?: number | null
           yield?: number
         }
@@ -177,6 +191,8 @@ export type Database = {
           amenities?: string[] | null
           bathrooms?: number | null
           bedrooms?: number | null
+          chain_explorer_url?: string | null
+          chain_name?: string | null
           commercial_lease_term_months?: number | null
           commercial_occupancy_rate?: number | null
           created_at?: string
@@ -186,18 +202,23 @@ export type Database = {
           last_renovation_year?: number | null
           launch_date?: string | null
           location?: string
+          max_investors?: number | null
           max_tokens?: number
           monthly_rent?: number | null
           name?: string
+          on_chain_decimals?: number | null
+          on_chain_symbol?: string | null
           owner_id?: string | null
           price_per_token?: number
           property_description?: string | null
+          property_token_address?: string | null
           property_token_asa_id?: number | null
           property_type?: string
           rejection_reason?: string | null
           size_sqm?: number | null
           status?: string
           tokens_sold?: number
+          total_raise_cap?: number | null
           year_built?: number | null
           yield?: number
         }

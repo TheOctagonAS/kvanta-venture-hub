@@ -22,6 +22,7 @@ For testing kan du bruke følgende påloggingsinformasjon:
 - Automatisk beregning av leieinntekter
 - Porteføljeadministrasjon
 - Vi har lagt til kolonner for on-chain token info og investor-limiter for prospektunntak
+- Vi har opprettet DeFiService for on-chain deploy og orakel integrasjon
 
 ## Skatt (Norge) Feature
 
