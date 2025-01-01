@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
-import { defiService } from '@/services/defiService';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -8,6 +7,96 @@ const corsHeaders = {
 };
 
 const VALID_PAYMENT_METHODS = ['bank_account', 'card', 'vipps', 'algorand'];
+
+// Mock DeFi service implementation
+const defiService = {
+  async deployToken(propertyId: string) {
+    console.log('Mock: Deploying token for property', propertyId);
+    
+    // Fetch property details from supabase
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
+    
+    const { data: property, error } = await supabaseClient
+      .from('properties')
+      .select('*')
+      .eq('id', propertyId)
+      .single();
+    
+    if (error) throw error;
+    if (!property) throw new Error('Property not found');
+    
+    const totalSupply = Math.floor(property.total_raise_cap / property.price_per_token);
+    
+    // Mock deployment result
+    const deploymentResult = {
+      tokenAddress: `0x${Array(40).fill(0).map(() => Math.floor(Math.random() * 16).toString(16)).join('')}`,
+      symbol: property.on_chain_symbol || 'KVANTA',
+      decimals: property.on_chain_decimals || 18,
+      chainName: property.chain_name || 'Ethereum',
+      explorerUrl: property.chain_explorer_url || 'https://etherscan.io',
+    };
+    
+    console.log('Mock: Token deployed with total supply:', totalSupply);
+    console.log('Mock: Deployment result:', deploymentResult);
+    
+    // Update property with token address
+    const { error: updateError } = await supabaseClient
+      .from('properties')
+      .update({
+        property_token_address: deploymentResult.tokenAddress,
+        on_chain_symbol: deploymentResult.symbol,
+        on_chain_decimals: deploymentResult.decimals,
+        chain_name: deploymentResult.chainName,
+        chain_explorer_url: deploymentResult.explorerUrl
+      })
+      .eq('id', propertyId);
+    
+    if (updateError) throw updateError;
+    
+    return deploymentResult;
+  },
+  
+  async whitelistInvestor(propertyId: string, userAddress: string) {
+    console.log('Mock: Whitelisting investor', userAddress, 'for property', propertyId);
+    
+    // Mock whitelist transaction
+    const txHash = `0x${Array(64).fill(0).map(() => Math.floor(Math.random() * 16).toString(16)).join('')}`;
+    console.log('Mock: Whitelist transaction hash:', txHash);
+    
+    return true;
+  },
+  
+  async setupChainlinkFeed(propertyId: string) {
+    console.log('Mock: Setting up Chainlink price feed for property', propertyId);
+    
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
+    
+    // Fetch property details for price calculation
+    const { data: property, error } = await supabaseClient
+      .from('properties')
+      .select('*')
+      .eq('id', propertyId)
+      .single();
+    
+    if (error) throw error;
+    if (!property) throw new Error('Property not found');
+    
+    // Mock oracle address
+    const oracleAddress = `0x${Array(40).fill(0).map(() => Math.floor(Math.random() * 16).toString(16)).join('')}`;
+    
+    // Calculate mock price based on property data
+    const mockPrice = property.price_per_token * (1 + (property.yield / 100));
+    console.log('Mock: Oracle price feed initialized at:', mockPrice);
+    
+    return oracleAddress;
+  }
+}
 
 async function checkKYCStatus(supabaseClient: any, userId: string) {
   console.log('Checking KYC status for user:', userId);
