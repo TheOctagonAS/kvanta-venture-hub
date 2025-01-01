@@ -1,19 +1,10 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Card } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-  TableFooter,
-} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
 import { Link } from "react-router-dom";
-import { Building2, Wallet } from "lucide-react";
+import { Building2, Wallet, DollarSign, Percent, PiggyBank } from "lucide-react";
 import { useState } from "react";
 import { DefiCollateralModal } from "./defi/DefiCollateralModal";
 
@@ -22,6 +13,7 @@ type Property = {
   name: string;
   price_per_token: number;
   yield: number;
+  image_url: string | null;
   on_chain_symbol?: string;
 };
 
@@ -51,6 +43,7 @@ const UserHoldings = () => {
             name,
             price_per_token,
             yield,
+            image_url,
             on_chain_symbol
           )
         `)
@@ -96,89 +89,107 @@ const UserHoldings = () => {
       </div>
 
       <div className="p-6">
-        <Table>
-          <TableHeader>
-            <TableRow className="hover:bg-gray-50">
-              <TableHead className="font-semibold">Eiendom</TableHead>
-              <TableHead className="text-right font-semibold">Antall tokens</TableHead>
-              <TableHead className="text-right font-semibold">Verdi (NOK)</TableHead>
-              <TableHead className="text-right font-semibold">Daglig leie</TableHead>
-              <TableHead className="text-right font-semibold">Total avkastning</TableHead>
-              <TableHead className="w-[100px]"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {holdings && holdings.length > 0 ? (
-              holdings.map((holding) => {
-                const value = holding.token_count * holding.property.price_per_token;
-                const dailyRent = (value * (holding.property.yield / 100)) / 365;
+        {holdings && holdings.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {holdings.map((holding) => {
+              const value = holding.token_count * holding.property.price_per_token;
+              const dailyRent = (value * (holding.property.yield / 100)) / 365;
 
-                return (
-                  <TableRow key={holding.id} className="hover:bg-gray-50">
-                    <TableCell>
+              return (
+                <div
+                  key={holding.id}
+                  className="bg-gradient-to-br from-white to-[#f9f9fc] rounded-lg border border-gray-100 shadow-sm overflow-hidden transition-all duration-200 hover:scale-[1.02] hover:shadow-md"
+                >
+                  <div className="flex items-start p-4 border-b border-gray-100">
+                    <div className="w-12 h-12 rounded-lg border-2 border-nordic-blue overflow-hidden mr-3 flex-shrink-0">
+                      {holding.property.image_url ? (
+                        <img
+                          src={holding.property.image_url}
+                          alt={holding.property.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-nordic-softblue flex items-center justify-center">
+                          <Building2 className="h-6 w-6 text-nordic-blue" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1">
                       <Link 
                         to={`/property/${holding.property.id}`}
-                        className="text-nordic-blue hover:underline font-medium"
+                        className="text-base font-medium text-nordic-charcoal hover:text-nordic-blue transition-colors"
                       >
                         {holding.property.name}
                       </Link>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {holding.token_count.toLocaleString()}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {value.toLocaleString()} NOK
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {dailyRent.toFixed(2)} NOK
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {holding.accumulated_rent.toLocaleString()} NOK
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full flex items-center gap-2 hover:bg-nordic-blue hover:text-white"
-                        onClick={() => setSelectedHolding(holding)}
-                        data-defi-button
-                      >
-                        <Wallet className="h-4 w-4" />
-                        DeFi
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              })
-            ) : (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center text-gray-500 py-12">
-                  Du har ingen tokens i porteføljen ennå
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-          {holdings && holdings.length > 0 && (
-            <TableFooter>
-              <TableRow className="hover:bg-gray-50">
-                <TableCell className="font-semibold">Sum</TableCell>
-                <TableCell className="text-right font-semibold">
-                  {totalTokens.toLocaleString()}
-                </TableCell>
-                <TableCell className="text-right font-semibold">
-                  {totalValue.toLocaleString()} NOK
-                </TableCell>
-                <TableCell className="text-right font-semibold">
-                  {((totalValue * (holdings[0]?.property.yield || 0) / 100) / 365).toFixed(2)} NOK
-                </TableCell>
-                <TableCell className="text-right font-semibold">
-                  {totalRent.toLocaleString()} NOK
-                </TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            </TableFooter>
-          )}
-        </Table>
+                    </div>
+                  </div>
+
+                  <div className="p-4 space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600">Antall tokens</span>
+                      <span className="text-lg font-semibold text-nordic-charcoal">
+                        {holding.token_count.toLocaleString()}
+                      </span>
+                    </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600">Verdi</span>
+                      <span className="text-lg font-semibold text-nordic-charcoal">
+                        {value.toLocaleString()} NOK
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600">Daglig leie</span>
+                      <span className="text-lg font-semibold text-accent">
+                        {dailyRent.toFixed(2)} NOK
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600">Total avkastning</span>
+                      <span className="text-lg font-semibold text-accent">
+                        {holding.accumulated_rent.toLocaleString()} NOK
+                      </span>
+                    </div>
+
+                    <Button
+                      variant="outline"
+                      className="w-full mt-4 flex items-center justify-center gap-2 hover:bg-nordic-blue hover:text-white"
+                      onClick={() => setSelectedHolding(holding)}
+                    >
+                      <Wallet className="h-4 w-4" />
+                      DeFi
+                    </Button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="text-center text-gray-500 py-12">
+            Du har ingen tokens i porteføljen ennå
+          </div>
+        )}
+
+        {holdings && holdings.length > 0 && (
+          <div className="mt-8 p-4 bg-nordic-softblue rounded-lg">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="flex justify-between items-center p-3 bg-white rounded-md">
+                <span className="text-gray-600">Totalt antall tokens</span>
+                <span className="text-lg font-semibold">{totalTokens.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-white rounded-md">
+                <span className="text-gray-600">Total verdi</span>
+                <span className="text-lg font-semibold">{totalValue.toLocaleString()} NOK</span>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-white rounded-md">
+                <span className="text-gray-600">Total avkastning</span>
+                <span className="text-lg font-semibold">{totalRent.toLocaleString()} NOK</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <DefiCollateralModal
