@@ -6,6 +6,13 @@ import { useNavigate } from "react-router-dom";
 import { Loader } from "lucide-react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
+import { defiService } from "@/services/defiService";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert";
+import { InfoIcon } from "lucide-react";
 
 interface SummaryStepProps {
   formData: any;
@@ -15,12 +22,14 @@ interface SummaryStepProps {
 const SummaryStep = ({ formData, propertyId }: SummaryStepProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [tokenAddress, setTokenAddress] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      const { error } = await supabase
+      // First, update property status to PENDING_REVIEW
+      const { error: updateError } = await supabase
         .from('properties')
         .update({ 
           status: 'PENDING_REVIEW',
@@ -30,13 +39,40 @@ const SummaryStep = ({ formData, propertyId }: SummaryStepProps) => {
         })
         .eq('id', propertyId);
 
-      if (error) throw error;
+      if (updateError) throw updateError;
+
+      // Deploy token and update property with token details
+      const deploymentResult = await defiService.deployToken(propertyId);
+      setTokenAddress(deploymentResult.tokenAddress);
+
+      // Get owner's wallets to whitelist
+      const { data: wallets, error: walletsError } = await supabase
+        .from('wallets')
+        .select('address')
+        .eq('user_id', (await supabase.auth.getUser()).data.user?.id);
+
+      if (walletsError) throw walletsError;
+
+      // Whitelist owner's wallets
+      for (const wallet of wallets || []) {
+        if (wallet.address) {
+          await defiService.whitelistInvestor(propertyId, wallet.address);
+        }
+      }
+
+      // Set property as active after successful token deployment and whitelisting
+      const { error: activateError } = await supabase
+        .from('properties')
+        .update({ status: 'ACTIVE' })
+        .eq('id', propertyId);
+
+      if (activateError) throw activateError;
 
       setIsSubmitted(true);
-      toast.success("Eiendommen er sendt til vurdering");
+      toast.success("Eiendommen er opprettet og tokens er generert");
     } catch (error) {
       console.error('Error submitting property:', error);
-      toast.error("Kunne ikke sende inn eiendommen");
+      toast.error("Kunne ikke opprette eiendommen");
     } finally {
       setIsSubmitting(false);
     }
@@ -76,12 +112,25 @@ const SummaryStep = ({ formData, propertyId }: SummaryStepProps) => {
           </div>
           
           <h3 className="text-xl font-semibold text-gray-900">
-            Takk for at du listet eiendommen med Kvanta.ai!
+            Eiendom opprettet!
           </h3>
           
-          <p className="text-gray-600">
-            Vi vurderer dokumentene og kontakter deg innen 48 timer.
-          </p>
+          {tokenAddress && (
+            <p className="text-gray-600">
+              Dine tokens ligger på kontrakt: {tokenAddress}. 
+              Inntil 150 investorer kan whitelistes.
+            </p>
+          )}
+
+          <Alert className="mt-6 bg-blue-50">
+            <InfoIcon className="h-4 w-4" />
+            <AlertTitle>Viktig informasjon om tokens</AlertTitle>
+            <AlertDescription className="text-sm text-gray-600">
+              Token utstedes på en EVM-kjede. Om/når du flytter token ut, husk at du 
+              <em className="font-semibold"> kan </em> 
+              handle på en Dex, men du tar ansvar for lovlighet.
+            </AlertDescription>
+          </Alert>
 
           <Button
             onClick={() => navigate('/minside')}
