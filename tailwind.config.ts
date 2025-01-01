@@ -25,15 +25,15 @@ export default {
         background: "#f8f9fa",
         foreground: "#333333",
         primary: {
-          DEFAULT: "#345FF6", // Kvantum blue - for buttons and headings
+          DEFAULT: "#345FF6",
           foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "#E9F2FF", // Light blue - for cards and highlights
+          DEFAULT: "#E9F2FF",
           foreground: "#333333",
         },
         accent: {
-          DEFAULT: "#47C757", // Success green - for yields and success states
+          DEFAULT: "#47C757",
           foreground: "#FFFFFF",
         },
         nordic: {
