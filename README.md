@@ -21,6 +21,7 @@ For testing kan du bruke følgende påloggingsinformasjon:
 - KYC-verifisering av brukere
 - Automatisk beregning av leieinntekter
 - Porteføljeadministrasjon
+- Vi har lagt til kolonner for on-chain token info og investor-limiter for prospektunntak
 
 ## Skatt (Norge) Feature
 
