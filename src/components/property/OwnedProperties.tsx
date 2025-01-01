@@ -83,7 +83,6 @@ const OwnedProperties = () => {
                     <Progress 
                       value={(property.tokens_sold / property.max_tokens) * 100} 
                       className="h-2 bg-gray-100"
-                      indicatorClassName="bg-nordic-blue"
                     />
                     <Button
                       variant="outline"
