@@ -36,7 +36,7 @@ const UserHoldings = () => {
   const { user } = useAuth();
   const [selectedHolding, setSelectedHolding] = useState<HoldingWithProperty | null>(null);
 
-  const { data: holdings } = useQuery<HoldingWithProperty[]>({
+  const { data: holdings } = useQuery({
     queryKey: ['holdings', user?.id],
     queryFn: async () => {
       if (!user) return [];
