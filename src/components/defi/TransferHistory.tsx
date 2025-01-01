@@ -73,4 +73,4 @@ export const TransferHistory = () => {
       </div>
     </ScrollArea>
   );
-});
+};
