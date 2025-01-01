@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { defiService } from '@/services/defiService';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -70,6 +71,17 @@ async function updateOwnerBalance(supabaseClient: any, {
       throw new Error('Failed to create owner balance');
     }
   }
+}
+
+async function checkInvestorLimits(supabaseClient: any, propertyId: string) {
+  const { data, error } = await supabaseClient
+    .from('user_holdings')
+    .select('user_id')
+    .eq('property_id', propertyId)
+    .not('token_count', 'eq', 0);
+
+  if (error) throw error;
+  return data?.length || 0;
 }
 
 async function createOrder(supabaseClient: any, {
@@ -206,6 +218,7 @@ serve(async (req) => {
     switch (action) {
       case 'placeOrder': {
         if (orderType === 'BUY') {
+          // Check KYC status
           const isKycVerified = await checkKYCStatus(supabaseClient, user.id);
           console.log('KYC verification result:', isKycVerified);
           
@@ -216,19 +229,135 @@ serve(async (req) => {
             );
           }
 
-          if (!paymentMethod) {
+          // Get property details
+          const { data: property, error: propertyError } = await supabaseClient
+            .from('properties')
+            .select('*')
+            .eq('id', propertyId)
+            .single();
+
+          if (propertyError || !property) {
             return new Response(
-              JSON.stringify({ error: 'Payment method is required for buy orders' }),
+              JSON.stringify({ error: 'Property not found' }),
+              { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          }
+
+          // Check max tokens limit
+          if (property.tokens_sold + tokenCount > property.max_tokens) {
+            return new Response(
+              JSON.stringify({ error: 'Ikke nok tilgjengelige tokens' }),
               { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
             );
           }
 
-          if (!VALID_PAYMENT_METHODS.includes(paymentMethod)) {
+          // Check max investors limit
+          const currentInvestorCount = await checkInvestorLimits(supabaseClient, propertyId);
+          if (currentInvestorCount >= property.max_investors) {
             return new Response(
-              JSON.stringify({ error: 'Invalid payment method' }),
+              JSON.stringify({ error: 'Maksimalt antall investorer er nådd' }),
               { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
             );
           }
+
+          // Get user's wallet address
+          const { data: userWallet, error: walletError } = await supabaseClient
+            .from('wallets')
+            .select('address')
+            .eq('user_id', user.id)
+            .eq('wallet_type', 'ALGORAND')
+            .single();
+
+          if (walletError) {
+            console.error('Error fetching wallet:', walletError);
+            return new Response(
+              JSON.stringify({ error: 'Kunne ikke finne wallet' }),
+              { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          }
+
+          // Whitelist investor's wallet
+          if (userWallet?.address) {
+            try {
+              await defiService.whitelistInvestor(propertyId, userWallet.address);
+            } catch (error) {
+              console.error('Error whitelisting investor:', error);
+              return new Response(
+                JSON.stringify({ error: 'Kunne ikke whitelist wallet' }),
+                { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+              );
+            }
+          }
+
+          const order = await createOrder(supabaseClient, {
+            userId: user.id,
+            propertyId,
+            orderType,
+            tokenCount,
+            pricePerToken: property.price_per_token,
+            paymentMethod
+          });
+
+          // Update tokens_sold count
+          const { error: updateError } = await supabaseClient
+            .from('properties')
+            .update({ 
+              tokens_sold: property.tokens_sold + tokenCount 
+            })
+            .eq('id', propertyId);
+
+          if (updateError) {
+            console.error('Error updating tokens sold:', updateError);
+            throw new Error('Failed to update tokens sold');
+          }
+
+          // Update owner's balance with the payment amount
+          if (property.owner_id) {
+            await updateOwnerBalance(supabaseClient, {
+              ownerId: property.owner_id,
+              amount: property.price_per_token * tokenCount
+            });
+          }
+
+          // Update order status
+          const { error: updateOrderError } = await supabaseClient
+            .from('orders')
+            .update({ status: 'FILLED' })
+            .eq('id', order.id);
+
+          if (updateOrderError) {
+            console.error('Error updating order status:', updateOrderError);
+            return new Response(
+              JSON.stringify({ error: 'Failed to update order status' }),
+              { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          }
+
+          // Update user holdings
+          await updateUserHoldings(supabaseClient, {
+            userId: user.id,
+            propertyId,
+            tokenCount
+          });
+
+          return new Response(
+            JSON.stringify(order),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
+
+        if (!paymentMethod) {
+          return new Response(
+            JSON.stringify({ error: 'Payment method is required for buy orders' }),
+            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
+
+        if (!VALID_PAYMENT_METHODS.includes(paymentMethod)) {
+          return new Response(
+            JSON.stringify({ error: 'Invalid payment method' }),
+            { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
         }
 
         let finalPricePerToken = pricePerToken;
@@ -255,62 +384,8 @@ serve(async (req) => {
           orderType,
           tokenCount,
           pricePerToken: finalPricePerToken,
-          paymentMethod: paymentMethod || 'bank_account'
+          paymentMethod
         });
-
-        if (orderType === 'BUY') {
-          // Get property owner information
-          const { data: property, error: propertyError } = await supabaseClient
-            .from('properties')
-            .select('owner_id, tokens_sold')
-            .eq('id', propertyId)
-            .single();
-
-          if (propertyError) {
-            console.error('Error fetching property:', propertyError);
-            throw new Error('Failed to fetch property information');
-          }
-
-          // Update tokens_sold count
-          const { error: updateError } = await supabaseClient
-            .from('properties')
-            .update({ 
-              tokens_sold: property.tokens_sold + tokenCount 
-            })
-            .eq('id', propertyId);
-
-          if (updateError) {
-            console.error('Error updating tokens sold:', updateError);
-            throw new Error('Failed to update tokens sold');
-          }
-
-          // Update owner's balance
-          if (property.owner_id) {
-            await updateOwnerBalance(supabaseClient, {
-              ownerId: property.owner_id,
-              amount: finalPricePerToken * tokenCount
-            });
-          }
-
-          const { error: updateOrderError } = await supabaseClient
-            .from('orders')
-            .update({ status: 'FILLED' })
-            .eq('id', order.id);
-
-          if (updateOrderError) {
-            console.error('Error updating order status:', updateOrderError);
-            return new Response(
-              JSON.stringify({ error: 'Failed to update order status' }),
-              { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-            );
-          }
-
-          await updateUserHoldings(supabaseClient, {
-            userId: user.id,
-            propertyId,
-            tokenCount
-          });
-        }
 
         return new Response(
           JSON.stringify(order),
