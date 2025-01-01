@@ -14,8 +14,15 @@ export const PartnersSection = () => {
       <p className="text-nordic-charcoal/80 max-w-2xl mx-auto text-center mb-8">
         Vi samarbeider med etablerte eiendomsaktører og finansinstitusjoner for å sikre en trygg og transparent investeringsplattform.
       </p>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-nordic-charcoal/60">
-        (Her kommer partner-logos)
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            className="aspect-[3/2] bg-white rounded-lg shadow-sm hover:shadow-md transition-all p-4 flex items-center justify-center"
+          >
+            <div className="text-nordic-charcoal/60">Partner Logo {i}</div>
+          </div>
+        ))}
       </div>
     </motion.div>
   );

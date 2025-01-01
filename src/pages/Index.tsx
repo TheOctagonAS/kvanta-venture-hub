@@ -1,11 +1,9 @@
 import { FlickeringGrid } from "@/components/FlickeringGrid";
 import { Hero } from "@/components/Hero";
-import { TimelineSection } from "@/components/home/TimelineSection";
-import { FeaturesSection } from "@/components/home/FeaturesSection";
-import { PlatformBenefitsSection } from "@/components/home/PlatformBenefitsSection";
-import { InvestmentBenefitsSection } from "@/components/home/InvestmentBenefitsSection";
-import { PartnersSection } from "@/components/home/PartnersSection";
+import { StepsTimeline } from "@/components/home/StepsTimeline";
+import { BenefitsGrid } from "@/components/home/BenefitsGrid";
 import YieldCalculator from "@/components/YieldCalculator";
+import { PartnersSection } from "@/components/home/PartnersSection";
 import { motion } from "framer-motion";
 
 const Index = () => {
@@ -17,9 +15,8 @@ const Index = () => {
       <div className="relative z-10">
         <div className="container mx-auto px-4 space-y-12 sm:space-y-16">
           <Hero />
-          <FeaturesSection />
-          <TimelineSection />
-          <PlatformBenefitsSection />
+          <StepsTimeline />
+          <BenefitsGrid />
           
           {/* Calculator section */}
           <motion.div
@@ -31,7 +28,6 @@ const Index = () => {
             <YieldCalculator />
           </motion.div>
 
-          <InvestmentBenefitsSection />
           <PartnersSection />
         </div>
       </div>
