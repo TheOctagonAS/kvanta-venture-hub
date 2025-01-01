@@ -35,7 +35,7 @@ const MinSide = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#f8faff] flex items-center justify-center">
+      <div className="min-h-screen bg-[#f5f8fc] flex items-center justify-center">
         <div className="text-gray-600">Laster...</div>
       </div>
     );
@@ -46,9 +46,8 @@ const MinSide = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8faff]">
+    <div className="min-h-screen bg-[#f5f8fc]">
       <main className="container mx-auto px-4 py-8">
-        <HeaderActions />
         <MainContent 
           isKyc={profile?.is_kyc || false}
           onStartKYC={async () => {

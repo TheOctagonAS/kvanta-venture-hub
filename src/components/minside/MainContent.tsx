@@ -2,13 +2,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
 import { Button } from "@/components/ui/button";
-import { Plus, Wallet, Building2, ChartBar, Receipt } from "lucide-react";
+import { Plus, Wallet, Building2, ChartBar, Receipt, DollarSign, Percent, PiggyBank, TrendingUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import UserHoldings from "@/components/UserHoldings";
-import StatisticsRow from "@/components/property-overview/StatisticsRow";
 import { usePropertyData } from "@/components/property-overview/usePropertyData";
 import OwnedProperties from "@/components/property/OwnedProperties";
-import OwnerInfoBox from "./OwnerInfoBox";
 
 interface MainContentProps {
   isKyc: boolean;
@@ -42,93 +40,113 @@ const MainContent = ({ isKyc, onStartKYC }: MainContentProps) => {
   });
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto space-y-8">
       {/* Header Section */}
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-3xl font-bold text-nordic-charcoal mb-2">Min portefølje</h1>
-          <p className="text-gray-600">Velkommen tilbake{profile?.is_kyc ? "!" : ", fullfør KYC for å komme i gang"}</p>
-        </div>
-        <div className="flex gap-4">
-          {isKyc && (
-            <Button 
-              onClick={() => navigate('/liste-eiendom')}
-              className="flex items-center gap-2 bg-nordic-blue text-white hover:bg-nordic-blue/90"
-            >
-              <Plus className="h-4 w-4" />
-              Liste Eiendom
-            </Button>
-          )}
-          <Button
-            variant="outline"
-            onClick={() => navigate('/leie-og-avkastning')}
-            className="flex items-center gap-2"
-          >
-            <ChartBar className="h-4 w-4" />
-            Leie og Avkastning
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => navigate('/skatt')}
-            className="flex items-center gap-2"
-          >
-            <Receipt className="h-4 w-4" />
-            Skatteoversikt
-          </Button>
-        </div>
+      <div className="bg-white rounded-xl shadow-sm p-8 border border-gray-100">
+        <h1 className="text-3xl font-bold text-nordic-charcoal mb-2">Din Portefølje</h1>
+        <p className="text-sm text-gray-600">
+          Oversikt over dine eiendomsandeler, avkastning og DeFi-muligheter
+        </p>
       </div>
 
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-          <p className="text-sm text-gray-600 mb-2">Est. Eiendomsverdi</p>
+      {/* Statistics Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 transition-all duration-200 hover:shadow-md">
+          <div className="flex items-center gap-2 mb-4">
+            <DollarSign className="h-5 w-5 text-nordic-blue" />
+            <span className="text-sm text-gray-600">Est. Eiendomsverdi</span>
+          </div>
           <p className="text-2xl font-bold text-nordic-charcoal">
             {calculateTotalValue().toLocaleString()} NOK
           </p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-          <p className="text-sm text-gray-600 mb-2">Totalt avkastning</p>
+
+        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 transition-all duration-200 hover:shadow-md">
+          <div className="flex items-center gap-2 mb-4">
+            <Percent className="h-5 w-5 text-nordic-blue" />
+            <span className="text-sm text-gray-600">Total avkastning</span>
+          </div>
           <p className="text-2xl font-bold text-nordic-charcoal">
             {calculateAverageYield().toFixed(1)}%
           </p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-          <p className="text-sm text-gray-600 mb-2">Totalt innestående</p>
+
+        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 transition-all duration-200 hover:shadow-md">
+          <div className="flex items-center gap-2 mb-4">
+            <PiggyBank className="h-5 w-5 text-nordic-blue" />
+            <span className="text-sm text-gray-600">Total innestående</span>
+          </div>
           <p className="text-2xl font-bold text-nordic-charcoal">
             {calculateTotalRent().toLocaleString()} NOK
+          </p>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100 transition-all duration-200 hover:shadow-md">
+          <div className="flex items-center gap-2 mb-4">
+            <TrendingUp className="h-5 w-5 text-nordic-blue" />
+            <span className="text-sm text-gray-600">Daglig leie</span>
+          </div>
+          <p className="text-2xl font-bold text-nordic-charcoal">
+            {(calculateTotalRent() / 365).toFixed(0)} NOK
           </p>
         </div>
       </div>
 
       {/* DeFi Section */}
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4 text-nordic-charcoal">DeFi Muligheter</h2>
-        <div className="bg-gradient-to-r from-[#E9F2FF] to-[#F5F8FF] p-6 rounded-xl border border-blue-100">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-medium text-nordic-charcoal mb-2">
-                Bruk dine eiendomstokens som sikkerhet
-              </h3>
-              <p className="text-gray-600 max-w-2xl">
-                Du kan nå bruke dine eiendomstokens som sikkerhet i DeFi-protokoller. 
-                Få tilgang til likviditet uten å selge dine tokens.
-              </p>
-            </div>
-            <Button 
-              size="lg"
-              className="bg-nordic-blue hover:bg-nordic-blue/90 text-white flex items-center gap-2 shadow-md"
-              onClick={() => {
-                const firstHolding = document.querySelector('[data-defi-button]');
-                if (firstHolding) {
-                  (firstHolding as HTMLButtonElement).click();
-                }
-              }}
-            >
-              <Wallet className="h-5 w-5" />
-              Start DeFi Utlån
-            </Button>
+      <div className="bg-gradient-to-r from-[#E9F2FF] to-[#F5F8FF] p-6 rounded-xl border border-blue-100">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-medium text-nordic-charcoal mb-2">
+              Bruk dine eiendomstokens som sikkerhet
+            </h3>
+            <p className="text-gray-600 max-w-2xl">
+              Du kan nå bruke dine eiendomstokens som sikkerhet i DeFi-protokoller. 
+              Få tilgang til likviditet uten å selge dine tokens.
+            </p>
           </div>
+          <Button 
+            size="lg"
+            className="bg-nordic-blue hover:bg-nordic-blue/90 text-white flex items-center gap-2 shadow-md transition-all duration-200 hover:shadow-lg hover:translate-y-[-1px]"
+            onClick={() => {
+              const firstHolding = document.querySelector('[data-defi-button]');
+              if (firstHolding) {
+                (firstHolding as HTMLButtonElement).click();
+              }
+            }}
+          >
+            <Wallet className="h-5 w-5" />
+            Start DeFi Utlån
+          </Button>
         </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex gap-4">
+        {isKyc && (
+          <Button 
+            onClick={() => navigate('/liste-eiendom')}
+            className="flex items-center gap-2 bg-nordic-blue text-white hover:bg-nordic-blue/90 transition-all duration-200 hover:shadow-lg hover:translate-y-[-1px]"
+          >
+            <Plus className="h-4 w-4" />
+            Liste Eiendom
+          </Button>
+        )}
+        <Button
+          variant="outline"
+          onClick={() => navigate('/leie-og-avkastning')}
+          className="flex items-center gap-2 hover:bg-gray-50 transition-all duration-200"
+        >
+          <ChartBar className="h-4 w-4" />
+          Leie og Avkastning
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => navigate('/skatt')}
+          className="flex items-center gap-2 hover:bg-gray-50 transition-all duration-200"
+        >
+          <Receipt className="h-4 w-4" />
+          Skatteoversikt
+        </Button>
       </div>
 
       {/* Holdings Section */}
