@@ -2,7 +2,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Wallet } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import UserHoldings from "@/components/UserHoldings";
 import StatisticsRow from "@/components/property-overview/StatisticsRow";
@@ -68,13 +68,30 @@ const MainContent = ({ isKyc, onStartKYC }: MainContentProps) => {
         <div>
           <h2 className="text-xl font-semibold mb-4">DeFi Muligheter</h2>
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-100">
-            <h3 className="text-lg font-medium text-blue-900 mb-2">
-              Bruk dine eiendomstokens som sikkerhet
-            </h3>
-            <p className="text-blue-700 mb-4">
-              Du kan nå bruke dine eiendomstokens som sikkerhet i DeFi-protokoller. 
-              Velg en eiendom fra listen nedenfor og klikk på "DeFi" knappen for å komme i gang.
-            </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-medium text-blue-900 mb-2">
+                  Bruk dine eiendomstokens som sikkerhet
+                </h3>
+                <p className="text-blue-700 mb-4">
+                  Du kan nå bruke dine eiendomstokens som sikkerhet i DeFi-protokoller. 
+                  Få tilgang til likviditet uten å selge dine tokens.
+                </p>
+              </div>
+              <Button 
+                size="lg"
+                className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 shadow-lg"
+                onClick={() => {
+                  const firstHolding = document.querySelector('[data-defi-button]');
+                  if (firstHolding) {
+                    (firstHolding as HTMLButtonElement).click();
+                  }
+                }}
+              >
+                <Wallet className="h-5 w-5" />
+                Start DeFi Utlån
+              </Button>
+            </div>
           </div>
         </div>
 

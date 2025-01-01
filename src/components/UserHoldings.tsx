@@ -138,6 +138,7 @@ const UserHoldings = () => {
                       size="sm"
                       className="w-full flex items-center gap-2"
                       onClick={() => setSelectedHolding(holding)}
+                      data-defi-button
                     >
                       <Wallet className="h-4 w-4" />
                       DeFi
