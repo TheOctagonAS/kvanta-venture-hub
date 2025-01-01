@@ -2,7 +2,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
 import { Button } from "@/components/ui/button";
-import { Plus, Wallet } from "lucide-react";
+import { Plus, Wallet, Building2, ChartBar, Receipt } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import UserHoldings from "@/components/UserHoldings";
 import StatisticsRow from "@/components/property-overview/StatisticsRow";
@@ -42,63 +42,100 @@ const MainContent = ({ isKyc, onStartKYC }: MainContentProps) => {
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-nordic-charcoal">Min portefølje</h1>
-        {isKyc && (
-          <Button 
-            onClick={() => navigate('/liste-eiendom')}
+    <div className="max-w-7xl mx-auto">
+      {/* Header Section */}
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h1 className="text-3xl font-bold text-nordic-charcoal mb-2">Min portefølje</h1>
+          <p className="text-gray-600">Velkommen tilbake{profile?.is_kyc ? "!" : ", fullfør KYC for å komme i gang"}</p>
+        </div>
+        <div className="flex gap-4">
+          {isKyc && (
+            <Button 
+              onClick={() => navigate('/liste-eiendom')}
+              className="flex items-center gap-2 bg-nordic-blue text-white hover:bg-nordic-blue/90"
+            >
+              <Plus className="h-4 w-4" />
+              Liste Eiendom
+            </Button>
+          )}
+          <Button
+            variant="outline"
+            onClick={() => navigate('/leie-og-avkastning')}
             className="flex items-center gap-2"
           >
-            <Plus className="h-4 w-4" />
-            Liste Eiendom
+            <ChartBar className="h-4 w-4" />
+            Leie og Avkastning
           </Button>
-        )}
+          <Button
+            variant="outline"
+            onClick={() => navigate('/skatt')}
+            className="flex items-center gap-2"
+          >
+            <Receipt className="h-4 w-4" />
+            Skatteoversikt
+          </Button>
+        </div>
       </div>
 
-      <StatisticsRow
-        totalValue={calculateTotalValue()}
-        averageYield={calculateAverageYield()}
-        totalBalance={calculateTotalRent()}
-      />
+      {/* Statistics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+          <p className="text-sm text-gray-600 mb-2">Est. Eiendomsverdi</p>
+          <p className="text-2xl font-bold text-nordic-charcoal">
+            {calculateTotalValue().toLocaleString()} NOK
+          </p>
+        </div>
+        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+          <p className="text-sm text-gray-600 mb-2">Totalt avkastning</p>
+          <p className="text-2xl font-bold text-nordic-charcoal">
+            {calculateAverageYield().toFixed(1)}%
+          </p>
+        </div>
+        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+          <p className="text-sm text-gray-600 mb-2">Totalt innestående</p>
+          <p className="text-2xl font-bold text-nordic-charcoal">
+            {calculateTotalRent().toLocaleString()} NOK
+          </p>
+        </div>
+      </div>
 
-      <OwnerInfoBox />
-
-      <div className="grid gap-6">
-        <div>
-          <h2 className="text-xl font-semibold mb-4">DeFi Muligheter</h2>
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-medium text-blue-900 mb-2">
-                  Bruk dine eiendomstokens som sikkerhet
-                </h3>
-                <p className="text-blue-700 mb-4">
-                  Du kan nå bruke dine eiendomstokens som sikkerhet i DeFi-protokoller. 
-                  Få tilgang til likviditet uten å selge dine tokens.
-                </p>
-              </div>
-              <Button 
-                size="lg"
-                className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 shadow-lg"
-                onClick={() => {
-                  const firstHolding = document.querySelector('[data-defi-button]');
-                  if (firstHolding) {
-                    (firstHolding as HTMLButtonElement).click();
-                  }
-                }}
-              >
-                <Wallet className="h-5 w-5" />
-                Start DeFi Utlån
-              </Button>
+      {/* DeFi Section */}
+      <div className="mb-8">
+        <h2 className="text-xl font-semibold mb-4 text-nordic-charcoal">DeFi Muligheter</h2>
+        <div className="bg-gradient-to-r from-[#E9F2FF] to-[#F5F8FF] p-6 rounded-xl border border-blue-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-medium text-nordic-charcoal mb-2">
+                Bruk dine eiendomstokens som sikkerhet
+              </h3>
+              <p className="text-gray-600 max-w-2xl">
+                Du kan nå bruke dine eiendomstokens som sikkerhet i DeFi-protokoller. 
+                Få tilgang til likviditet uten å selge dine tokens.
+              </p>
             </div>
+            <Button 
+              size="lg"
+              className="bg-nordic-blue hover:bg-nordic-blue/90 text-white flex items-center gap-2 shadow-md"
+              onClick={() => {
+                const firstHolding = document.querySelector('[data-defi-button]');
+                if (firstHolding) {
+                  (firstHolding as HTMLButtonElement).click();
+                }
+              }}
+            >
+              <Wallet className="h-5 w-5" />
+              Start DeFi Utlån
+            </Button>
           </div>
         </div>
-
-        <UserHoldings />
       </div>
-      
-      {isKyc && <OwnedProperties />}
+
+      {/* Holdings Section */}
+      <div className="space-y-8">
+        <UserHoldings />
+        {isKyc && <OwnedProperties />}
+      </div>
     </div>
   );
 };
