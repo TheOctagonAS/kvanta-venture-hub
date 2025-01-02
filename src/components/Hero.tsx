@@ -26,7 +26,12 @@ function Hero() {
   }, [titleNumber, titles]);
 
   const handleVippsLogin = () => {
-    window.location.href = vippsService.getVippsLoginUrl();
+    try {
+      const vippsUrl = vippsService.getVippsLoginUrl();
+      window.location.href = vippsUrl;
+    } catch (error) {
+      console.error("Error getting Vipps login URL:", error);
+    }
   };
 
   return (
@@ -53,7 +58,7 @@ function Hero() {
                   <motion.span
                     key={index}
                     className="absolute font-semibold text-primary"
-                    initial={{ opacity: 0, y: "-100" }}
+                    initial={{ opacity: 0, y: 100 }}
                     transition={{ type: "spring", stiffness: 50 }}
                     animate={
                       titleNumber === index
